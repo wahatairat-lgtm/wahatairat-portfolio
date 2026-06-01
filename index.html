@@ -183,6 +183,8 @@ footer{border-top:1px solid var(--border);padding:24px 56px;display:flex;align-i
 .modal-bg.open{opacity:1;pointer-events:all}
 .modal-inner{background:var(--surface);border:1px solid var(--border);border-radius:20px;max-width:1100px;width:98%;max-height:94vh;overflow-y:auto;overflow-anchor:none;position:relative;transform:translateY(32px);transition:transform .4s cubic-bezier(.22,1,.36,1);box-shadow:0 48px 120px rgba(0,0,0,.26)}
 .modal-bg.open .modal-inner{transform:none}
+.resume-mobile-view{display:none}
+.resume-desktop-view{display:block}
 .modal-x{position:fixed;top:24px;right:24px;z-index:400;width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.12);color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;backdrop-filter:blur(8px)}
 .modal-x:hover{background:rgba(255,255,255,.22)}
 /* Banner */
@@ -296,11 +298,12 @@ footer{border-top:1px solid var(--border);padding:24px 56px;display:flex;align-i
   /* Footer */
   footer{padding:16px;flex-direction:column;gap:6px;text-align:center}
 
-  /* Resume modal — full screen on mobile */
+  /* Resume modal — compact sheet on mobile */
   #resume-modal{align-items:center}
-  .resume-modal-inner{width:100%!important;max-width:100%!important;max-height:100svh!important;border-radius:0!important;height:100svh}
-  .resume-header{padding:12px 16px!important}
-  .resume-iframe{height:calc(100svh - 52px)!important;overflow:auto;-webkit-overflow-scrolling:touch}
+  .resume-modal-inner{width:92%!important;border-radius:20px!important;max-height:auto!important;height:auto!important}
+  .resume-header{padding:16px!important}
+  .resume-desktop-view{display:none!important}
+  .resume-mobile-view{display:flex!important;flex-direction:column;align-items:center;gap:20px;padding:28px 24px 32px}
 
   /* Project modal — bottom sheet style */
   .modal-bg{align-items:flex-end}
@@ -372,8 +375,7 @@ footer{border-top:1px solid var(--border);padding:24px 56px;display:flex;align-i
       <p class="hero-desc">8 years designing AI-powered and data-driven digital experiences — from UX strategy to high-fidelity UI and scalable design systems.</p>
       <div class="hero-btns">
         <a class="btn-fill" href="#work">View Work →</a>
-        <a class="btn-ghost" href="mailto:wa.hatairat@gmail.com">Get in Touch</a>
-        <button class="btn-ghost" onclick="openResume()" style="gap:7px;font-family:inherit">&#x2197;&#xFE0E; View Resume</button>
+        <button class="btn-ghost" onclick="openResume()" style="gap:7px;font-family:inherit">View Resume &#x2197;&#xFE0E;</button>
       </div>
     </div>
     <div class="hero-right">
@@ -665,7 +667,18 @@ footer{border-top:1px solid var(--border);padding:24px 56px;display:flex;align-i
       <span style="font-size:14px;font-weight:600;color:var(--text)">Resume — Hatairat W. (Joon)</span>
       <a href="HatairatW-Resume2026_1.pdf" download="HatairatW-Resume2026_1.pdf" class="btn-fill" style="font-size:12px;padding:8px 16px">⬇ Download</a>
     </div>
-    <iframe class="resume-iframe" src="HatairatW-Resume2026_1.pdf#zoom=page-width&toolbar=0" style="width:100%;height:88vh;border:none;display:block"></iframe>
+    <!-- Desktop: iframe preview -->
+    <div class="resume-desktop-view">
+      <iframe src="HatairatW-Resume2026_1.pdf#zoom=page-width&toolbar=0" style="width:100%;height:88vh;border:none;display:block"></iframe>
+    </div>
+    <!-- Mobile: open natively in Safari PDF viewer -->
+    <div class="resume-mobile-view">
+      <p style="font-size:14px;color:var(--muted);text-align:center;line-height:1.6">PDF preview works best on desktop.<br/>Tap below to open or download.</p>
+      <div style="display:flex;flex-direction:column;gap:12px;width:100%">
+        <a href="HatairatW-Resume2026_1.pdf" target="_blank" class="btn-fill" style="justify-content:center">Open Resume ↗</a>
+        <a href="HatairatW-Resume2026_1.pdf" download="HatairatW-Resume2026_1.pdf" class="btn-ghost" style="justify-content:center">⬇ Download</a>
+      </div>
+    </div>
   </div>
 </div>
 
