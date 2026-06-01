@@ -936,8 +936,7 @@ const pdata = {
     bannerImg:"QIS.jpg",
     bannerFit:"contain",
     bannerBg:"#EEF2F8",
-    imgs:[{src:"QIS-Logo-Black-03.png",small:true},{src:"QIS.jpg",width:70},{src:"Name_Card-min.webp",width:70}],
-    textFirst:true,
+    imgs:[{src:"QIS-Logo-Black-03.png",small:true},{src:"QIS.jpg",width:70}],
     backTo:"logodesign"
   },
   logodesign:{
@@ -1213,9 +1212,11 @@ function openProject(id){
   const videoLocalEl = document.getElementById('m-video-local');
   if(p.videoFile){ videoLocalEl.src=p.videoFile; videoLocalWrap.style.display='block'; }
   else { videoLocalEl.src=''; videoLocalWrap.style.display='none'; }
+  const mi = document.querySelector('.modal-inner');
+  mi.scrollTop=0;
   document.getElementById('modal').classList.add('open');
   document.body.style.overflow='hidden';
-  document.querySelector('.modal-inner').scrollTop=0;
+  requestAnimationFrame(()=>{ mi.scrollTop=0; });
 }
 function closeModal(){
   document.getElementById('modal').classList.remove('open');
@@ -1230,6 +1231,9 @@ function closeResume(){
   document.body.style.overflow='';
 }
 document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeModal(); closeResume(); } });
+// Prevent browser scroll restoration — always start at top
+if('scrollRestoration' in history) history.scrollRestoration='manual';
+window.addEventListener('load',()=>window.scrollTo(0,0));
 </script>
 </body>
 </html>
