@@ -296,7 +296,13 @@ footer{border-top:1px solid var(--border);padding:24px 56px;display:flex;align-i
   /* Footer */
   footer{padding:16px;flex-direction:column;gap:6px;text-align:center}
 
-  /* Modal — bottom sheet style */
+  /* Resume modal — full screen on mobile */
+  #resume-modal{align-items:center}
+  .resume-modal-inner{width:100%!important;max-width:100%!important;max-height:100svh!important;border-radius:0!important;height:100svh}
+  .resume-header{padding:12px 16px!important}
+  .resume-iframe{height:calc(100svh - 52px)!important;overflow:auto;-webkit-overflow-scrolling:touch}
+
+  /* Project modal — bottom sheet style */
   .modal-bg{align-items:flex-end}
   .modal-inner{border-radius:20px 20px 0 0;width:100%;max-height:92vh;transform:translateY(100%);display:flex;flex-direction:column}
   .modal-bg.open .modal-inner{transform:translateY(0)}
@@ -654,12 +660,12 @@ footer{border-top:1px solid var(--border);padding:24px 56px;display:flex;align-i
 <!-- RESUME POPUP -->
 <div class="modal-bg" id="resume-modal" onclick="closeResume()">
   <button class="modal-x" onclick="closeResume()">✕</button>
-  <div class="modal-inner" onclick="event.stopPropagation()" style="max-width:960px;padding:0;overflow:hidden">
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid var(--border);flex-shrink:0">
+  <div class="modal-inner resume-modal-inner" onclick="event.stopPropagation()" style="max-width:960px;padding:0;overflow:hidden">
+    <div class="resume-header" style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid var(--border);flex-shrink:0">
       <span style="font-size:14px;font-weight:600;color:var(--text)">Resume — Hatairat W. (Joon)</span>
       <a href="HatairatW-Resume2026_1.pdf" download="HatairatW-Resume2026_1.pdf" class="btn-fill" style="font-size:12px;padding:8px 16px">⬇ Download</a>
     </div>
-    <iframe src="HatairatW-Resume2026_1.pdf#zoom=page-width&toolbar=0" style="width:100%;height:88vh;border:none;display:block"></iframe>
+    <iframe class="resume-iframe" src="HatairatW-Resume2026_1.pdf#zoom=page-width&toolbar=0" style="width:100%;height:88vh;border:none;display:block"></iframe>
   </div>
 </div>
 
