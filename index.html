@@ -320,6 +320,7 @@ footer{border-top:1px solid var(--border);padding:24px 56px;display:flex;align-i
   .m-subcards{grid-template-columns:1fr !important;padding:14px 16px 0}
   .m-subcard-banner{height:160px}
   .m-imgs{padding:12px 16px 4px}
+  .m-text-first .m-imgs{order:8}
   .m-img-sm{max-width:100%}
   .m-video{border-radius:8px}
   #m-tags{padding:12px 16px 0 !important}
@@ -933,7 +934,8 @@ const pdata = {
     bannerImg:"QIS.jpg",
     bannerFit:"contain",
     bannerBg:"#EEF2F8",
-    imgs:[{src:"QIS-Logo-Black-03.png",small:true},"QIS.jpg","Name_Card-min.webp"],
+    imgs:[{src:"QIS-Logo-Black-03.png",small:true},{src:"QIS.jpg",width:70},{src:"Name_Card-min.webp",width:70}],
+    textFirst:true,
     backTo:"logodesign"
   },
   logodesign:{
@@ -1151,6 +1153,9 @@ function openProject(id){
   } else {
     bannerEl.style.background = p.grad;
   }
+  // Text-first flag (moves images after sections on mobile)
+  const mInner = document.querySelector('#modal .modal-inner');
+  p.textFirst ? mInner.classList.add('m-text-first') : mInner.classList.remove('m-text-first');
   // Back button
   const backBtn = document.getElementById('m-back-btn');
   if(p.backTo){ backBtn.style.display='flex'; backBtn.onclick=()=>openProject(p.backTo); }
