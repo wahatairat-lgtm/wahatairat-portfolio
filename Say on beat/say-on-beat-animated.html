@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎮 Say on Beat</title>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700;800;900&family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { width:100vw; height:100vh; overflow:hidden; font-family:'Kanit','Arial Black',Arial,sans-serif; background:#000; user-select:none; }
+
+/* ═══════════════ BACKGROUNDS ═══════════════ */
+.bg1 { background: radial-gradient(ellipse 80% 80% at 50% 55%, #00DDEE 0%, #0077BB 55%, #003A6E 100%); }
+.bg1::before {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background: conic-gradient(from 0deg at 50% 55%,
+    rgba(255,255,255,.06) 0deg, transparent 7deg, rgba(255,255,255,.06) 15deg, transparent 22deg,
+    rgba(255,255,255,.06) 30deg, transparent 37deg, rgba(255,255,255,.06) 45deg, transparent 52deg,
+    rgba(255,255,255,.06) 60deg, transparent 67deg, rgba(255,255,255,.06) 75deg, transparent 82deg,
+    rgba(255,255,255,.06) 90deg, transparent 97deg, rgba(255,255,255,.06) 105deg, transparent 112deg,
+    rgba(255,255,255,.06) 120deg, transparent 127deg, rgba(255,255,255,.06) 135deg, transparent 142deg,
+    rgba(255,255,255,.06) 150deg, transparent 157deg, rgba(255,255,255,.06) 165deg, transparent 172deg,
+    rgba(255,255,255,.06) 180deg, transparent 187deg, rgba(255,255,255,.06) 195deg, transparent 202deg,
+    rgba(255,255,255,.06) 210deg, transparent 217deg, rgba(255,255,255,.06) 225deg, transparent 232deg,
+    rgba(255,255,255,.06) 240deg, transparent 247deg, rgba(255,255,255,.06) 255deg, transparent 262deg,
+    rgba(255,255,255,.06) 270deg, transparent 277deg, rgba(255,255,255,.06) 285deg, transparent 292deg,
+    rgba(255,255,255,.06) 300deg, transparent 307deg, rgba(255,255,255,.06) 315deg, transparent 322deg,
+    rgba(255,255,255,.06) 330deg, transparent 337deg, rgba(255,255,255,.06) 345deg, transparent 352deg);
+}
+.bg2 { background: linear-gradient(135deg, #FFD200 0%, #FF8800 45%, #FF3E8A 100%); }
+.bg3 { background: linear-gradient(150deg, #0D0030 0%, #3A0070 40%, #1A0060 70%, #000830 100%); }
+
+/* ═══════════════ HOME ═══════════════ */
+#home {
+  width:100vw; height:100vh; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:36px;
+  position:relative; overflow:hidden;
+}
+.sertis-wordmark { text-align:center; position:relative; z-index:1; line-height:1; font-family:'Permanent Marker',cursive; font-size:clamp(46px,8.6vw,90px); letter-spacing:1px; color:#fff; text-shadow:3px 4px 0 rgba(0,0,0,.25); }
+.sertis-wordmark .num { color:#2DE0E6; }
+.home-logo { text-align:center; position:relative; z-index:1; line-height:1; }
+.logo-badge {
+  position:relative; display:inline-flex; align-items:baseline; justify-content:center; gap:clamp(8px,1.4vw,16px);
+  background:#FFD740; border-radius:42% 58% 54% 46% / 50% 44% 56% 50%;
+  padding:clamp(12px,2vw,20px) clamp(34px,6vw,68px); margin-bottom:clamp(2px,1vw,10px);
+  transform:rotate(-3deg);
+  box-shadow:0 8px 0 rgba(0,0,0,.16), 0 18px 30px rgba(0,0,0,.35);
+}
+.logo-badge .say-word { font-size:clamp(32px,5.6vw,68px); color:#E8540C; font-weight:900; letter-spacing:1px; text-shadow:2px 3px 0 rgba(0,0,0,.16); }
+.logo-badge .on-word  { font-size:clamp(18px,3vw,36px); color:#E8540C; font-weight:700; opacity:.8; text-shadow:1px 2px 0 rgba(0,0,0,.14); }
+.logo-spark { position:absolute; color:#fff; opacity:.9; line-height:1; }
+.logo-spark.s1 { font-size:clamp(14px,2vw,22px); top:-2px; left:8%; transform:rotate(-12deg); }
+.logo-spark.s2 { font-size:clamp(10px,1.4vw,16px); bottom:2px; right:6%; opacity:.7; }
+.home-logo .beat { font-size:clamp(92px,17vw,200px); color:#FF7A1A; letter-spacing:4px; line-height:.85; font-weight:900; display:block; margin-top:clamp(-4px,-0.6vw,2px); transform:rotate(2deg); text-shadow:4px 6px 0 rgba(0,0,0,.22), 0 0 50px rgba(255,122,26,.3); animation:beatPop 1.333s ease-in-out infinite; }
+@keyframes beatPop {
+  0%,100% { transform:rotate(2deg) scale(1); }
+  50%      { transform:rotate(2deg) scale(1.045); }
+}
+.home-sub  { font-size:clamp(18px,2.4vw,26px); color:rgba(255,255,255,.5); letter-spacing:0.3px; font-family:Kanit,Arial,sans-serif; font-weight:400; position:relative; z-index:1; margin-top:-18px; }
+.game-buttons { display:flex; gap:clamp(14px,2.2vw,30px); flex-wrap:wrap; justify-content:center; padding:0 20px; position:relative; z-index:1; }
+.game-btn { display:flex; flex-direction:column; align-items:center; gap:10px; padding:clamp(22px,3vw,40px) clamp(32px,4.5vw,64px); border-radius:22px; border:none; cursor:pointer; font-family:inherit; font-weight:700; transition:transform .15s, box-shadow .15s; min-width:clamp(180px,24vw,290px); }
+.game-btn:hover { transform:translateY(-6px) scale(1.03); }
+.game-btn:active { transform:scale(.97); }
+.game-btn.g1 { background:linear-gradient(145deg,#004E78,#0099CC); box-shadow:0 8px 28px rgba(0,153,204,.5); }
+.game-btn.g2 { background:linear-gradient(145deg,#9A5800,#E88800); box-shadow:0 8px 28px rgba(232,136,0,.5); }
+.game-btn.g3 { background:linear-gradient(145deg,#2A006A,#6600CC); box-shadow:0 8px 28px rgba(102,0,204,.5); }
+.btn-num   { font-size:clamp(11px,1.4vw,15px); color:rgba(255,255,255,.6); letter-spacing:0.5px; font-weight:400; }
+.btn-icon  { font-size:clamp(36px,5.5vw,62px); line-height:1; }
+.btn-name  { font-size:clamp(14px,2vw,22px); color:#fff; letter-spacing:0.5px; text-align:center; }
+.btn-rnds  { font-size:clamp(10px,1.1vw,14px); color:rgba(255,255,255,.45); font-family:Kanit,Arial,sans-serif; font-weight:400; }
+
+/* ═══════════════ INSTRUCTION OVERLAY ═══════════════ */
+#instruction {
+  display:none; position:fixed; inset:0; z-index:800;
+  flex-direction:column; align-items:center; justify-content:center;
+  background:rgba(0,0,0,.88); backdrop-filter:blur(10px);
+  animation:fadeIn .3s ease;
+}
+.instr-card {
+  background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.18);
+  border-radius:28px; padding:clamp(44px,6vw,72px) clamp(52px,7.5vw,100px);
+  max-width:min(1040px,94vw); width:94%; display:flex; flex-direction:column;
+  align-items:center; gap:30px; text-align:center;
+}
+.instr-num   { font-size:clamp(13px,1.5vw,17px); color:rgba(255,255,255,.45); letter-spacing:0.5px; font-weight:400; }
+.instr-title { font-size:clamp(38px,6.5vw,78px); color:#fff; letter-spacing:1px; text-shadow:0 2px 16px rgba(255,255,255,.2); }
+.instr-rule  { font-size:clamp(24px,3.6vw,44px); color:rgba(255,255,255,.85); font-family:Kanit,Arial,sans-serif; font-weight:700; line-height:1.6; letter-spacing:0; }
+.instr-rule span { color:#FFD740; }
+.instr-examples { display:flex; gap:16px; flex-wrap:wrap; justify-content:center; margin:4px 0; }
+.ex-cell {
+  width:clamp(76px,10vw,116px); height:clamp(76px,10vw,116px);
+  border-radius:16px; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:2px;
+}
+.ex-cell.dark  { background:rgba(0,20,40,.9); border:3px solid #000; }
+.ex-cell.amber { background:rgba(30,14,0,.85); border:2px solid rgba(255,255,255,.7); }
+.ex-cell.deep  { background:rgba(4,0,18,.9); }
+.ex-letter { font-size:clamp(32px,6vw,62px); font-weight:900; }
+.ex-arrow  { font-size:clamp(40px,7vw,76px); font-weight:900; display:inline-flex; }
+.instr-note { font-size:clamp(13px,1.6vw,18px); color:rgba(255,255,255,.45); font-family:Kanit,Arial,sans-serif; font-weight:400; letter-spacing:0; line-height:1.8; }
+.start-btn {
+  margin-top:8px; padding:20px 72px; font-size:clamp(19px,2.6vw,28px);
+  font-weight:700; font-family:inherit; letter-spacing:0.5px; color:#fff;
+  border:none; border-radius:40px; cursor:pointer;
+  transition:transform .15s, box-shadow .15s;
+}
+.start-btn:hover { transform:translateY(-4px); }
+.start-btn:active { transform:scale(.97); }
+.sb1 { background:linear-gradient(135deg,#0077BB,#00BBDD); box-shadow:0 6px 22px rgba(0,180,220,.5); }
+.sb2 { background:linear-gradient(135deg,#C97800,#FFB300); box-shadow:0 6px 22px rgba(200,120,0,.5); }
+.sb3 { background:linear-gradient(135deg,#6600CC,#AA44FF); box-shadow:0 6px 22px rgba(120,0,220,.5); }
+
+/* ═══════════════ GAME SCREEN ═══════════════ */
+#game-screen { width:100vw; height:100vh; display:none; flex-direction:column; position:relative; overflow:hidden; }
+.header { position:relative; display:flex; align-items:center; justify-content:center; height:72px; background:rgba(0,0,0,.4); flex-shrink:0; z-index:2; }
+/* .round-badge removed — now inside .beat-right */
+.game-title  { font-size:clamp(18px,2.8vw,32px); font-weight:800; color:#fff; letter-spacing:1px; text-shadow:0 2px 12px rgba(0,0,0,.7); }
+.beat-right  { position:absolute; right:18px; display:flex; align-items:center; gap:10px; }
+.beat-dot    { width:13px; height:13px; border-radius:50%; background:rgba(255,255,255,.28); flex-shrink:0; }
+.round-badge-inline { font-size:clamp(16px,2.2vw,24px); font-weight:700; color:#fff; letter-spacing:0; }
+.beat-dot.pulse1 { animation:bdPulse1 .15s ease-out forwards; }
+.beat-dot.pulse2 { animation:bdPulse2 .15s ease-out forwards; }
+@keyframes bdPulse1 { 0%{background:#fff;transform:scale(1.7)} 100%{background:rgba(255,255,255,.28);transform:scale(1)} }
+@keyframes bdPulse2 { 0%{background:#fff;transform:scale(1.7)} 100%{background:rgba(255,255,255,.28);transform:scale(1)} }
+
+/* ═══════════════ GRID ═══════════════ */
+.grid {
+  flex:1; display:grid; grid-template-columns:repeat(4,1fr); grid-template-rows:repeat(2,1fr);
+  gap:clamp(8px,1.2vw,18px); padding:clamp(12px,1.5vw,22px) clamp(16px,2vw,32px);
+  position:relative; z-index:2;
+  animation:gridIn .32s cubic-bezier(.22,1,.36,1) forwards;
+}
+@keyframes gridIn { from{opacity:0;transform:scale(.94)} to{opacity:1;transform:scale(1)} }
+
+/* ═══════════════ CELLS — BASE (dim border) ═══════════════ */
+.cell {
+  border-radius:clamp(10px,1.5vw,20px);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  transition: border-color .1s ease, box-shadow .1s ease;
+  will-change: transform;
+  position:relative;
+}
+
+/* Game 1 */
+.bg1 .cell { background:rgba(0,18,38,.88); border:4px solid rgba(0,0,0,.7); }
+/* Game 2 */
+.bg2 .cell { background:rgba(30,14,0,.85); border:3px solid rgba(255,255,255,.12); }
+/* Game 3 */
+.bg3 .cell { background:rgba(4,0,18,.92); border:2px solid rgba(255,255,255,.1); box-shadow:none; }
+
+/* ═══════════════ CELLS — ACTIVATED (.hl) ═══════════════ */
+.cell.hl { animation:cellFlash .28s ease-out forwards; }
+@keyframes cellFlash {
+  0%   { transform:scale(1.07); }
+  100% { transform:scale(1); }
+}
+
+.bg1 .cell.hl {
+  border-color: var(--hl-color) !important;
+  box-shadow: 0 0 0 2px var(--hl-color), 0 0 32px 6px var(--hl-color), inset 0 0 18px rgba(255,255,255,.06);
+}
+.bg2 .cell.hl {
+  border-color: var(--hl-color) !important;
+  border-width: 4px;
+  box-shadow: 0 0 28px 6px var(--hl-color);
+}
+.bg3 .cell.hl {
+  border-color: var(--hl-color) !important;
+  border-width: 3px;
+  box-shadow: 0 0 0 2px var(--hl-color), 0 0 40px 12px var(--hl-color), 0 0 80px 6px var(--hl-color);
+}
+
+/* ═══════════════ CELL CONTENT ═══════════════ */
+.g1-letter { font-size:clamp(54px,11vw,128px); font-weight:900; line-height:1; text-shadow:0 4px 8px rgba(0,0,0,.9); }
+.g2-arrow  { font-size:clamp(78px,16vw,182px); line-height:1; font-weight:900; display:inline-flex; }
+.g3-word   { font-size:clamp(28px,5.5vw,70px); font-weight:900; letter-spacing:2px; text-shadow:0 4px 8px rgba(0,0,0,.5); }
+
+/* ═══════════════ END OVERLAY ═══════════════ */
+#end-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.88); z-index:500; flex-direction:column; align-items:center; justify-content:center; gap:24px; animation:fadeIn .4s ease; }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+.end-icon  { font-size:clamp(52px,8vw,88px); }
+.end-title { font-size:clamp(26px,5vw,56px); color:#fff; letter-spacing:5px; }
+.end-sub   { font-size:clamp(12px,1.6vw,17px); color:rgba(255,255,255,.5); letter-spacing:3px; font-family:Kanit,Arial,sans-serif; font-weight:normal; }
+.back-btn  { margin-top:10px; padding:16px 44px; font-size:clamp(15px,2vw,21px); font-weight:700; font-family:inherit; letter-spacing:0.5px; color:#fff; background:linear-gradient(135deg,#0077BB,#00BBDD); border:none; border-radius:40px; cursor:pointer; box-shadow:0 6px 24px rgba(0,180,220,.5); transition:transform .15s,box-shadow .15s; }
+.back-btn:hover { transform:translateY(-4px); box-shadow:0 10px 32px rgba(0,180,220,.7); }
+
+/* ═══════════════ CONTROLS (hidden — kept for JS refs) ═══════════════ */
+#controls { display:none !important; }
+.cbtn,.slide-counter,.bpm-wrap,.divider,.icon-btn { display:none; }
+
+/* ═══════════════ HOME FLOAT BUTTON ═══════════════ */
+#btn-home-float {
+  position:fixed; top:20px; left:20px; z-index:500;
+  display:none; align-items:center; gap:7px;
+  padding:10px 20px; border-radius:30px;
+  background:rgba(0,0,0,.60); border:1px solid rgba(255,255,255,.22);
+  color:#fff; font-size:14px; font-family:'Kanit',sans-serif; font-weight:700;
+  letter-spacing:0.5px; cursor:pointer;
+  backdrop-filter:blur(12px);
+  transition:background .2s, transform .15s, box-shadow .2s;
+  box-shadow:0 4px 16px rgba(0,0,0,.35);
+}
+#btn-home-float:hover {
+  background:rgba(0,0,0,.85);
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(0,0,0,.5);
+}
+#btn-home-float:active { transform:scale(.96); }
+#progress { position:fixed; top:0; left:0; height:4px; background:linear-gradient(90deg,#00DDFF,#FF44CC); z-index:300; transition:width .4s ease; pointer-events:none; }
+
+/* ═══════════════ COUNTDOWN ═══════════════ */
+#countdown {
+  display:none; position:fixed; inset:0; z-index:450;
+  align-items:center; justify-content:center; pointer-events:none;
+}
+#cd-num {
+  font-size:clamp(120px,22vw,260px); font-weight:900; color:#fff;
+  text-shadow:0 0 80px rgba(255,255,255,.6), 0 0 160px rgba(255,255,255,.2);
+  line-height:1;
+}
+#cd-num.go { color:#FFD740; text-shadow:0 0 80px rgba(255,215,64,.8); font-size:clamp(72px,14vw,160px); }
+@keyframes cdPop {
+  0%   { opacity:0; transform:scale(1.8); }
+  25%  { opacity:1; transform:scale(0.95); }
+  75%  { opacity:1; transform:scale(1); }
+  100% { opacity:0; transform:scale(0.5); }
+}
+</style>
+</head>
+<body>
+
+<!-- ════ HOME ════ -->
+<div id="home" class="bg1">
+  <div class="sertis-wordmark">SE<span class="num">12</span>TIS</div>
+  <div class="home-logo">
+    <div class="logo-badge">
+      <span class="logo-spark s1">✦</span>
+      <span class="say-word">Say</span>
+      <span class="on-word">on</span>
+      <span class="logo-spark s2">✦</span>
+    </div>
+    <div class="beat">BEAT</div>
+  </div>
+  <div class="game-buttons">
+    <button class="game-btn g1" onclick="showInstruction(1)">
+      <div class="btn-num">GAME 1</div>
+      <div class="btn-icon">🔤</div>
+      <div class="btn-name">SERTIS LETTERS</div>
+      <div class="btn-rnds">10 rounds</div>
+    </button>
+    <button class="game-btn g2" onclick="showInstruction(2)">
+      <div class="btn-num">GAME 2</div>
+      <div class="btn-icon">🧭</div>
+      <div class="btn-name">DIRECTIONS</div>
+      <div class="btn-rnds">10 rounds</div>
+    </button>
+    <button class="game-btn g3" onclick="showInstruction(3)">
+      <div class="btn-num">GAME 3</div>
+      <div class="btn-icon">🌈</div>
+      <div class="btn-name">STROOP COLORS</div>
+      <div class="btn-rnds">10 rounds</div>
+    </button>
+  </div>
+</div>
+
+<!-- ════ INSTRUCTION OVERLAY ════ -->
+<div id="instruction">
+  <div class="instr-card" id="instr-card"></div>
+</div>
+
+<!-- ════ GAME SCREEN ════ -->
+<div id="game-screen"></div>
+
+<!-- ════ END OVERLAY ════ -->
+<div id="end-overlay">
+  <div class="end-icon"  id="end-icon">🎉</div>
+  <div class="end-title" id="end-title">GAME COMPLETE!</div>
+  <div class="end-sub"   id="end-sub">จบ 10 rounds</div>
+  <button class="back-btn" onclick="goHome()">← Back to Home</button>
+</div>
+
+<!-- ════ LOCAL AUDIO ════ -->
+<audio id="bg-music" loop preload="auto">
+  <source src="music.webm" type="audio/webm">
+  <source src="music.mp3"  type="audio/mpeg">
+</audio>
+
+<div id="progress"></div>
+<!-- ════ HOME FLOAT BUTTON ════ -->
+<button id="btn-home-float">&#127968; HOME</button>
+<!-- ════ COUNTDOWN ════ -->
+<div id="countdown"><div id="cd-num">5</div></div>
+
+<!-- ════ CONTROLS ════ -->
+<div id="controls">
+  <button class="cbtn" id="btn-prev">◀</button>
+  <button class="cbtn" id="btn-auto">▶ Auto</button>
+  <span class="slide-counter" id="counter">1 / 10</span>
+  <button class="cbtn" id="btn-next">Next ▶</button>
+  <div class="divider"></div>
+  <button class="cbtn" id="btn-music">🎵 Music</button>
+  <button class="cbtn" id="btn-beat">🥁 Beat</button>
+  <div class="bpm-wrap">
+    BPM <input type="range" id="bpm-slider" min="60" max="180" value="180" step="1">
+    <span id="bpm-label">180</span>
+  </div>
+  <button class="cbtn" id="btn-tap" title="กดตามจังหวะเพลง 4+ ครั้ง">🎯 Tap</button>
+  <div class="divider"></div>
+  <button class="icon-btn" id="btn-fs">⛶</button>
+  <div class="divider"></div>
+  <button class="cbtn" id="btn-home">🏠 Home</button>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  DATA
+// ══════════════════════════════════════════════
+const LC = { S:'#FF5252', E:'#FFD740', R:'#69F0AE', T:'#40C4FF', I:'#E040FB' };
+const DC = { Left:'#FFFFFF', Right:'#FFE066', Up:'#80FF80', Down:'#FF9999' };
+const DA = { Right:0, Down:90, Left:180, Up:270 };
+const SC = { white:'#F0F0F0', green:'#4CD964', pink:'#FF69B4', red:'#FF4444', blue:'#5599FF' };
+function arrowSVG(deg) {
+  return `<svg viewBox="0 0 100 100" style="width:1em;height:1em;display:block;transform:rotate(${deg}deg)"><path d="M15,38 L55,38 L55,20 L90,50 L55,80 L55,62 L15,62 Z" fill="currentColor"/></svg>`;
+}
+
+const ALL = [
+  {g:1,r:1,  c:['S','E','R','T','I','S','E','R']},
+  {g:1,r:2,  c:['T','I','S','S','E','R','T','I']},
+  {g:1,r:3,  c:['R','R','T','S','I','I','E','T']},
+  {g:1,r:4,  c:['S','T','T','T','R','E','I','S']},
+  {g:1,r:5,  c:['I','S','R','I','T','R','E','S']},
+  {g:1,r:6,  c:['T','E','T','E','T','E','T','E']},
+  {g:1,r:7,  c:['S','S','I','I','R','R','T','T']},
+  {g:1,r:8,  c:['R','I','I','R','S','T','T','S']},
+  {g:1,r:9,  c:['I','T','R','S','E','I','T','R']},
+  {g:1,r:10, c:['T','T','I','S','T','R','T','E']},
+  {g:2,r:1,  c:['Left','Right','Left','Right','Left','Right','Left','Right']},
+  {g:2,r:2,  c:['Up','Down','Up','Down','Left','Right','Left','Right']},
+  {g:2,r:3,  c:['Left','Left','Right','Right','Up','Up','Down','Down']},
+  {g:2,r:4,  c:['Right','Up','Left','Down','Right','Up','Left','Down']},
+  {g:2,r:5,  c:['Up','Up','Up','Down','Down','Down','Left','Right']},
+  {g:2,r:6,  c:['Down','Left','Up','Right','Down','Left','Up','Right']},
+  {g:2,r:7,  c:['Left','Up','Up','Left','Right','Down','Down','Right']},
+  {g:2,r:8,  c:['Right','Right','Down','Left','Left','Up','Right','Down']},
+  {g:2,r:9,  c:['Up','Down','Left','Down','Up','Right','Up','Left']},
+  {g:2,r:10, c:['Down','Right','Up','Left','Right','Down','Left','Up']},
+  {g:3,r:1,  c:[['WHITE','red'],['BLACK','blue'],['RED','white'],['BLUE','pink'],['PINK','black'],['WHITE','blue'],['RED','pink'],['BLACK','white']]},
+  {g:3,r:2,  c:[['BLUE','pink'],['RED','black'],['WHITE','blue'],['PINK','red'],['BLACK','white'],['RED','pink'],['BLUE','black'],['WHITE','red']]},
+  {g:3,r:3,  c:[['PINK','blue'],['BLACK','red'],['BLUE','white'],['RED','black'],['WHITE','pink'],['BLACK','blue'],['PINK','red'],['RED','white']]},
+  {g:3,r:4,  c:[['RED','black'],['WHITE','pink'],['BLACK','red'],['BLUE','white'],['PINK','blue'],['WHITE','black'],['RED','pink'],['BLACK','blue']]},
+  {g:3,r:5,  c:[['BLACK','red'],['PINK','white'],['RED','blue'],['WHITE','black'],['BLUE','pink'],['PINK','red'],['BLACK','white'],['RED','blue']]},
+  {g:3,r:6,  c:[['WHITE','black'],['BLUE','red'],['PINK','blue'],['BLACK','pink'],['RED','white'],['WHITE','blue'],['BLUE','black'],['PINK','red']]},
+  {g:3,r:7,  c:[['RED','pink'],['BLACK','white'],['WHITE','red'],['PINK','blue'],['BLUE','black'],['RED','white'],['BLACK','pink'],['WHITE','blue']]},
+  {g:3,r:8,  c:[['PINK','black'],['RED','blue'],['BLUE','pink'],['WHITE','red'],['BLACK','white'],['PINK','blue'],['RED','black'],['BLUE','red']]},
+  {g:3,r:9,  c:[['BLUE','white'],['WHITE','black'],['PINK','red'],['RED','blue'],['BLACK','pink'],['BLUE','red'],['WHITE','white'],['PINK','black']]},
+  {g:3,r:10, c:[['BLACK','blue'],['PINK','black'],['WHITE','pink'],['BLUE','red'],['RED','white'],['BLACK','blue'],['PINK','pink'],['WHITE','black']]},
+];
+
+const GNAMES = { 1:'SERTIS LETTERS', 2:'DIRECTIONS', 3:'STROOP COLORS' };
+const GEND   = {
+  1:{icon:'🎉',title:'LETTERS DONE!',  sub:'จบ Game 1 — SERTIS LETTERS'},
+  2:{icon:'🧭',title:'DIRECTIONS DONE!',sub:'จบ Game 2 — DIRECTIONS'},
+  3:{icon:'🌈',title:'STROOP DONE!',   sub:'จบ Game 3 — STROOP COLORS'},
+};
+
+// ══════════════════════════════════════════════
+//  INSTRUCTION CONTENT
+// ══════════════════════════════════════════════
+function instrHTML(g) {
+  if (g === 1) return `
+    <div class="instr-num">GAME 1 · SERTIS LETTERS</div>
+    <div class="instr-title">🔤 LETTERS</div>
+    <div class="instr-rule">เห็นตัวอักษรอะไร <span>พูดชื่อนั้น</span> ตามจังหวะ<br><small style="font-size:.8em;color:rgba(255,255,255,.55)">Say the letter you see on each beat</small></div>
+    <div class="instr-examples">
+      ${['S','E','R','T','I'].map(l=>`<div class="ex-cell dark"><span class="ex-letter" style="color:${LC[l]}">${l}</span></div>`).join('')}
+    </div>
+    <div class="instr-note">เห็น <b style="color:#FF5252">S</b> พูด "S" &nbsp;·&nbsp; เห็น <b style="color:#FFD740">E</b> พูด "E" &nbsp;·&nbsp; See a letter → Say it!</div>
+    <button class="start-btn sb1" onclick="startGame(1)">เริ่มเล่น! / Start!</button>`;
+
+  if (g === 2) return `
+    <div class="instr-num">GAME 2 · DIRECTIONS</div>
+    <div class="instr-title">🧭 ARROWS</div>
+    <div class="instr-rule">เห็นลูกศรชี้ทางไหน <span>พูดทิศทางนั้น</span> ตามจังหวะ<br><small style="font-size:.8em;color:rgba(255,255,255,.55)">Say the direction the arrow is pointing</small></div>
+    <div class="instr-examples">
+      ${['Left','Right','Up','Down'].map(d=>`<div class="ex-cell amber"><span class="ex-arrow" style="color:${DC[d]}">${arrowSVG(DA[d])}</span></div>`).join('')}
+    </div>
+    <div class="instr-note">เห็น <b style="color:#fff">←</b> พูด "Left" &nbsp;·&nbsp; เห็น <b style="color:#FFE066">→</b> พูด "Right" &nbsp;·&nbsp; เห็น <b style="color:#80FF80">↑</b> พูด "Up" &nbsp;·&nbsp; เห็น <b style="color:#FF9999">↓</b> พูด "Down"</div>
+    <button class="start-btn sb2" onclick="startGame(2)">เริ่มเล่น! / Start!</button>`;
+
+  if (g === 3) return `
+    <div class="instr-num">GAME 3 · STROOP COLORS</div>
+    <div class="instr-title">🌈 STROOP</div>
+    <div class="instr-rule">พูดตาม<span>สีที่เห็น</span> ไม่ใช่คำที่อ่าน!<br><small style="font-size:.8em;color:rgba(255,255,255,.55)">Say the COLOR you see — NOT the word!</small></div>
+    <div class="instr-examples">
+      <div class="ex-cell deep" style="border:2px solid ${SC['blue']}"><span class="ex-letter" style="color:${SC['blue']};font-size:clamp(14px,2.2vw,22px);letter-spacing:1px">RED</span></div>
+      <div style="display:flex;align-items:center;font-size:clamp(18px,2.5vw,28px);color:rgba(255,255,255,.5);padding:0 4px">=</div>
+      <div class="ex-cell deep" style="border:2px solid ${SC['blue']};padding:0 8px">
+        <span style="color:${SC['blue']};font-size:clamp(13px,1.8vw,18px);letter-spacing:2px;font-weight:900">BLUE</span>
+        <span style="color:rgba(255,255,255,.4);font-size:10px;font-family:Kanit,Arial">สีที่เห็น / the color</span>
+      </div>
+    </div>
+    <div class="instr-note">คำว่า RED สี<b style="color:#5599FF">น้ำเงิน</b> = พูด "Blue" &nbsp;·&nbsp; Read the color ink, ignore the word!</div>
+    <button class="start-btn sb3" onclick="startGame(3)">เริ่มเล่น! / Start!</button>`;
+}
+
+// ══════════════════════════════════════════════
+//  LOCAL AUDIO
+// ══════════════════════════════════════════════
+let musicOn = true;
+const bgMusic = document.getElementById('bg-music');
+
+// ── จัดการ event 'ended' ของเพลง สำหรับจบเกม (รอเพลงจบเองค่อยขึ้น popup) ──
+let musicEndedHandler = null, endTimer = null;
+function clearMusicEndedHandler() {
+  if (musicEndedHandler) { bgMusic.removeEventListener('ended', musicEndedHandler); musicEndedHandler = null; }
+  clearTimeout(endTimer);
+}
+
+function playMusic() {
+  bgMusic.loop = true;               // คืนค่าเริ่มต้น (ปิด loop เฉพาะตอนจบรอบ 10/10)
+  clearMusicEndedHandler();
+  if (!musicOn) return;
+  bgMusic.currentTime = 0;          // เริ่มใหม่จากต้นทุกครั้ง
+  bgMusic.play().catch(() => {});
+}
+function pauseMusic() {
+  bgMusic.pause();
+  bgMusic.currentTime = 0;          // reset ไว้รอเริ่มใหม่ครั้งต่อไป
+}
+function toggleMusic() {
+  musicOn = !musicOn;
+  const b = document.getElementById('btn-music');
+  if (musicOn) {
+    b.classList.add('beat-on'); b.textContent = '🎵 Music';
+    playMusic();
+  } else {
+    b.classList.remove('beat-on'); b.textContent = '🎵 Off';
+    pauseMusic();
+  }
+}
+
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
+let activeGame = 0, gameSlides = [], cur = 0;
+let bpm = 182.4, autoMode = false, hideTimer = null; // 182.4 = ค่า BPM จริงของ music.mp3 (วัดจาก onset autocorrelation) ไม่ใช่ 180 — ของเดิมใช้ 180 ทำให้คลิก/ไฟกระพริบไหลห่างจากเพลงจริงสะสมไปเรื่อยๆ จนเพี้ยนชัดราวรอบ 7
+let hlIdx = -1, hlTimer = null, hlPhase = 0;
+
+// ══════════════════════════════════════════════
+//  WEB AUDIO (triggered per beat)
+// ══════════════════════════════════════════════
+let audioCtx = null, beatOn = false;
+
+function initAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+}
+
+// Returns current time in ms, locked to audio hardware clock when available
+function audioNowMs() {
+  return audioCtx ? audioCtx.currentTime * 1000 : performance.now();
+}
+
+function playKick(t) {
+  const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+  o.connect(g); g.connect(audioCtx.destination);
+  o.type = 'sine';
+  o.frequency.setValueAtTime(160, t);
+  o.frequency.exponentialRampToValueAtTime(0.01, t + 0.35);
+  g.gain.setValueAtTime(0.9, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
+  o.start(t); o.stop(t + 0.35);
+}
+
+function playClap(t) {
+  const len = Math.floor(audioCtx.sampleRate * 0.1);
+  const buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = (Math.random()*2-1) * Math.exp(-i/(len*0.08));
+  const src = audioCtx.createBufferSource(), f = audioCtx.createBiquadFilter(), g = audioCtx.createGain();
+  f.type = 'bandpass'; f.frequency.value = 1100; f.Q.value = 0.5;
+  src.buffer = buf; src.connect(f); f.connect(g); g.connect(audioCtx.destination);
+  g.gain.setValueAtTime(0.55, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+  src.start(t); src.stop(t + 0.12);
+}
+
+function playHihat(t, open) {
+  const len = Math.floor(audioCtx.sampleRate * (open ? 0.07 : 0.025));
+  const buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = Math.random()*2-1;
+  const src = audioCtx.createBufferSource(), f = audioCtx.createBiquadFilter(), g = audioCtx.createGain();
+  f.type = 'highpass'; f.frequency.value = 9000;
+  src.buffer = buf; src.connect(f); f.connect(g); g.connect(audioCtx.destination);
+  g.gain.setValueAtTime(open ? 0.18 : 0.12, t);
+  g.gain.exponentialRampToValueAtTime(0.001, t + (open ? 0.07 : 0.025));
+  src.start(t); src.stop(t + 0.08);
+}
+
+function playBeatSound() {
+  if (!beatOn || !audioCtx) return;
+  const t = audioCtx.currentTime + 0.01;
+  if (hlPhase === 0)      { playKick(t); playHihat(t, false); }
+  else if (hlPhase === 1) { playClap(t); playHihat(t, false); }
+  else if (hlPhase === 2) { playKick(t); playHihat(t, false); }
+  else                    { playClap(t); playHihat(t, true); }
+  hlPhase = (hlPhase + 1) % 4;
+}
+
+function toggleBeat() {
+  beatOn = !beatOn;
+  if (beatOn) initAudio();
+  const b = document.getElementById('btn-beat');
+  b.classList.toggle('beat-on', beatOn);
+  b.textContent = beatOn ? '🥁 Stop' : '🥁 Beat';
+}
+
+// ══════════════════════════════════════════════
+//  COUNTDOWN
+// ══════════════════════════════════════════════
+let cdTimer = null;
+
+function startCountdown(callback) {
+  const overlay = document.getElementById('countdown');
+  const numEl   = document.getElementById('cd-num');
+  overlay.style.display = 'flex';
+  let count = 5;
+  const TICK = 700; // countdown ช้าลง อ่านได้ทัน
+
+  function tick() {
+    if (count > 0) {
+      numEl.className = '';
+      numEl.textContent = count;
+      numEl.style.animation = 'none';
+      void numEl.offsetWidth;
+      numEl.style.animation = `cdPop ${TICK}ms ease-in-out forwards`;
+      if (beatOn && audioCtx) {
+        const t = audioCtx.currentTime + 0.01;
+        playHihat(t, false);
+      }
+      count--;
+      cdTimer = setTimeout(tick, TICK);
+    } else {
+      numEl.className = 'go';
+      numEl.textContent = 'GO!';
+      numEl.style.animation = 'none';
+      void numEl.offsetWidth;
+      numEl.style.animation = `cdPop ${TICK}ms ease-in-out forwards`;
+      if (beatOn && audioCtx) {
+        const t = audioCtx.currentTime + 0.01;
+        playKick(t);
+        playHihat(t, true);
+      }
+      cdTimer = setTimeout(() => {
+        overlay.style.display = 'none';
+        callback();
+      }, TICK);
+    }
+  }
+  tick();
+}
+
+// ══════════════════════════════════════════════
+//  BEAT CYCLE — drives all highlight + sound
+// ══════════════════════════════════════════════
+function beatMs() { return 60000 / bpm; }
+
+// Global beat clock — เริ่มครั้งเดียวตอนเกมเริ่ม ไม่ reset ระหว่าง round
+let clockT0 = null, clockBeat = 0, roundOffset = 0;
+let isFirstRound = true;
+const HIDE_BEATS = 8;  // round 1 เท่านั้น: ซ่อนการ์ด ไฟกระพริบรอจังหวะ
+const WAIT_BEATS = 8;  // ทุก round: ไฟกระพริบ ดูการ์ด
+const CELL_BEATS = 8;  // ทุก round: ช่องวิ่ง c0–c7
+
+function startGlobalClock() {
+  clearTimeout(hlTimer);
+  clockT0 = audioNowMs();
+  clockBeat = 0;
+  roundOffset = 0;
+  isFirstRound = true;
+  clockTick();
+}
+
+// จบเกม (10/10): ปล่อยเพลงเล่นจบเองก่อน ไม่ตัดกลางคัน แล้วรอ 5 วิ ค่อยขึ้น popup
+function endGameAfterMusic() {
+  clearMusicEndedHandler();
+  const finishUp = () => { clearMusicEndedHandler(); endTimer = setTimeout(showEnd, 5000); };
+  if (musicOn && !bgMusic.paused && !bgMusic.ended) {
+    bgMusic.loop = false;             // เลิก loop ตรงนี้ ให้มันเล่นจบไฟล์จริง
+    musicEndedHandler = finishUp;
+    bgMusic.addEventListener('ended', musicEndedHandler, { once: true });
+  } else {
+    finishUp();
+  }
+}
+
+function clockTick() {
+  const beatInRound = clockBeat - roundOffset;
+  const d = document.getElementById('bdot');
+  const _p = (clockBeat % 2 === 0) ? 'pulse1' : 'pulse2';
+
+  if (isFirstRound) {
+    if (beatInRound < HIDE_BEATS) {
+      // ── round 1: ซ่อนการ์ด ──
+      if (d) { d.classList.remove('pulse1','pulse2'); d.classList.add(_p); }
+      playBeatSound();
+    } else {
+      const b = beatInRound - HIDE_BEATS;
+      if (b === 0) {
+        // เปิดการ์ดพร้อม grid-in animation
+        const grid = document.querySelector('#game-screen .grid');
+        if (grid) { grid.style.animation = 'none'; void grid.offsetWidth; grid.style.animation = ''; grid.style.opacity = ''; }
+      }
+      if (b < WAIT_BEATS) {
+        // ── round 1: ไฟกระพริบ ดูการ์ด ──
+        if (d) { d.classList.remove('pulse1','pulse2'); d.classList.add(_p); }
+        playBeatSound();
+      } else {
+        // ── round 1: ช่องวิ่ง ──
+        const ci = b - WAIT_BEATS;
+        if (ci < CELL_BEATS) {
+          const c = document.getElementById(`c${ci}`);
+          if (d) { d.classList.remove('pulse1','pulse2'); d.classList.add(_p); }
+          if (c) c.classList.add('hl');
+          playBeatSound();
+          if (ci === CELL_BEATS - 1 && autoMode) {
+            isFirstRound = false;
+            if (cur < gameSlides.length - 1) {
+              cur++;
+              roundOffset = clockBeat + 1;  // ต้อง +1 เหมือน round 2+ ไม่งั้น round 2 สั้นไป 1 บีท ทำให้ช่องขึ้นเร็วไป 1 บีทตลอดเกม
+              const _c = cur;
+              const _abs = clockT0 + (clockBeat + 1) * (60000 / bpm) - 50;
+              setTimeout(() => renderInPlace(_c), Math.max(0, _abs - audioNowMs()));
+            } else {
+              endGameAfterMusic();
+            }
+          }
+        }
+      }
+    }
+  } else {
+    if (beatInRound < WAIT_BEATS) {
+      // ── round 2+: ไฟกระพริบ ดูการ์ด ──
+      if (d) { d.classList.remove('pulse1','pulse2'); d.classList.add(_p); }
+      playBeatSound();
+    } else {
+      // ── round 2+: ช่องวิ่ง ──
+      const ci = beatInRound - WAIT_BEATS;
+      if (ci < CELL_BEATS) {
+        const c = document.getElementById(`c${ci}`);
+        if (d) { d.classList.remove('pulse1','pulse2'); d.classList.add(_p); }
+        if (c) c.classList.add('hl');
+        playBeatSound();
+        if (ci === CELL_BEATS - 1 && autoMode) {
+          if (cur < gameSlides.length - 1) {
+            cur++;
+            roundOffset = clockBeat + 1;  // +1 keeps rounds 16 beats each → phrase alignment consistent
+            const _c = cur;
+            const _abs = clockT0 + (clockBeat + 1) * (60000 / bpm) - 50;
+            setTimeout(() => renderInPlace(_c), Math.max(0, _abs - audioNowMs()));
+          } else {
+            endGameAfterMusic();
+          }
+        }
+      }
+    }
+  }
+
+  clockBeat++;
+  // absolute-time drift correction
+  const nextMs = clockT0 + clockBeat * (60000 / bpm);
+  hlTimer = setTimeout(clockTick, Math.max(0, nextMs - audioNowMs()));
+}
+
+function startBeatCycle() { /* ไม่ใช้แล้ว — ดู startGlobalClock */ }
+
+// ══════════════════════════════════════════════
+//  FLOW
+// ══════════════════════════════════════════════
+function showInstruction(g) {
+  activeGame = g;
+  document.getElementById('instr-card').innerHTML = instrHTML(g);
+  document.getElementById('instruction').style.display = 'flex';
+}
+
+function randomSlides(g, count = 10) {
+  const slides = [];
+  const lKeys = Object.keys(LC); // S E R T I
+  const dKeys = Object.keys(DC); // Left Right Up Down
+  const sKeys = Object.keys(SC); // white black pink red blue
+  for (let r = 1; r <= count; r++) {
+    let c;
+    if (g === 1) {
+      c = Array.from({length:8}, () => lKeys[Math.floor(Math.random()*lKeys.length)]);
+    } else if (g === 2) {
+      c = Array.from({length:8}, () => dKeys[Math.floor(Math.random()*dKeys.length)]);
+    } else {
+      c = Array.from({length:8}, () => {
+        const word = sKeys[Math.floor(Math.random()*sKeys.length)];
+        let ink;
+        do { ink = sKeys[Math.floor(Math.random()*sKeys.length)]; } while (ink === word);
+        return [word.toUpperCase(), ink];
+      });
+    }
+    slides.push({g, r, c});
+  }
+  return slides;
+}
+
+function startGame(g) {
+  initAudio(); // create audio ctx during user gesture
+  document.getElementById('instruction').style.display = 'none';
+  activeGame = g;
+  gameSlides = randomSlides(g); // random ทุกครั้งที่เริ่มใหม่
+  cur = 0;
+
+  document.getElementById('home').style.display = 'none';
+  const gs = document.getElementById('game-screen');
+  gs.style.display = 'flex';
+  gs.className = `bg${g}`;
+  document.getElementById('progress').style.width = '0%';
+  document.getElementById('btn-home-float').style.display = 'flex';
+
+  autoMode = true;
+  document.addEventListener('keydown', onKey);
+  render(0, true);
+  // ซ่อนการ์ด round 1 — เปิดตอน HIDE phase จบ (beat 8)
+  const _initGrid = document.querySelector('#game-screen .grid');
+  if (_initGrid) { _initGrid.style.animation = 'none'; _initGrid.style.opacity = '0'; }
+  startCountdown(() => { playMusic(); startGlobalClock(); });
+}
+
+function goHome() {
+  clearTimeout(hlTimer); clearTimeout(cdTimer); autoMode = false;
+  clearMusicEndedHandler();
+  document.getElementById('countdown').style.display = 'none';
+  pauseMusic();
+  document.removeEventListener('keydown', onKey);
+  document.getElementById('end-overlay').style.display = 'none';
+  document.getElementById('game-screen').style.display = 'none';
+  document.getElementById('instruction').style.display = 'none';
+  document.getElementById('progress').style.width = '0%';
+  document.getElementById('btn-home-float').style.display = 'none';
+  document.getElementById('home').style.display = 'flex';
+  activeGame = 0;
+}
+
+function showEnd() {
+  clearTimeout(hlTimer); autoMode = false;
+  pauseMusic();
+  const info = GEND[activeGame];
+  document.getElementById('end-icon').textContent  = info.icon;
+  document.getElementById('end-title').textContent = info.title;
+  document.getElementById('end-sub').textContent   = info.sub;
+  const eo = document.getElementById('end-overlay');
+  eo.style.display = 'flex';
+  eo.style.animation = 'none'; void eo.offsetWidth; eo.style.animation = '';
+}
+
+// ══════════════════════════════════════════════
+//  RENDER
+// ══════════════════════════════════════════════
+function render(idx, skipCycle = false) {
+  if (!skipCycle) clearTimeout(hlTimer);
+  const s = gameSlides[idx];
+  const gs = document.getElementById('game-screen');
+  const cells = s.c.map((cell, i) => buildCell(s.g, cell, i)).join('');
+  gs.innerHTML = `
+    <div class="header">
+      <div class="game-title">${GNAMES[s.g]}</div>
+      <div class="beat-right">
+        <span class="round-badge-inline">${s.r}/10</span>
+        <div class="beat-dot" id="bdot"></div>
+      </div>
+    </div>
+    <div class="grid">${cells}</div>`;
+  // round 2+: ขึ้นการ์ดทันที ไม่ต้องมี gridIn fade animation
+  if (skipCycle && idx > 0) {
+    const g = gs.querySelector('.grid');
+    if (g) g.style.animation = 'none';
+  }
+  document.getElementById('counter').textContent = `${idx+1} / 10`;
+  document.getElementById('progress').style.width = `${(idx+1)/10*100}%`;
+  if (!skipCycle) startBeatCycle();
+}
+
+// renderInPlace: update เฉพาะ content (ไม่ replace innerHTML ทั้งหมด) → เร็วกว่า render() ~10x
+// ใช้ตอน round transition (round 2+) เพื่อไม่ให้ JS บล็อก clockTick
+function renderInPlace(idx) {
+  const s = gameSlides[idx];
+  // update round badge
+  const badge = document.querySelector('.round-badge-inline');
+  if (badge) badge.textContent = `${s.r}/10`;
+  // update each cell in-place (keep the cell div, just update style + inner content)
+  for (let i = 0; i < 8; i++) {
+    const el = document.getElementById(`c${i}`);
+    if (!el) continue;
+    el.classList.remove('hl'); // reset highlight from previous round
+    if (s.g === 1) {
+      const col = LC[s.c[i]];
+      el.style.cssText = `--hl-color:${col}`;
+      el.innerHTML = `<span class="g1-letter" style="color:${col}">${s.c[i]}</span>`;
+    } else if (s.g === 2) {
+      const col = DC[s.c[i]];
+      el.style.cssText = `--hl-color:${col}`;
+      el.innerHTML = `<span class="g2-arrow" style="color:${col}">${arrowSVG(DA[s.c[i]])}</span>`;
+    } else {
+      const [word, cn] = s.c[i], col = SC[cn];
+      el.style.cssText = `--gc:${col};--hl-color:${col}`;
+      el.innerHTML = `<span class="g3-word" style="color:${col}">${word}</span>`;
+    }
+  }
+  document.getElementById('counter').textContent = `${idx+1} / 10`;
+  document.getElementById('progress').style.width = `${(idx+1)/10*100}%`;
+}
+
+function buildCell(g, cell, i) {
+  if (g === 1) {
+    const col = LC[cell];
+    return `<div class="cell" id="c${i}" style="--hl-color:${col}">
+      <span class="g1-letter" style="color:${col}">${cell}</span></div>`;
+  }
+  if (g === 2) {
+    const col = DC[cell];
+    return `<div class="cell" id="c${i}" style="--hl-color:${col}">
+      <span class="g2-arrow" style="color:${col}">${arrowSVG(DA[cell])}</span></div>`;
+  }
+  if (g === 3) {
+    const [word, cn] = cell, col = SC[cn];
+    return `<div class="cell" id="c${i}" style="--gc:${col};--hl-color:${col}">
+      <span class="g3-word" style="color:${col}">${word}</span></div>`;
+  }
+}
+
+// ══════════════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════════════
+function next() {
+  clearTimeout(hlTimer);
+  if (cur < gameSlides.length-1) { cur++; render(cur); }
+  else showEnd();
+}
+function prev() {
+  if (cur > 0) { clearTimeout(hlTimer); cur--; render(cur); }
+}
+
+function startAuto() {
+  autoMode = true;
+  const b = document.getElementById('btn-auto');
+  b.classList.add('active'); b.textContent = '⏸ Stop';
+}
+function stopAuto() {
+  autoMode = false;
+  const b = document.getElementById('btn-auto');
+  if (b) { b.classList.remove('active'); b.textContent = '▶ Auto'; }
+}
+function toggleAuto() { autoMode ? stopAuto() : startAuto(); }
+
+// ══════════════════════════════════════════════
+//  CONTROLS
+// ══════════════════════════════════════════════
+function showCtrls() {
+  const c = document.getElementById('controls');
+  c.classList.remove('fade'); clearTimeout(hideTimer);
+  hideTimer = setTimeout(() => c.classList.add('fade'), 4000);
+}
+
+function onKey(e) {
+  if (document.getElementById('end-overlay').style.display === 'flex') return;
+  if (document.getElementById('instruction').style.display === 'flex') return;
+  showCtrls();
+  if      (e.key==='ArrowRight'||e.key==='ArrowDown') { e.preventDefault(); stopAuto(); next(); }
+  else if (e.key==='ArrowLeft'||e.key==='ArrowUp')    { e.preventDefault(); stopAuto(); prev(); }
+  else if (e.key===' ')  { e.preventDefault(); toggleAuto(); }
+  else if (e.key==='Escape') goHome();
+  else if (e.key==='f'||e.key==='F') toggleFS();
+  else if (e.key==='b'||e.key==='B') toggleBeat();
+}
+
+document.getElementById('game-screen').addEventListener('click', () => {
+  if (document.getElementById('end-overlay').style.display !== 'flex') {
+    stopAuto(); next(); showCtrls();
+  }
+});
+document.addEventListener('mousemove', () => { if (activeGame) showCtrls(); });
+
+document.getElementById('btn-next').addEventListener('click', e => { e.stopPropagation(); stopAuto(); next(); });
+document.getElementById('btn-prev').addEventListener('click', e => { e.stopPropagation(); stopAuto(); prev(); });
+document.getElementById('btn-auto').addEventListener('click', e => { e.stopPropagation(); toggleAuto(); });
+document.getElementById('btn-music').addEventListener('click', e => { e.stopPropagation(); toggleMusic(); });
+document.getElementById('btn-beat').addEventListener('click', e => { e.stopPropagation(); toggleBeat(); });
+document.getElementById('btn-fs').addEventListener('click',   e => { e.stopPropagation(); toggleFS(); });
+document.getElementById('btn-tap').addEventListener('click',  e => { e.stopPropagation(); tapTempo(); });
+document.getElementById('btn-home-float').addEventListener('click', e => { e.stopPropagation(); goHome(); });
+// Music on by default — mark button active on load
+document.getElementById('btn-music').classList.add('beat-on');
+
+document.getElementById('bpm-slider').addEventListener('input', function() {
+  bpm = +this.value;
+  document.getElementById('bpm-label').textContent = bpm;
+});
+
+// ══════════════════════════════════════════════
+//  TAP TEMPO
+// ══════════════════════════════════════════════
+let tapTimes = [], tapResetTimer = null;
+function tapTempo() {
+  const now = performance.now();
+  clearTimeout(tapResetTimer);
+  tapTimes.push(now);
+  tapTimes = tapTimes.filter(t => now - t < 4000);
+  tapResetTimer = setTimeout(() => { tapTimes = []; }, 2500);
+  if (tapTimes.length >= 2) {
+    const intervals = [];
+    for (let i = 1; i < tapTimes.length; i++) intervals.push(tapTimes[i] - tapTimes[i-1]);
+    const avg = intervals.reduce((a,b) => a+b, 0) / intervals.length;
+    bpm = Math.round(Math.max(60, Math.min(180, 60000 / avg)));
+    document.getElementById('bpm-label').textContent = bpm;
+    document.getElementById('bpm-slider').value = bpm;
+  }
+  const btn = document.getElementById('btn-tap');
+  btn.classList.add('active');
+  setTimeout(() => btn.classList.remove('active'), 150);
+}
+
+// ══════════════════════════════════════════════
+//  AUTO BPM DETECTION (วิเคราะห์จากไฟล์เพลง)
+// ══════════════════════════════════════════════
+function setBPM(val) {
+  if (autoMode) return;  // ล็อค bpm ตอนเล่น — ห้ามเปลี่ยนกลางเกม
+  bpm = Math.max(60, Math.min(180, Math.round(val)));
+  document.getElementById('bpm-label').textContent = bpm;
+  document.getElementById('bpm-slider').value = bpm;
+}
+
+async function autoDetectBPM() {
+  try {
+    const resp = await fetch('music.mp3');
+    if (!resp.ok) return;
+    const arr = await resp.arrayBuffer();
+    const decCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const buf = await decCtx.decodeAudioData(arr);
+    decCtx.close();
+
+    const sr = buf.sampleRate;
+    const raw = buf.getChannelData(0);
+
+    // ── energy envelope at 10ms per hop ──
+    const HOP = Math.floor(sr * 0.01); // 10ms
+    const N   = Math.floor(raw.length / HOP);
+    const env = new Float32Array(N);
+    for (let i = 0; i < N; i++) {
+      let s = 0;
+      for (let j = 0; j < HOP; j++) s += raw[i * HOP + j] ** 2;
+      env[i] = Math.sqrt(s / HOP);
+    }
+
+    // ── onset strength: positive first-difference ──
+    const onset = new Float32Array(N);
+    for (let i = 1; i < N; i++) onset[i] = Math.max(0, env[i] - env[i - 1]);
+
+    // ── autocorrelation over first 30 s ──
+    const useN  = Math.min(N, Math.floor(30000 / 10));
+    // lag range: 60 BPM = 1000ms = 100 hops, 180 BPM = 333ms = 33 hops
+    const minL  = 33, maxL = 100;
+    let bestLag = minL, bestVal = -Infinity;
+
+    for (let lag = minL; lag <= maxL; lag++) {
+      let corr = 0;
+      for (let i = 0; i < useN - lag; i++) corr += onset[i] * onset[i + lag];
+      // boost harmonics: also check 2× and 0.5× lag
+      const lag2 = lag * 2;
+      if (lag2 <= maxL * 2) {
+        let c2 = 0;
+        for (let i = 0; i < useN - lag2; i++) c2 += onset[i] * onset[i + lag2];
+        corr += c2 * 0.5;
+      }
+      if (corr > bestVal) { bestVal = corr; bestLag = lag; }
+    }
+
+    const detectedBPM = 60000 / (bestLag * 10); // 10ms per hop
+    setBPM(detectedBPM);
+    console.log('[Say on Beat] Auto-detected BPM:', bpm);
+  } catch (e) {
+    console.log('[Say on Beat] BPM detection skipped:', e.message);
+  }
+}
+
+// autoDetectBPM disabled — bpm=180 is hardcoded to match time-stretched music.mp3
+// Running it changes bpm mid-game and breaks the absolute clock
+
+function toggleFS() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(()=>{});
+    document.getElementById('btn-fs').textContent = '✕ Exit';
+  } else {
+    document.exitFullscreen();
+    document.getElementById('btn-fs').textContent = '⛶';
+  }
+}
+</script>
+</body>
+</html>
