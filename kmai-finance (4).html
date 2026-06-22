@@ -1,0 +1,3611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KMAI Chat — ผลประกอบการ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20,400,0,0" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; font-family: 'Inter', sans-serif; }
+
+/* ── Tokens ── */
+:root {
+  --bg: #f3f4f6;
+  --white: #ffffff;
+  --text-primary: #1f1f1f;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+  --brand: #5B6CFF;
+  --brand-light: #eceeff;
+  --item-selected: rgba(0,0,0,0.06);
+  --item-hover: rgba(0,0,0,0.04);
+  --border: #e5e7eb;
+  --input-border: #9ca3af;
+  --sidebar-w: 248px;
+  --icon-nav-w: 64px;
+}
+
+/* ── Layout ── */
+#app { display: flex; height: 100vh; background: var(--bg); overflow: hidden; }
+
+/* ── Material Icons ── */
+.mi { font-family: 'Material Symbols Rounded'; font-size: 20px; font-weight: 400;
+  line-height: 1; display: inline-block; white-space: nowrap;
+  -webkit-font-smoothing: antialiased; user-select: none; }
+.mi-16 { font-size: 16px; }
+.mi-24 { font-size: 24px; }
+
+/* book_5 filled style */
+.mi-book5 {
+  font-family: 'Material Symbols Rounded';
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  line-height: 1; display: inline-block; white-space: nowrap;
+  -webkit-font-smoothing: antialiased; user-select: none;
+}
+
+/* ══════════════════════════════════════
+   EXPAND SIDEBAR
+══════════════════════════════════════ */
+#sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  height: 100%;
+  gap: 0;
+}
+#sidebar.hidden { display: none; }
+
+/* Header row: logo + toggle */
+.sb-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 40px;
+  flex-shrink: 0;
+  margin-bottom: 8px;
+}
+.sb-logo {
+  width: 36px; height: 36px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.sb-logo svg { width: 36px; height: 36px; }
+
+.sb-toggle {
+  width: 24px; height: 24px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; border: none; background: transparent;
+  color: var(--text-secondary); border-radius: 6px;
+  transition: background 0.15s;
+}
+.sb-toggle:hover { background: var(--item-hover); }
+.sb-toggle .mi { font-size: 20px; }
+
+/* Nav menu */
+.sb-menu { display: flex; flex-direction: column; flex-shrink: 0; margin-bottom: 8px; }
+
+.sb-item {
+  display: flex; align-items: center;
+  height: 36px;
+  padding: 4px 4px 4px 8px;
+  border-radius: 8px;
+  cursor: pointer; gap: 8px;
+  font-size: 14px; font-weight: 400;
+  color: var(--text-primary);
+  transition: background 0.15s;
+  white-space: nowrap; overflow: hidden;
+  user-select: none;
+}
+.sb-item:hover { background: var(--item-hover); }
+.sb-item.selected { background: var(--item-selected); }
+.sb-item.prominent { color: var(--brand); font-weight: 500; }
+.sb-item .mi-16 { flex-shrink: 0; color: currentColor; }
+.sb-item-label { overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0; }
+
+/* ── Recent item with ... button ── */
+.sb-recent-item {
+  display: flex; align-items: center;
+  height: 36px; padding: 4px 4px 4px 8px;
+  border-radius: 8px; cursor: pointer; gap: 4px;
+  font-size: 14px; font-weight: 400; color: var(--text-primary);
+  transition: background 0.15s;
+  white-space: nowrap; overflow: hidden;
+  user-select: none; position: relative;
+}
+.sb-recent-item:hover { background: var(--item-hover); }
+.sb-recent-item.selected { background: var(--item-selected); }
+
+.sb-recent-label {
+  flex: 1; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.sb-recent-pin {
+  color: var(--brand); font-size: 14px; flex-shrink: 0;
+}
+.sb-more-btn {
+  width: 24px; height: 24px; border-radius: 6px;
+  border: none; background: transparent; cursor: pointer;
+  color: var(--text-secondary); flex-shrink: 0;
+  display: none; align-items: center; justify-content: center;
+  transition: background 0.12s;
+}
+.sb-more-btn .mi { font-size: 16px; }
+.sb-more-btn:hover { background: rgba(0,0,0,0.06); }
+.sb-recent-item:hover .sb-more-btn,
+.sb-recent-item.menu-open .sb-more-btn { display: flex; }
+.sb-recent-item:hover .sb-recent-pin,
+.sb-recent-item.menu-open .sb-recent-pin { display: none; }
+
+/* ── Context menu ── */
+.ctx-menu {
+  position: fixed; z-index: 1000;
+  background: white; border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.14), 0 1px 4px rgba(0,0,0,0.08);
+  padding: 4px 0; min-width: 160px;
+  animation: fadeUp .1s ease both;
+}
+.ctx-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 16px; font-size: 14px; color: var(--text-primary);
+  cursor: pointer; transition: background 0.1s;
+  border: none; background: transparent;
+  width: 100%; text-align: left; font-family: 'Inter', sans-serif;
+}
+.ctx-item:hover { background: #f3f4f6; }
+.ctx-item .mi { font-size: 18px; color: var(--text-secondary); }
+.ctx-item.danger { color: #dc2626; }
+.ctx-item.danger .mi { color: #dc2626; }
+
+/* Recents section */
+.sb-section-label {
+  font-size: 12px; font-weight: 500;
+  color: var(--text-secondary);
+  padding: 8px 8px 4px 8px;
+  flex-shrink: 0;
+}
+
+.sb-recents {
+  flex: 1;
+  overflow-y: auto; overflow-x: hidden;
+  display: flex; flex-direction: column;
+  min-height: 0;
+}
+.sb-recents::-webkit-scrollbar { width: 4px; }
+.sb-recents::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 2px; }
+
+/* Footer: avatar */
+.sb-footer { flex-shrink: 0; padding-top: 8px; }
+.sb-avatar-btn {
+  display: flex; align-items: center;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer; gap: 8px;
+  border: none; background: transparent;
+  width: 100%; text-align: left;
+  transition: background 0.15s;
+  font-family: 'Inter', sans-serif;
+}
+.sb-avatar-btn:hover { background: var(--item-hover); }
+.avatar-circle {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--brand-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 500; color: var(--brand);
+  flex-shrink: 0;
+}
+.avatar-name {
+  font-size: 14px; font-weight: 600; color: var(--text-primary);
+  line-height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.avatar-texts { min-width: 0; flex: 1; }
+.avatar-chevron { color: var(--text-secondary); flex-shrink: 0; font-size: 20px; }
+
+/* ══════════════════════════════════════
+   COLLAPSE ICON NAV
+══════════════════════════════════════ */
+#icon-nav {
+  width: var(--icon-nav-w);
+  flex-shrink: 0;
+  background: var(--bg);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 0 8px;
+  height: 100%;
+  gap: 0;
+}
+#icon-nav.visible { display: flex; }
+
+.in-toggle {
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 8px; cursor: pointer; border: none; background: transparent;
+  color: var(--text-secondary); flex-shrink: 0;
+  transition: background 0.15s;
+  margin-bottom: 4px;
+}
+.in-toggle:hover { background: var(--item-hover); }
+.in-toggle .mi { font-size: 20px; }
+
+.in-logo {
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 12px;
+}
+.in-logo svg { width: 36px; height: 36px; }
+
+.in-icons { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+
+.in-icon-btn {
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 8px; cursor: pointer; border: none; background: transparent;
+  color: var(--text-secondary);
+  transition: background 0.15s;
+}
+.in-icon-btn:hover { background: var(--item-hover); }
+.in-icon-btn.prominent { color: var(--brand); }
+.in-icon-btn .mi { font-size: 20px; }
+
+.in-footer { flex-shrink: 0; padding-bottom: 0; }
+.in-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--brand-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 500; color: var(--brand);
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.in-avatar:hover { opacity: 0.8; }
+
+/* ══════════════════════════════════════
+   MAIN CONTENT AREA
+══════════════════════════════════════ */
+#main {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 8px 8px 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#content {
+  flex: 1;
+  background: var(--white);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ── Top Nav Bar ── */
+#top-nav {
+  flex-shrink: 0;
+  height: 72px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  background: var(--white);
+}
+.tnb-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+.tnb-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 24px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tnb-model-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  height: 24px;
+  padding: 0 8px;
+  background: #e5e7eb;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #484848;
+  cursor: pointer;
+  border: none;
+  font-family: 'Inter', sans-serif;
+  transition: background 0.15s;
+  white-space: nowrap;
+  width: fit-content;
+  align-self: flex-start;
+}
+.tnb-model-pill:hover { background: #d1d5db; }
+.tnb-model-pill .mi-16 { color: #6b7280; }
+
+/* ── Chat layout ── */
+#chat-home {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* Scrollable area — greeting + messages */
+#conv-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* center when greeting */
+  padding: 24px 24px 16px;
+  min-height: 0;
+}
+#conv-scroll::-webkit-scrollbar { width: 4px; }
+#conv-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 2px; }
+
+/* Switch to top-aligned once chat starts */
+#conv-scroll.chat-mode {
+  justify-content: flex-start;
+}
+
+/* Input section — always pinned at bottom */
+#input-section {
+  flex-shrink: 0;
+  padding: 0 24px 8px;
+  display: flex;
+  justify-content: center;
+}
+
+.greeting-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 788px;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.greeting-text {
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 60px;
+  background: linear-gradient(16.82deg, rgb(91, 108, 255) 45.55%, rgb(170, 183, 255) 83.702%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  width: 100%;
+}
+
+.greeting-sub {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  line-height: 24px;
+}
+
+/* ── Input box ── */
+.input-wrap {
+  width: 100%;
+  max-width: 788px;
+  flex-shrink: 0;
+}
+
+.input-box {
+  width: 100%;
+  border: 1px solid var(--input-border);
+  border-radius: 16px;
+  padding: 16px;
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  min-height: 108px;
+}
+.input-box:focus-within {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(91,108,255,0.08);
+}
+
+.input-textarea {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: 24px;
+  border: none; outline: none;
+  background: transparent;
+  resize: none;
+  width: 100%;
+  min-height: 24px;
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
+}
+.input-textarea::placeholder { color: var(--text-muted); }
+
+.input-control-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 36px;
+}
+
+.input-actions { display: flex; gap: 0; align-items: center; }
+
+.input-action-btn {
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 8px; cursor: pointer; border: none; background: transparent;
+  color: var(--text-secondary);
+  transition: background 0.15s;
+}
+.input-action-btn:hover { background: var(--item-hover); }
+.input-action-btn .mi { font-size: 24px; }
+
+.send-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%; border: none; cursor: pointer;
+  background: var(--brand);
+  display: flex; align-items: center; justify-content: center;
+  color: white; flex-shrink: 0;
+  transition: opacity 0.15s, transform 0.1s;
+  opacity: 0; pointer-events: none; transform: scale(0.8);
+}
+.send-btn.visible { opacity: 1; pointer-events: auto; transform: scale(1); }
+.send-btn:hover { background: #4a59e0; }
+.send-btn .mi { font-size: 20px; }
+
+/* ── Conversation area ── */
+#conv-area {
+  display: none;
+  flex-direction: column;
+  width: 100%;
+  max-width: 788px;
+  gap: 16px;
+  flex-shrink: 0;
+  margin-bottom: 8px;
+}
+#conv-area.visible { display: flex; }
+
+/* ── Attached file card (in conversation, Figma style) ── */
+.conv-file-card {
+  align-self: flex-end;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 10px 12px;
+  max-width: 220px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  animation: fadeUp .2s ease both;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.conv-file-icon {
+  width: 32px; height: 32px; flex-shrink: 0;
+}
+.conv-file-icon img { width: 32px; height: 32px; display: block; }
+.conv-file-info { min-width: 0; flex: 1; }
+.conv-file-name {
+  font-size: 12px; font-weight: 500; color: var(--text-primary);
+  line-height: 16px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.conv-file-size {
+  font-size: 11px; color: var(--text-muted); line-height: 16px; margin-top: 1px;
+}
+
+/* ── Citations ── */
+.citations-wrap {
+  margin-top: 12px;
+  animation: fadeUp .2s ease .1s both;
+}
+.citations-title {
+  font-size: 14px; font-weight: 600; color: var(--text-primary);
+  margin-bottom: 8px;
+}
+.citation-row {
+  display: flex; align-items: flex-start; gap: 8px;
+  margin-bottom: 6px; flex-wrap: wrap;
+}
+.citation-filename {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 8px;
+  background: #F3F4F6;
+  padding: 2px 10px;
+  font-size: 12px; font-weight: 500; color: #374151;
+  flex-shrink: 0; cursor: pointer; transition: background 0.12s;
+  white-space: nowrap;
+}
+.citation-filename:hover { background: #e5e7eb; }
+.citation-pages {
+  display: flex; flex-wrap: wrap; gap: 3px; align-items: center; padding-top: 2px;
+}
+.citation-page {
+  font-size: 12px; color: #6b7280; white-space: nowrap;
+}
+.citations-toggle {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 13px; color: #6b7280; cursor: pointer;
+  border: none; background: transparent; font-family: 'Inter', sans-serif;
+  padding: 4px 0; margin-top: 2px;
+  transition: color 0.12s;
+}
+.citations-toggle:hover { color: var(--text-primary); }
+.citations-toggle .mi { font-size: 16px; }
+
+/* ── Thinking step content types ── */
+.step-content { padding: 4px 0 10px 30px; display: none; }
+.step-content.visible { display: block; }
+
+.step-text {
+  font-size: 13px; color: #6b7280; line-height: 1.65;
+}
+.step-text.italic { font-style: italic; }
+
+.step-file-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 4px;
+}
+.step-file-item {
+  display: flex; align-items: center; gap: 6px;
+  background: white; border: 1px solid #e5e7eb; border-radius: 8px;
+  padding: 6px 10px; font-size: 12px; font-weight: 500; color: #374151;
+}
+.step-file-item img { width: 20px; height: 26px; flex-shrink: 0; }
+
+.step-queries { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
+.step-query-item {
+  display: flex; align-items: center; gap: 8px;
+  background: white; border: 1px solid #e5e7eb; border-radius: 6px;
+  padding: 6px 10px; font-size: 13px; color: #374151;
+}
+.step-query-item .mi { font-size: 16px; color: #6b7280; flex-shrink: 0; }
+
+.step-facts { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
+.step-fact-item {
+  display: flex; align-items: center; gap: 8px;
+  background: white; border: 1px solid #e5e7eb; border-radius: 6px;
+  padding: 6px 10px; font-size: 13px; color: #374151;
+}
+.step-fact-badge {
+  background: #f3f4f6; border-radius: 4px; padding: 1px 6px;
+  font-size: 11px; font-weight: 600; color: #6b7280; flex-shrink: 0;
+}
+
+.step-code-block {
+  background: #f3f4f6; border-radius: 8px; overflow: hidden;
+  margin-top: 4px;
+}
+.step-code-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 12px; font-size: 12px; color: #6b7280;
+  border-bottom: 1px solid #e5e7eb;
+}
+.step-code-body {
+  padding: 10px 12px; font-family: 'Consolas', monospace;
+  font-size: 12px; color: #111827; line-height: 1.7; overflow-x: auto;
+  white-space: pre;
+}
+
+.step-table { width: 100%; border-collapse: collapse; margin-top: 4px; font-size: 13px; }
+.step-table th, .step-table td {
+  border: 1px solid #e5e7eb; padding: 7px 12px; text-align: left;
+}
+.step-table th { background: #f9fafb; font-weight: 600; color: #374151; }
+.step-table td { color: #374151; }
+.step-table tr:last-child td { background: #f9fafb; }
+
+.step-error-box {
+  display: flex; align-items: center; gap: 8px;
+  background: #fff1f1; border: 1px solid #fecaca;
+  border-radius: 8px; padding: 8px 12px;
+  font-size: 13px; font-weight: 600; color: #dc2626;
+  margin-top: 4px;
+}
+.step-error-box .mi { font-size: 16px; }
+
+/* ── AI action row ── */
+.ai-actions {
+  display: flex; align-items: center; gap: 4px;
+  flex-wrap: wrap; margin-top: 8px;
+  animation: fadeUp .2s ease .15s both;
+}
+.ai-action-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 5px 8px; border-radius: 6px;
+  border: none; background: transparent;
+  font-size: 12px; font-weight: 500; color: var(--text-secondary);
+  cursor: pointer; font-family: 'Inter', sans-serif;
+  transition: background 0.12s, color 0.12s;
+  white-space: nowrap;
+}
+.ai-action-btn:hover { background: #f3f4f6; color: var(--text-primary); }
+.ai-action-btn .mi { font-size: 16px; }
+.ai-action-icon { /* icon-only buttons */
+  width: 28px; height: 28px; padding: 0;
+  justify-content: center;
+}
+.ai-action-divider {
+  width: 1px; height: 16px; background: #e5e7eb; margin: 0 2px; flex-shrink: 0;
+}
+
+/* Bubbles */
+.bubble-user {
+  align-self: flex-end;
+  background: #f3f4f6;
+  border-radius: 18px 18px 4px 18px;
+  padding: 12px 16px;
+  max-width: 720px;
+  font-size: 14px; color: var(--text-primary); line-height: 1.6;
+  animation: fadeUp .2s ease both;
+}
+.bubble-ai {
+  align-self: flex-start;
+  font-size: 14px; color: var(--text-primary); line-height: 1.75;
+  max-width: 720px;
+  animation: fadeUp .2s ease .1s both;
+}
+
+/* ── Thinking card ── */
+.thinking-card {
+  align-self: flex-start;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: white;
+  width: 100%; max-width: 540px;
+  overflow: hidden;
+  animation: fadeUp .2s ease both;
+}
+
+/* Header */
+.thinking-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 16px;
+  cursor: pointer; user-select: none;
+}
+.thinking-header-title {
+  flex: 1; font-size: 14px; font-weight: 600; color: var(--text-primary);
+}
+.thinking-header-right {
+  display: flex; align-items: center; gap: 4px;
+}
+.thinking-chevron { color: var(--text-secondary); font-size: 20px; transition: transform .2s; }
+.thinking-chevron.open { transform: rotate(180deg); }
+
+/* Flare icon (thinking in progress) */
+.thinking-star {
+  font-size: 20px; color: var(--brand);
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  flex-shrink: 0;
+  animation: thinkFlare 1.6s ease-in-out infinite;
+}
+@keyframes thinkFlare {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.6; transform: scale(0.88); }
+}
+
+/* Done icon */
+.thinking-done-icon {
+  display: flex;
+  width: 28px;
+  height: 28px;
+  padding: 4px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  aspect-ratio: 1/1;
+  border-radius: 100px;
+  background: #eceeff;
+  font-size: 18px; color: var(--brand);
+  font-variation-settings: 'FILL' 1;
+  box-sizing: border-box;
+}
+
+/* Steps container */
+.thinking-steps {
+  padding: 0 16px 12px;
+  display: flex; flex-direction: column; gap: 0;
+}
+.thinking-steps.hidden { display: none; }
+
+/* Step row */
+.thinking-step {
+  display: flex; flex-direction: column;
+}
+.thinking-step-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 0; cursor: pointer; user-select: none;
+  position: relative;
+}
+.thinking-step-row:hover { opacity: 0.85; }
+.thinking-step-label {
+  flex: 1; font-size: 14px; font-weight: 500; color: var(--text-primary);
+}
+.thinking-step.pending .thinking-step-label { color: #9ca3af; font-weight: 400; }
+.thinking-step-chevron { font-size: 16px; color: #9ca3af; }
+.thinking-step.done .thinking-step-chevron { color: var(--text-secondary); }
+
+/* Step icons */
+.step-icon-done {
+  width: 20px; height: 20px; flex-shrink: 0;
+  font-family: 'Material Symbols Rounded'; font-size: 20px;
+  color: var(--brand); line-height: 1;
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+  background: white;
+  border-radius: 50%;
+  position: relative; z-index: 1;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* Active: solid blue circle + pulsing outer rings */
+.step-icon-active {
+  width: 20px; height: 20px; flex-shrink: 0;
+  position: relative; display: flex; align-items: center; justify-content: center;
+  background: white; border-radius: 50%; z-index: 1;
+}
+.step-icon-active::before {
+  /* solid inner dot */
+  content: '';
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--brand);
+  position: relative; z-index: 1;
+}
+.step-icon-active::after {
+  /* pulsing outer ring */
+  content: '';
+  position: absolute;
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 2px solid var(--brand);
+  opacity: 0.5;
+  animation: stepPulse 1.4s ease-out infinite;
+}
+.step-ring-2 {
+  /* second ring delayed */
+  position: absolute;
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 1.5px solid var(--brand);
+  opacity: 0;
+  animation: stepPulse 1.4s ease-out 0.5s infinite;
+}
+@keyframes stepPulse {
+  0%   { width: 12px; height: 12px; opacity: 0.7; }
+  60%  { width: 22px; height: 22px; opacity: 0.25; }
+  100% { width: 28px; height: 28px; opacity: 0; }
+}
+
+.step-icon-pending {
+  width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%;
+  border: 2px solid #d1d5db; background: white;
+  position: relative; z-index: 1;
+}
+.step-icon-error {
+  width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%;
+  border: 2px solid #d1d5db;
+}
+
+/* Vertical connector between steps */
+.thinking-step {
+  position: relative;
+}
+/* Line goes from below the icon all the way to bottom of step (incl. expanded content) */
+.thinking-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 9px;
+  top: 34px;   /* 7px row-padding + 20px icon + 7px row-padding */
+  bottom: 0;
+  width: 2px;
+  background: #e5e7eb;
+  z-index: 0;
+}
+.thinking-step.done:not(:last-child)::after { background: var(--brand); opacity: 0.2; }
+.thinking-step.active:not(:last-child)::after { background: var(--brand); opacity: 0.15; }
+
+/* Step sub-text (active streaming) */
+.thinking-step-sub {
+  padding: 2px 0 6px 30px;
+  font-size: 13px; font-style: italic; color: #6b7280; line-height: 1.6;
+  display: none;
+}
+.thinking-step-sub.visible { display: block; }
+
+/* Error box */
+.thinking-error-box {
+  margin: 2px 0 6px 30px;
+  background: #fff1f1; border: 1px solid #fecaca;
+  border-radius: 8px; padding: 8px 12px;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 600; color: #dc2626; font-style: italic;
+}
+.thinking-error-box .mi { font-size: 16px; color: #dc2626; }
+
+/* Refresh btn in header */
+.thinking-refresh-btn {
+  border: none; background: transparent; cursor: pointer;
+  color: var(--text-secondary); padding: 0;
+  display: flex; align-items: center;
+}
+.thinking-refresh-btn .mi { font-size: 18px; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── Knowledge base popover (fixed, via JS positioning) ── */
+.kb-popover {
+  position: fixed;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.06);
+  padding: 12px 14px;
+  width: 210px;
+  display: none;
+  z-index: 500;
+  animation: fadeUp .12s ease both;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.kb-popover.open { display: block; }
+.kb-popover:hover { background: #f9fafb; }
+.kb-popover-row {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 4px;
+}
+.kb-popover-title {
+  font-size: 14px; font-weight: 600; color: var(--text-primary);
+}
+.kb-popover-sub {
+  font-size: 12px; color: var(--text-secondary); line-height: 1.4;
+  padding-left: 28px;
+}
+
+/* ── Knowledge base active pill (in control bar) ── */
+.kb-pill {
+  display: flex;
+  padding: 4px 12px;
+  align-items: center;
+  gap: 4px;
+  background: #dbeafe; color: #1d4ed8;
+  border-radius: 999px;
+  font-size: 12px; font-weight: 500;
+  animation: fadeUp .15s ease both;
+}
+.kb-pill .mi { font-size: 14px; }
+.kb-pill-remove {
+  border: none; background: transparent; cursor: pointer;
+  color: #1d4ed8; padding: 0; line-height: 1;
+  display: flex; align-items: center;
+  transition: opacity 0.12s;
+}
+.kb-pill-remove:hover { opacity: 0.7; }
+.kb-pill-remove .mi { font-size: 14px; }
+
+/* ── Tooltip ── */
+.tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1f1f1f;
+  color: white;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.12s;
+  z-index: 100;
+}
+.has-tooltip { position: relative; }
+.has-tooltip:hover .tooltip { opacity: 1; }
+/* hide tooltip when dropdown is open */
+#add-dropdown.open ~ * .tooltip,
+.has-tooltip:has(~ #add-dropdown.open) .tooltip,
+.dropdown-open .tooltip { opacity: 0 !important; pointer-events: none; }
+
+/* ── Dropdown ── */
+#add-dropdown {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.06);
+  padding: 4px 0;
+  min-width: 200px;
+  z-index: 200;
+  display: none;
+  animation: fadeUp .12s ease both;
+}
+#add-dropdown.open { display: block; }
+
+.dd-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 16px;
+  font-size: 14px; color: var(--text-primary);
+  cursor: pointer; transition: background 0.12s;
+  border: none; background: transparent;
+  width: 100%; text-align: left;
+  font-family: 'Inter', sans-serif;
+}
+.dd-item:hover { background: #f3f4f6; }
+.dd-item .mi { font-size: 20px; color: var(--text-secondary); }
+
+/* ── Drag-over state ── */
+.input-box.drag-over {
+  border-color: var(--brand) !important;
+  box-shadow: 0 0 0 3px rgba(91,108,255,0.10) !important;
+  background: #f0f4ff;
+}
+.drop-hint {
+  display: none;
+  align-items: center; justify-content: flex-end;
+  gap: 6px;
+  font-size: 14px; color: var(--brand);
+  font-weight: 500;
+  padding: 4px 0;
+  pointer-events: none;
+}
+.drop-hint.visible { display: flex; }
+
+/* ── File chips ── */
+.file-chips {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  padding-bottom: 4px;
+}
+.file-chips:empty { display: none; }
+
+/* ── Image preview (in input box) ── */
+.img-preview-wrap {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.img-preview {
+  width: 72px; height: 72px;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+  cursor: pointer;
+}
+.img-preview-remove {
+  position: absolute; top: -6px; right: -6px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: #1f1f1f; color: white;
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; line-height: 1;
+  transition: background 0.12s;
+}
+.img-preview-remove:hover { background: #374151; }
+.img-preview-remove .mi { font-size: 12px; }
+
+/* ── Image bubble in conversation ── */
+.conv-img-bubble {
+  align-self: flex-end;
+  max-width: 240px;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  animation: fadeUp .2s ease both;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+.conv-img-bubble img {
+  display: block; width: 100%; height: auto;
+  transition: opacity 0.15s;
+}
+.conv-img-bubble:hover img { opacity: 0.92; }
+
+/* ── Image lightbox ── */
+#img-lightbox {
+  display: none;
+  position: fixed; inset: 0; z-index: 5000;
+  background: rgba(0,0,0,0.75);
+  align-items: center; justify-content: center;
+  animation: fadeIn .18s ease both;
+}
+#img-lightbox.open { display: flex; }
+@keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
+
+.lightbox-inner {
+  position: relative;
+  max-width: 720px;
+  width: 90%;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.3);
+  animation: fadeUp .2s ease both;
+}
+.lightbox-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+.lightbox-filename {
+  font-size: 14px; font-weight: 500; color: var(--text-primary);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.lightbox-close {
+  width: 28px; height: 28px; border-radius: 6px;
+  border: none; background: transparent; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-secondary); flex-shrink: 0;
+  transition: background 0.12s;
+}
+.lightbox-close:hover { background: #f3f4f6; }
+.lightbox-close .mi { font-size: 20px; }
+.lightbox-img {
+  display: block; width: 100%; height: auto;
+  max-height: 70vh; object-fit: contain;
+}
+
+/* file-card — same as MFA */
+.file-card {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  width: 200px; max-height: 96px; box-sizing: border-box;
+  background: #f3f4f6; border: 1px solid #e5e7eb;
+  border-radius: 8px; padding: 8px; gap: 0;
+}
+.file-card-left {
+  display: flex; gap: 8px; align-items: center;
+  padding: 4px 0; flex: 1; min-width: 0;
+}
+.file-card-icon {
+  width: 24px; height: 32px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.file-card-icon img { width: 24px; height: 32px; display: block; }
+.file-card-text { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.file-card-name {
+  font-size: 12px; font-weight: 500; color: #1f1f1f;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  line-height: 18px;
+}
+.file-card-size { font-size: 10px; font-weight: 500; color: #6b7280; line-height: 14px; }
+.file-card-close {
+  background: none; border: none; cursor: pointer; color: #6b7280;
+  padding: 0; display: flex; align-items: center; flex-shrink: 0;
+  width: 20px; height: 20px; margin-top: 2px; transition: color 0.12s;
+}
+.file-card-close:hover { color: #1f1f1f; }
+.file-card-close .mi { font-size: 16px; }
+
+/* ── Error toast ── */
+#toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: #1f1f1f; color: white;
+  padding: 10px 16px; border-radius: 8px;
+  font-size: 13px; font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 9999;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+#toast.show { opacity: 1; }
+
+/* ── Disclaimer ── */
+.disclaimer {
+  font-size: 11px; color: var(--text-muted);
+  text-align: center; padding: 8px 16px 10px;
+  flex-shrink: 0; line-height: 16px;
+}
+
+/* ── Response table (AI answer) ── */
+.ai-response-table {
+  width: 100%; border-collapse: collapse;
+  margin: 10px 0; font-size: 13px; border-radius: 8px; overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+.ai-response-table th {
+  background: #f9fafb; font-weight: 600; color: #374151;
+  padding: 10px 12px; text-align: left; border-bottom: 1px solid #e5e7eb;
+  border-right: 1px solid #e5e7eb; white-space: nowrap;
+}
+.ai-response-table th:last-child { border-right: none; }
+.ai-response-table td {
+  padding: 9px 12px; color: #374151; border-bottom: 1px solid #f3f4f6;
+  border-right: 1px solid #f3f4f6; vertical-align: middle;
+}
+.ai-response-table td:last-child { border-right: none; }
+.ai-response-table tr:last-child td { border-bottom: none; background: #fafafa; }
+.ai-response-table tbody tr { opacity: 0; transform: translateY(6px); transition: opacity 0.3s ease, transform 0.3s ease; }
+.ai-response-table tbody tr.row-visible { opacity: 1; transform: translateY(0); }
+.ai-response-table .revenue-val { color: #059669; font-weight: 500; }
+.ai-response-table .expense-val { color: #dc2626; }
+.ai-response-table .profit-val  { color: #0b57d0; font-weight: 500; }
+
+/* Streaming cursor */
+.stream-cursor::after {
+  content: '▋';
+  display: inline-block;
+  color: var(--brand);
+  animation: blink 0.8s step-end infinite;
+  margin-left: 1px;
+  font-size: 0.85em;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ══ EXPAND SIDEBAR ══ -->
+  <div id="sidebar" class="hidden">
+    <div class="sb-header">
+      <div class="sb-logo">
+        <svg width="231" height="230" viewBox="0 0 231 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M183.979 85.2292C182.35 83.6 180.242 82.45 177.75 81.6833V75.3583C177.75 71.6208 176.217 67.8833 173.533 65.2L164.812 56.4792C162.129 53.7958 158.392 52.2625 154.654 52.2625H117.471L128.492 41.2417C130.408 39.325 130.408 36.3542 128.492 34.4375C126.575 32.5208 123.604 32.5208 121.688 34.4375L105.875 50.25L90.0625 34.4375C88.1458 32.5208 85.175 32.5208 83.2583 34.4375C81.3417 36.3542 81.3417 39.325 83.2583 41.2417L94.2792 52.2625H57.0958C53.3583 52.2625 49.6208 53.7958 46.9375 56.4792L38.2167 65.2C35.5333 67.8833 34 71.6208 34 75.3583V134.488C34 138.225 35.5333 141.963 38.2167 144.646L46.9375 153.367C49.6208 156.05 53.3583 157.583 57.0958 157.583H62.75V171.958C62.75 175.792 66.9667 178.092 70.225 175.983L81.3417 168.604L85.3667 172.629C88.05 175.312 91.7875 176.846 95.525 176.846H123.604L151.108 195.246C154.271 197.354 158.583 195.054 158.583 191.221V176.846H173.821C177.558 176.846 181.296 175.312 183.979 172.629L192.7 163.908C195.383 161.225 196.917 157.488 196.917 153.75V104.204C196.917 100.467 195.383 96.7292 192.7 94.0458L183.979 85.325V85.2292ZM168.167 134.583C168.167 135.829 167.688 137.075 166.729 137.938L158.008 146.658C157.146 147.521 155.9 148.096 154.654 148.096H96.2917C95.3333 148.096 94.375 148.383 93.6083 148.863L72.3333 163.046V152.792C72.3333 150.108 70.225 148 67.5417 148H57.0958C55.85 148 54.6042 147.521 53.7417 146.563L45.0208 137.842C44.1583 136.979 43.5833 135.733 43.5833 134.488V75.3583C43.5833 74.1125 44.0625 72.8667 45.0208 72.0042L53.7417 63.2833C54.6042 62.4208 55.85 61.8458 57.0958 61.8458H154.558C155.804 61.8458 157.05 62.325 157.913 63.2833L166.633 72.0042C167.496 72.8667 168.071 74.1125 168.071 75.3583V134.488L168.167 134.583Z" fill="#5B6CFF"/>
+<path d="M86.5937 100.208C89.2878 100.208 91.4045 98.1084 91.4045 95.4362V85.8926C91.4045 83.2204 89.2878 81.1208 86.5937 81.1208C83.8997 81.1208 81.783 83.2204 81.783 85.8926V95.4362C81.783 98.1084 83.8997 100.208 86.5937 100.208Z" fill="#5B6CFF"/>
+<path d="M125.08 100.208C127.774 100.208 129.891 98.1084 129.891 95.4362V85.8926C129.891 83.2204 127.774 81.1208 125.08 81.1208C122.386 81.1208 120.269 83.2204 120.269 85.8926V95.4362C120.269 98.1084 122.386 100.208 125.08 100.208Z" fill="#5B6CFF"/>
+<path d="M126.523 115.955L123.156 119.295H88.6142L85.2467 115.955C83.3224 114.046 80.3397 114.046 78.4154 115.955C76.4911 117.864 76.4911 120.822 78.4154 122.731L83.2262 127.503C84.0921 128.362 85.3429 128.934 86.5937 128.934H125.08C126.331 128.934 127.581 128.457 128.447 127.503L133.258 122.731C135.182 120.822 135.182 117.864 133.258 115.955C131.334 114.046 128.351 114.046 126.427 115.955H126.523Z" fill="#5B6CFF"/>
+</svg>
+      </div>
+      <button class="sb-toggle" onclick="collapseNav()" title="Collapse sidebar">
+        <span class="mi">right_panel_open</span>
+      </button>
+    </div>
+
+    <!-- Nav items -->
+    <div class="sb-menu">
+      <div class="sb-item prominent" onclick="newChat()">
+        <span class="mi mi-16">add_circle</span>
+        <span class="sb-item-label">New chat</span>
+      </div>
+    </div>
+    <div class="sb-menu">
+      <div class="sb-item" onclick="">
+        <span class="mi mi-16">search</span>
+        <span class="sb-item-label">Search chats</span>
+      </div>
+      <div class="sb-item" onclick="">
+        <span class="mi mi-16">forum</span>
+        <span class="sb-item-label">Chats</span>
+      </div>
+    </div>
+
+    <!-- Recents -->
+    <div class="sb-section-label">RECENTS</div>
+    <div class="sb-recents" id="sb-recents"></div>
+
+    <!-- Footer -->
+    <div class="sb-footer">
+      <button class="sb-avatar-btn">
+        <div class="avatar-circle">OP</div>
+        <div class="avatar-texts">
+          <div class="avatar-name">Orpawan Pongsawat</div>
+        </div>
+        <span class="mi avatar-chevron">keyboard_arrow_down</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ COLLAPSE ICON NAV ══ -->
+  <div id="icon-nav" class="visible">
+    <button class="in-toggle" onclick="expandNav()" title="Expand sidebar">
+      <span class="mi">left_panel_open</span>
+    </button>
+    <div class="in-logo">
+      <svg width="231" height="230" viewBox="0 0 231 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M183.979 85.2292C182.35 83.6 180.242 82.45 177.75 81.6833V75.3583C177.75 71.6208 176.217 67.8833 173.533 65.2L164.812 56.4792C162.129 53.7958 158.392 52.2625 154.654 52.2625H117.471L128.492 41.2417C130.408 39.325 130.408 36.3542 128.492 34.4375C126.575 32.5208 123.604 32.5208 121.688 34.4375L105.875 50.25L90.0625 34.4375C88.1458 32.5208 85.175 32.5208 83.2583 34.4375C81.3417 36.3542 81.3417 39.325 83.2583 41.2417L94.2792 52.2625H57.0958C53.3583 52.2625 49.6208 53.7958 46.9375 56.4792L38.2167 65.2C35.5333 67.8833 34 71.6208 34 75.3583V134.488C34 138.225 35.5333 141.963 38.2167 144.646L46.9375 153.367C49.6208 156.05 53.3583 157.583 57.0958 157.583H62.75V171.958C62.75 175.792 66.9667 178.092 70.225 175.983L81.3417 168.604L85.3667 172.629C88.05 175.312 91.7875 176.846 95.525 176.846H123.604L151.108 195.246C154.271 197.354 158.583 195.054 158.583 191.221V176.846H173.821C177.558 176.846 181.296 175.312 183.979 172.629L192.7 163.908C195.383 161.225 196.917 157.488 196.917 153.75V104.204C196.917 100.467 195.383 96.7292 192.7 94.0458L183.979 85.325V85.2292ZM168.167 134.583C168.167 135.829 167.688 137.075 166.729 137.938L158.008 146.658C157.146 147.521 155.9 148.096 154.654 148.096H96.2917C95.3333 148.096 94.375 148.383 93.6083 148.863L72.3333 163.046V152.792C72.3333 150.108 70.225 148 67.5417 148H57.0958C55.85 148 54.6042 147.521 53.7417 146.563L45.0208 137.842C44.1583 136.979 43.5833 135.733 43.5833 134.488V75.3583C43.5833 74.1125 44.0625 72.8667 45.0208 72.0042L53.7417 63.2833C54.6042 62.4208 55.85 61.8458 57.0958 61.8458H154.558C155.804 61.8458 157.05 62.325 157.913 63.2833L166.633 72.0042C167.496 72.8667 168.071 74.1125 168.071 75.3583V134.488L168.167 134.583Z" fill="#5B6CFF"/>
+<path d="M86.5937 100.208C89.2878 100.208 91.4045 98.1084 91.4045 95.4362V85.8926C91.4045 83.2204 89.2878 81.1208 86.5937 81.1208C83.8997 81.1208 81.783 83.2204 81.783 85.8926V95.4362C81.783 98.1084 83.8997 100.208 86.5937 100.208Z" fill="#5B6CFF"/>
+<path d="M125.08 100.208C127.774 100.208 129.891 98.1084 129.891 95.4362V85.8926C129.891 83.2204 127.774 81.1208 125.08 81.1208C122.386 81.1208 120.269 83.2204 120.269 85.8926V95.4362C120.269 98.1084 122.386 100.208 125.08 100.208Z" fill="#5B6CFF"/>
+<path d="M126.523 115.955L123.156 119.295H88.6142L85.2467 115.955C83.3224 114.046 80.3397 114.046 78.4154 115.955C76.4911 117.864 76.4911 120.822 78.4154 122.731L83.2262 127.503C84.0921 128.362 85.3429 128.934 86.5937 128.934H125.08C126.331 128.934 127.581 128.457 128.447 127.503L133.258 122.731C135.182 120.822 135.182 117.864 133.258 115.955C131.334 114.046 128.351 114.046 126.427 115.955H126.523Z" fill="#5B6CFF"/>
+</svg>
+    </div>
+    <div class="in-icons">
+      <button class="in-icon-btn prominent" onclick="newChat()" title="New chat">
+        <span class="mi">add_circle</span>
+      </button>
+      <button class="in-icon-btn" title="Search chats">
+        <span class="mi">search</span>
+      </button>
+      <button class="in-icon-btn" title="Chats">
+        <span class="mi">forum</span>
+      </button>
+    </div>
+    <div class="in-footer">
+      <div class="in-avatar" title="Orpawan Pongsawat">OP</div>
+    </div>
+  </div>
+
+  <!-- ══ MAIN AREA ══ -->
+  <div id="main">
+    <div id="content">
+
+      <!-- Top Nav Bar -->
+      <div id="top-nav">
+        <div class="tnb-left">
+          <div class="tnb-title" id="chat-title">New chat</div>
+          <button class="tnb-model-pill" id="model-pill">
+            <span id="model-label">Knowly</span>
+            <span class="mi mi-16">keyboard_arrow_down</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Chat Home / Conversation -->
+      <div id="chat-home">
+
+        <!-- Scrollable area -->
+        <div id="conv-scroll">
+          <!-- Conversation area -->
+          <div id="conv-area"></div>
+
+          <!-- Greeting (home state) -->
+          <div id="greeting-wrap" class="greeting-wrap">
+            <div class="greeting-text">👋 สวัสดี, Orpawan</div>
+            <div class="greeting-sub">วันนี้ต้องการให้ช่วยเรื่องอะไร?</div>
+          </div>
+        </div>
+
+        <!-- Input — pinned at bottom -->
+        <div id="input-section">
+        <div class="input-wrap">
+          <div class="input-box" id="input-box"
+               ondragover="onDragOver(event)"
+               ondragleave="onDragLeave(event)"
+               ondrop="onDrop(event)">
+
+            <!-- File chips (shown after file selected) -->
+            <div class="file-chips" id="file-chips"></div>
+
+            <textarea class="input-textarea" id="main-input" rows="1"
+              placeholder="Ask anything"
+              oninput="onInput(this)"
+              onkeydown="onKeydown(event)"></textarea>
+
+            <!-- Drop hint (shown on drag-over) -->
+            <div class="drop-hint" id="drop-hint">
+              <span class="mi" style="font-size:20px">attach_file</span>
+              Drop file here
+            </div>
+
+            <div class="input-control-bar">
+              <div class="input-actions">
+                <!-- + button with tooltip + dropdown -->
+                <div style="position:relative">
+                  <button class="input-action-btn" id="add-btn"
+                    onclick="toggleDropdown(event)">
+                    <span class="mi">add</span>
+                  </button>
+                  <!-- Dropdown -->
+                  <div id="add-dropdown">
+                    <button class="dd-item" onclick="triggerFilePicker()">
+                      <span class="mi">attach_file</span>
+                      Add file or photo
+                    </button>
+                  </div>
+                </div>
+                <!-- KB pill (shown when active) -->
+                <div id="kb-pill-wrap" style="display:none">
+                  <div class="kb-pill">
+                    <span class="mi" style="font-variation-settings:'FILL' 1">book_5</span>
+                    Knowledge base
+                    <button class="kb-pill-remove" onclick="deactivateKB()" title="Remove">
+                      <span class="mi">close</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Knowledge base button -->
+                <button class="input-action-btn" id="kb-btn"
+                  onclick="toggleKBPopover(event)">
+                  <span class="mi">instant_mix</span>
+                </button>
+              </div>
+              <button class="send-btn" id="send-btn" onclick="sendMessage()" title="Send">
+                <span class="mi">arrow_upward</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        </div><!-- /input-section -->
+
+        <!-- Hidden file input -->
+        <input type="file" id="file-input" style="display:none"
+          accept=".pdf,.docx,.xlsx,.png,.jpg,.jpeg"
+          onchange="onFileSelected(this)">
+
+      </div><!-- /chat-home -->
+
+      <div class="disclaimer">KMAI อาจเกิดข้อผิดพลาดได้ โปรดตรวจสอบข้อมูลสำคัญจากแหล่งอ้างอิงเสมอ</div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- KB Popover (fixed, outside input) -->
+<div class="kb-popover" id="kb-popover" onclick="activateKB()">
+  <div class="kb-popover-row">
+    <span class="mi-book5" style="font-size:22px;color:var(--brand)">book_5</span>
+    <span class="kb-popover-title">Knowledge base</span>
+  </div>
+  <div class="kb-popover-sub">This may take a longer time to process</div>
+</div>
+
+<!-- Image lightbox -->
+<div id="img-lightbox" onclick="closeLightbox(event)">
+  <div class="lightbox-inner" onclick="event.stopPropagation()">
+    <div class="lightbox-header">
+      <span class="lightbox-filename" id="lightbox-name"></span>
+      <button class="lightbox-close" onclick="closeLightbox()"><span class="mi">close</span></button>
+    </div>
+    <img class="lightbox-img" id="lightbox-img" src="" alt="">
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+// ── File type icons (inline SVG — document shape with dog-ear) ──
+function makeFileIconSVG(label, color) {
+  // 24x32 document shape, dog-ear top-right
+  const ear = 7;
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 32" width="24" height="32">
+  <path d="M0 3C0 1.34 1.34 0 3 0H17L24 7V29C24 30.66 22.66 32 21 32H3C1.34 32 0 30.66 0 29V3Z" fill="${color}"/>
+  <path d="M17 0L24 7H19C17.9 7 17 6.1 17 5V0Z" fill="rgba(0,0,0,0.18)"/>
+  <text x="12" y="26" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-weight="700" font-size="7" fill="white" letter-spacing="0.3">${label}</text>
+</svg>`)}`;
+}
+
+const FILE_ICONS = {
+  pdf:  makeFileIconSVG('PDF',  '#E53E3E'),
+  docx: makeFileIconSVG('DOCX', '#4169E1'),
+  doc:  makeFileIconSVG('DOC',  '#4169E1'),
+  xlsx: makeFileIconSVG('XLSX', '#22A06B'),
+  xls:  makeFileIconSVG('XLS',  '#22A06B'),
+  png:  makeFileIconSVG('PNG',  '#7C3AED'),
+  jpg:  makeFileIconSVG('JPG',  '#7C3AED'),
+  jpeg: makeFileIconSVG('JPEG', '#7C3AED'),
+};
+
+function getFileIconSrc(name) {
+  const ext = name.split('.').pop().toLowerCase();
+  return FILE_ICONS[ext] || makeFileIconSVG(ext.toUpperCase().slice(0,4), '#6b7280');
+}
+
+// ── Constants ──
+const ALLOWED_TYPES = ['application/pdf','application/vnd.openxmlformats-officedocument.wordprocessingml.document','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','image/png','image/jpeg'];
+const ALLOWED_EXT = ['.pdf','.docx','.xlsx','.png','.jpg','.jpeg'];
+const IMG_TYPES = ['image/png','image/jpeg','image/jpg'];
+const IMG_EXT = ['.png','.jpg','.jpeg'];
+
+function isImageFile(file) {
+  return IMG_TYPES.includes(file.type) || IMG_EXT.some(e => file.name.toLowerCase().endsWith(e));
+}
+
+// ── State ──
+let attachedFiles = [];
+let lastMessageFileName = null;
+
+// ── Nav Toggle ──
+function expandNav() {
+  document.getElementById('sidebar').classList.remove('hidden');
+  document.getElementById('icon-nav').classList.remove('visible');
+}
+function collapseNav() {
+  document.getElementById('sidebar').classList.add('hidden');
+  document.getElementById('icon-nav').classList.add('visible');
+}
+
+// ── Input ──
+function onInput(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 192) + 'px';
+  updateSendBtn();
+}
+function updateSendBtn() {
+  const hasText = document.getElementById('main-input').value.trim().length > 0;
+  const hasFile = attachedFiles.length > 0;
+  const btn = document.getElementById('send-btn');
+  if (hasText || hasFile) btn.classList.add('visible');
+  else btn.classList.remove('visible');
+}
+
+function onKeydown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+// ── Knowledge base ──
+let kbActive = false;
+
+function toggleKBPopover(e) {
+  e.stopPropagation();
+  if (kbActive) { deactivateKB(); return; }
+  const pop = document.getElementById('kb-popover');
+  const btn = document.getElementById('kb-btn');
+  const isOpen = !pop.classList.contains('open');
+
+  closeKBPopover();
+  if (!isOpen) return;
+
+  // Position above the button using fixed coords
+  const rect = btn.getBoundingClientRect();
+  const pw = 210, ph = 90;
+  let left = rect.left;
+  let top = rect.top - ph - 8;
+  if (left + pw > window.innerWidth - 8) left = window.innerWidth - pw - 8;
+  if (top < 8) top = rect.bottom + 8;
+  pop.style.top = top + 'px';
+  pop.style.left = left + 'px';
+  pop.classList.add('open');
+}
+
+function activateKB() {
+  kbActive = true;
+  document.getElementById('kb-popover').classList.remove('open');
+  document.getElementById('kb-pill-wrap').style.display = '';
+  // hide kb button while active
+  document.getElementById('kb-btn').style.display = 'none';
+  const tip = document.querySelector('#kb-btn .tooltip');
+  if (tip) tip.style.opacity = '';
+}
+
+function deactivateKB() {
+  kbActive = false;
+  document.getElementById('kb-pill-wrap').style.display = 'none';
+  document.getElementById('kb-btn').style.display = '';
+}
+
+function closeKBPopover() {
+  const pop = document.getElementById('kb-popover');
+  const btn = document.getElementById('kb-btn');
+  if (pop) pop.classList.remove('open');
+  if (btn) btn.classList.remove('popover-open');
+}
+
+// Close KB popover on outside click
+document.addEventListener('click', closeKBPopover);
+
+// ── Dropdown ──
+function toggleDropdown(e) {
+  e.stopPropagation();
+  const dd = document.getElementById('add-dropdown');
+  const btn = document.getElementById('add-btn');
+  const isOpen = dd.classList.toggle('open');
+  // hide tooltip while dropdown is open
+  btn.style.pointerEvents = isOpen ? 'none' : '';
+  btn.style.pointerEvents = ''; // keep clickable
+  const tip = btn.querySelector('.tooltip');
+  if (tip) tip.style.opacity = isOpen ? '0' : '';
+}
+function closeDropdown() {
+  const dd = document.getElementById('add-dropdown');
+  dd.classList.remove('open');
+  const tip = document.querySelector('#add-btn .tooltip');
+  if (tip) tip.style.opacity = '';
+}
+document.addEventListener('click', () => closeDropdown());
+
+// ── File picker ──
+function triggerFilePicker() {
+  closeDropdown();
+  document.getElementById('file-input').click();
+}
+
+function onFileSelected(input) {
+  const files = Array.from(input.files);
+  if (!files.length) return;
+
+  const invalid = files.filter(f => !ALLOWED_TYPES.includes(f.type) && !ALLOWED_EXT.some(ext => f.name.toLowerCase().endsWith(ext)));
+  if (invalid.length) { showToast('Only PDF, DOCX, XLSX, PNG, JPG files are supported'); input.value = ''; return; }
+  if (files.length > 1) { showToast('Only 1 file can be attached at a time'); input.value = ''; return; }
+  if (attachedFiles.length >= 1) { showToast('Remove the current file before adding a new one'); input.value = ''; return; }
+
+  const file = files[0];
+  if (isImageFile(file)) {
+    // Read as data URL for preview
+    const reader = new FileReader();
+    reader.onload = e => {
+      file._dataUrl = e.target.result;
+      attachedFiles.push(file);
+      renderFileChips();
+      updateSendBtn();
+    };
+    reader.readAsDataURL(file);
+  } else {
+    attachedFiles.push(file);
+    renderFileChips();
+    updateSendBtn();
+  }
+  input.value = '';
+}
+
+// ── Drag & Drop ──
+function onDragOver(e) {
+  e.preventDefault();
+  const box = document.getElementById('input-box');
+  const hint = document.getElementById('drop-hint');
+  box.classList.add('drag-over');
+  hint.classList.add('visible');
+}
+function onDragLeave(e) {
+  // Only remove if leaving the box entirely
+  if (!e.currentTarget.contains(e.relatedTarget)) {
+    const box = document.getElementById('input-box');
+    const hint = document.getElementById('drop-hint');
+    box.classList.remove('drag-over');
+    hint.classList.remove('visible');
+  }
+}
+function onDrop(e) {
+  e.preventDefault();
+  const box = document.getElementById('input-box');
+  const hint = document.getElementById('drop-hint');
+  box.classList.remove('drag-over');
+  hint.classList.remove('visible');
+
+  const files = Array.from(e.dataTransfer.files);
+  if (!files.length) return;
+
+  if (files.length > 1) { showToast('Only 1 file can be attached at a time'); return; }
+  const f = files[0];
+  const validType = ALLOWED_TYPES.includes(f.type) || ALLOWED_EXT.some(ext => f.name.toLowerCase().endsWith(ext));
+  if (!validType) { showToast('Unsupported file format. Use PDF, DOCX, XLSX, PNG, or JPG'); return; }
+  if (attachedFiles.length >= 1) { showToast('Remove the current file before adding a new one'); return; }
+
+  attachedFiles.push(f);
+  renderFileChips();
+  updateSendBtn();
+}
+
+// ── File chips ──
+function getFileIcon(name) {
+  const n = name.toLowerCase();
+  if (n.endsWith('.pdf')) return 'picture_as_pdf';
+  if (n.endsWith('.docx')) return 'article';
+  if (n.endsWith('.xlsx')) return 'table_chart';
+  if (n.endsWith('.png') || n.endsWith('.jpg') || n.endsWith('.jpeg')) return 'image';
+  return 'attach_file';
+}
+
+function formatSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+function renderFileChips() {
+  const container = document.getElementById('file-chips');
+  container.innerHTML = '';
+  attachedFiles.forEach((file, i) => {
+    if (isImageFile(file) && file._dataUrl) {
+      // Image: show thumbnail preview
+      const wrap = document.createElement('div');
+      wrap.className = 'img-preview-wrap';
+      wrap.innerHTML = `
+        <img class="img-preview" src="${file._dataUrl}" alt="${file.name}">
+        <button class="img-preview-remove" onclick="removeFile(${i})">
+          <span class="mi">close</span>
+        </button>`;
+      container.appendChild(wrap);
+    } else {
+      // Document: show file-card
+      const card = document.createElement('div');
+      card.className = 'file-card';
+      card.innerHTML = `
+        <div class="file-card-left">
+          <div class="file-card-icon">
+            <img src="${getFileIconSrc(file.name)}" alt="${file.name.split('.').pop().toUpperCase()}">
+          </div>
+          <div class="file-card-text">
+            <div class="file-card-name">${file.name}</div>
+            <div class="file-card-size">${formatSize(file.size)}</div>
+          </div>
+        </div>
+        <button class="file-card-close" onclick="removeFile(${i})" title="Remove">
+          <span class="mi">close</span>
+        </button>`;
+      container.appendChild(card);
+    }
+  });
+}
+
+function removeFile(i) {
+  attachedFiles.splice(i, 1);
+  renderFileChips();
+  updateSendBtn();
+}
+
+// ── Toast ──
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── Send ──
+function sendMessage() {
+  const input = document.getElementById('main-input');
+  const text = input.value.trim();
+  if (!text && attachedFiles.length === 0) return;
+
+  const convArea = document.getElementById('conv-area');
+  const convScroll = document.getElementById('conv-scroll');
+  const greetWrap = document.getElementById('greeting-wrap');
+  const title = document.getElementById('chat-title');
+  const modelPill = document.getElementById('model-pill');
+
+  // Switch layout
+  convScroll.classList.add('chat-mode');
+  greetWrap.style.display = 'none';
+  convArea.classList.add('visible');
+  const chatTitle = text ? (text.length > 40 ? text.slice(0, 40) + '…' : text) : attachedFiles[0]?.name || 'New chat';
+  title.textContent = chatTitle;
+  // model pill stays visible always
+
+  // Add to recents if this is a new chat (no selectedId or selectedId is null)
+  if (!selectedId) {
+    const newId = Date.now();
+    recents.unshift({ id: newId, title: chatTitle, pinned: false });
+    selectedId = newId;
+    renderRecents();
+  }
+
+  // File/image — separate element, right-aligned, above user bubble
+  if (attachedFiles.length) {
+    const f = attachedFiles[0];
+    if (isImageFile(f) && f._dataUrl) {
+      // Image bubble — clickable, opens lightbox
+      const imgBubble = document.createElement('div');
+      imgBubble.className = 'conv-img-bubble';
+      imgBubble.innerHTML = `<img src="${f._dataUrl}" alt="${f.name}">`;
+      imgBubble.onclick = () => openLightbox(f._dataUrl, f.name);
+      convArea.appendChild(imgBubble);
+    } else {
+      // Document file card
+      const fileCard = document.createElement('div');
+      fileCard.className = 'conv-file-card';
+      fileCard.innerHTML = `
+        <div class="conv-file-icon">
+          <img src="${getFileIconSrc(f.name)}" alt="${f.name.split('.').pop().toUpperCase()}">
+        </div>
+        <div class="conv-file-info">
+          <div class="conv-file-name">${f.name}</div>
+          <div class="conv-file-size">${formatSize(f.size)}</div>
+        </div>`;
+      convArea.appendChild(fileCard);
+    }
+  }
+
+  // User bubble — text only
+  if (text) {
+    const userBubble = document.createElement('div');
+    userBubble.className = 'bubble-user';
+    userBubble.textContent = text;
+    convArea.appendChild(userBubble);
+  }
+
+  // Thinking card — animated
+  const thinking = buildThinkingCard();
+  convArea.appendChild(thinking);
+  convScroll.scrollTop = convScroll.scrollHeight;
+
+  // Capture file name before clearing
+  lastMessageFileName = attachedFiles.length ? attachedFiles[0].name : null;
+
+  // Reset input
+  input.value = '';
+  input.style.height = 'auto';
+  attachedFiles = [];
+  renderFileChips();
+  document.getElementById('send-btn').classList.remove('visible');
+
+  // Animate thinking steps then resolve
+  const steps = isInflationQuery(text) ? INFLATION_THINKING_STEPS
+              : isContractQuery(text) ? CONTRACT_THINKING_STEPS
+              : isHealthcareQuery(text) ? HEALTHCARE_THINKING_STEPS
+              : isEducationQuery(text) ? EDUCATION_THINKING_STEPS
+              : isManufacturingQuery(text) ? MANUFACTURING_THINKING_STEPS
+              : isHRQuery(text) ? HR_THINKING_STEPS
+              : THINKING_STEPS;
+  animateThinking(thinking, convArea, convScroll, text, steps);
+}
+
+// ── New Chat ──
+function newChat() {
+  const convArea = document.getElementById('conv-area');
+  const convScroll = document.getElementById('conv-scroll');
+  const greetWrap = document.getElementById('greeting-wrap');
+  document.getElementById('chat-title').textContent = 'New chat';
+  document.getElementById('model-pill').style.display = '';
+  convArea.innerHTML = '';
+  convArea.classList.remove('visible');
+  greetWrap.style.display = '';
+  convScroll.classList.remove('chat-mode');
+  attachedFiles = [];
+  renderFileChips();
+  document.getElementById('send-btn').classList.remove('visible');
+  selectedId = null; // reset so next send creates a new entry
+  renderRecents();
+}
+
+// ── Recents data + render ──
+let recents = [
+  { id:2, title:'Best Banks for Low-Interest Loans in Thailand 2026', pinned:false },
+  { id:3, title:'Tips for Improving Credit Score', pinned:false },
+  { id:4, title:'Difference Between Secured and Unsecured Loans', pinned:false },
+  { id:5, title:'What Is a Good Credit Score?', pinned:false },
+  { id:6, title:'Which Bank Has the Best Savings Interest Rate?', pinned:false },
+  { id:7, title:'Steps to Get Approved for a Car Loan', pinned:false },
+  { id:8, title:'Understanding Loan Interest Rate Calculations', pinned:false },
+  { id:9, title:'How to Pay Off Credit Card Debt Faster', pinned:false },
+  { id:10, title:'Pros and Cons of Taking a Personal Loan', pinned:false },
+];
+let selectedId = null;
+
+function renderRecents() {
+  const container = document.getElementById('sb-recents');
+  container.innerHTML = '';
+  // Pinned first, then unpinned
+  const sorted = [...recents.filter(r=>r.pinned), ...recents.filter(r=>!r.pinned)];
+  sorted.forEach(chat => {
+    const el = document.createElement('div');
+    el.className = 'sb-recent-item' + (chat.id === selectedId ? ' selected' : '');
+    el.dataset.id = chat.id;
+    el.innerHTML = `
+      <span class="sb-recent-label">${chat.title}</span>
+      ${chat.pinned ? '<span class="mi sb-recent-pin" style="font-size:14px">push_pin</span>' : ''}
+      <button class="sb-more-btn" onclick="openCtxMenu(event, ${chat.id})" title="More options">
+        <span class="mi">more_horiz</span>
+      </button>`;
+    el.addEventListener('click', e => {
+      if (e.target.closest('.sb-more-btn')) return;
+      selectChat(chat.id);
+    });
+    container.appendChild(el);
+  });
+}
+
+function selectChat(id) {
+  selectedId = id;
+  renderRecents();
+  loadConversation(id);
+}
+
+// ── Context menu ──
+let activeCtxMenu = null;
+
+function openCtxMenu(e, chatId) {
+  e.stopPropagation();
+  closeCtxMenu();
+
+  const chat = recents.find(r => r.id === chatId);
+  const btn = e.currentTarget;
+  btn.closest('.sb-recent-item').classList.add('menu-open');
+
+  const menu = document.createElement('div');
+  menu.className = 'ctx-menu';
+  menu.innerHTML = `
+    <button class="ctx-item" onclick="pinChat(${chatId})">
+      <span class="mi">push_pin</span>${chat.pinned ? 'Unpin' : 'Pin'}
+    </button>
+    <button class="ctx-item" onclick="renameChat(${chatId})">
+      <span class="mi">edit</span>Rename
+    </button>
+    <button class="ctx-item" onclick="archiveChat(${chatId})">
+      <span class="mi">inventory_2</span>Archive
+    </button>
+    <button class="ctx-item danger" onclick="deleteChat(${chatId})">
+      <span class="mi">delete</span>Delete
+    </button>`;
+
+  document.body.appendChild(menu);
+  activeCtxMenu = menu;
+
+  // Position near the button
+  const rect = btn.getBoundingClientRect();
+  const menuW = 160, menuH = 160;
+  let top = rect.bottom + 4;
+  let left = rect.left;
+  if (left + menuW > window.innerWidth - 8) left = rect.right - menuW;
+  if (top + menuH > window.innerHeight - 8) top = rect.top - menuH - 4;
+  menu.style.top = top + 'px';
+  menu.style.left = left + 'px';
+}
+
+function closeCtxMenu() {
+  if (activeCtxMenu) { activeCtxMenu.remove(); activeCtxMenu = null; }
+  document.querySelectorAll('.sb-recent-item.menu-open').forEach(el => el.classList.remove('menu-open'));
+}
+
+document.addEventListener('click', closeCtxMenu);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCtxMenu(); });
+
+// ── Chat actions ──
+function pinChat(id) {
+  const chat = recents.find(r => r.id === id);
+  if (chat) chat.pinned = !chat.pinned;
+  closeCtxMenu();
+  renderRecents();
+}
+
+function renameChat(id) {
+  const chat = recents.find(r => r.id === id);
+  if (!chat) return;
+  closeCtxMenu();
+  const name = prompt('Rename chat:', chat.title);
+  if (name && name.trim()) {
+    chat.title = name.trim();
+    if (selectedId === id) document.getElementById('chat-title').textContent = chat.title;
+    renderRecents();
+  }
+}
+
+function archiveChat(id) {
+  recents = recents.filter(r => r.id !== id);
+  if (selectedId === id) selectedId = null;
+  closeCtxMenu();
+  renderRecents();
+}
+
+function deleteChat(id) {
+  recents = recents.filter(r => r.id !== id);
+  if (selectedId === id) selectedId = null;
+  closeCtxMenu();
+  renderRecents();
+}
+
+// Init recents on load
+renderRecents();
+
+// ── Thinking card builder & animator ──
+const THINKING_STEPS = [
+  {
+    label: 'วิเคราะห์คำขอ',
+    sub: 'กำลังระบุความต้องการ: ดูผลประกอบการไตรมาสล่าสุด เรียงตามรายได้…',
+    contentType: 'text',
+    content: 'คำขอเป็นการขอสรุปผลประกอบการทางการเงิน ไตรมาสล่าสุด (Q1/2026) จัดเรียงตามรายได้สูงสุด — ต้องดึงข้อมูลจากรายงานการเงินและ dashboard หลายไฟล์'
+  },
+  {
+    label: 'กำหนดแนวทางค้นหา',
+    sub: 'สร้าง queries สำหรับค้นหาข้อมูลผลประกอบการ…',
+    contentType: 'queries',
+    content: [
+      'ผลประกอบการรายได้ไตรมาส 1/2026 แยกตามหน่วยธุรกิจ',
+      'ค่าใช้จ่ายและกำไรสุทธิ Q1 2026 summary',
+      'Financial performance dashboard Q1 revenue ranking',
+      'Executive summary Q1 2026 business segment'
+    ]
+  },
+  {
+    label: 'ค้นหาเอกสาร',
+    sub: 'กำลังค้นหาในไฟล์รายงานการเงิน…',
+    contentType: 'files',
+    content: ['Q1_2026_Revenue_Report.pdf', 'Financial_Performance_Dashboard.xlsx', 'Executive_Summary_Q1_2026.pdf']
+  },
+  {
+    label: 'ดึงข้อมูลหลัก',
+    sub: 'กำลังดึงตัวเลขรายได้และกำไรต่อหน่วยธุรกิจ…',
+    contentType: 'facts',
+    content: [
+      '[4] โซลูชันองค์กร (คำลิสกิตรีซอฟต์แวร์): รายได้ ฿38.2M',
+      '[5] บริการทางการเงิน (ระบบชำระเงินดิจิทัล): รายได้ ฿31.4M',
+      '[12] การผลิต (อุปกรณ์อุตสาหกรรม): รายได้ ฿27.1M',
+      '[34] โซลูชันองค์กร (บริการคลาวด์): รายได้ ฿24.5M'
+    ]
+  },
+  {
+    label: 'จัดเรียงและสรุปผล',
+    sub: 'จัดเรียงข้อมูลตามรายได้สูงสุดและเตรียมตารางสรุป…',
+    contentType: 'table',
+    content: {
+      headers: ['หมวดธุรกิจ', 'รายได้ (Q1/2026)', 'กำไรสุทธิ'],
+      rows: [
+        ['โซลูชันองค์กร', '฿ 38.2M', '฿ 14.1M'],
+        ['บริการทางการเงิน', '฿ 31.4M', '฿ 11.6M'],
+        ['การผลิต', '฿ 27.1M', '฿ 8.2M'],
+        ['การแก้ไขความตกลง', '฿ 21.8M', '฿ 7.6M']
+      ]
+    }
+  },
+  {
+    label: 'ประมวลผลคำตอบ',
+    sub: 'สังเคราะห์ข้อมูลทั้งหมดเป็นตารางพร้อม citations…',
+    contentType: 'text',
+    content: 'จัดรูปแบบตารางสรุปผลประกอบการ ไตรมาส 1/2026 เรียงตามรายได้สูงสุด พร้อมอ้างอิงเอกสารต้นฉบับ 3 ไฟล์'
+  },
+];
+
+function buildStepContent(step) {
+  const wrap = document.createElement('div');
+  wrap.className = 'step-content';
+  const { contentType, content } = step;
+
+  if (contentType === 'text') {
+    wrap.innerHTML = `<div class="step-text">${content}</div>`;
+  } else if (contentType === 'files') {
+    const grid = content.map(f =>
+      `<div class="step-file-item"><img src="${getFileIconSrc(f)}" style="width:20px;height:26px;flex-shrink:0">${f}</div>`
+    ).join('');
+    wrap.innerHTML = `<div class="step-file-grid">${grid}</div>`;
+  } else if (contentType === 'queries') {
+    const items = content.map(q =>
+      `<div class="step-query-item"><span class="mi">sync_alt</span>${q}</div>`
+    ).join('');
+    wrap.innerHTML = `<div class="step-queries">${items}</div>`;
+  } else if (contentType === 'facts') {
+    const items = content.map(f => {
+      const match = f.match(/^\[(\d+)\]\s*(.*)/);
+      const badge = match ? `<span class="step-fact-badge">[${match[1]}]</span>` : '';
+      const text = match ? match[2] : f;
+      return `<div class="step-fact-item">${badge}${text}</div>`;
+    }).join('');
+    wrap.innerHTML = `<div class="step-facts">${items}</div>`;
+  } else if (contentType === 'table') {
+    const { headers, rows } = content;
+    const ths = headers.map(h => `<th>${h}</th>`).join('');
+    const trs = rows.map(r => `<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('');
+    wrap.innerHTML = `<table class="step-table"><thead><tr>${ths}</tr></thead><tbody>${trs}</tbody></table>`;
+  } else if (contentType === 'error') {
+    wrap.innerHTML = `<div class="step-error-box"><span class="mi">warning</span>${content}</div>`;
+  }
+  return wrap;
+}
+
+function buildThinkingCard() {
+  const card = document.createElement('div');
+  card.className = 'thinking-card';
+
+  // Header
+  const header = document.createElement('div');
+  header.className = 'thinking-header';
+  header.innerHTML = `
+    <span class="mi thinking-star">flare</span>
+    <span class="thinking-header-title">Thinking</span>
+    <div class="thinking-header-right">
+      <span class="mi thinking-chevron">expand_more</span>
+    </div>`;
+  card.appendChild(header);
+
+  // Steps
+  const stepsWrap = document.createElement('div');
+  stepsWrap.className = 'thinking-steps';
+  card.appendChild(stepsWrap);
+
+  // Toggle expand/collapse
+  let stepsOpen = true;
+  header.addEventListener('click', () => {
+    stepsOpen = !stepsOpen;
+    stepsWrap.classList.toggle('hidden', !stepsOpen);
+    header.querySelector('.thinking-chevron').classList.toggle('open', stepsOpen);
+  });
+  header.querySelector('.thinking-chevron').classList.add('open');
+
+  card._stepsWrap = stepsWrap;
+  card._header = header;
+  return card;
+}
+
+function makeStepEl(step, state) {
+  // state: 'done' | 'active' | 'pending'
+  const el = document.createElement('div');
+  el.className = 'thinking-step ' + state;
+
+  let iconHtml;
+  if (state === 'done')    iconHtml = `<span class="step-icon-done mi">check_circle</span>`;
+  else if (state === 'active') iconHtml = `<div class="step-icon-active"><div class="step-ring-2"></div></div>`;
+  else                     iconHtml = `<div class="step-icon-pending"></div>`;
+
+  const chevronHtml = state === 'pending'
+    ? `<span class="mi thinking-step-chevron" style="visibility:hidden">expand_more</span>`
+    : `<span class="mi thinking-step-chevron">expand_more</span>`;
+
+  el.innerHTML = `
+    <div class="thinking-step-row">
+      ${iconHtml}
+      <span class="thinking-step-label">${step.label}</span>
+      ${chevronHtml}
+    </div>
+    <div class="thinking-step-sub${state === 'active' ? ' visible' : ''}">${step.sub}</div>`;
+
+  // Toggle sub on click
+  if (state !== 'pending') {
+    const row = el.querySelector('.thinking-step-row');
+    const sub = el.querySelector('.thinking-step-sub');
+    const chev = el.querySelector('.thinking-step-chevron');
+    row.addEventListener('click', () => {
+      const open = sub.classList.toggle('visible');
+      chev.textContent = open ? 'expand_less' : 'expand_more';
+    });
+  }
+  return el;
+}
+
+function animateThinking(card, convArea, convScroll, queryText, customSteps) {
+  const stepsWrap = card._stepsWrap;
+  const startTime = Date.now();
+  const stepEls = [];
+  const STEPS = customSteps || THINKING_STEPS;
+
+  function markDone(i) {
+    const el = stepEls[i];
+    el.className = 'thinking-step done';
+
+    // Replace row with done state
+    el.querySelector('.thinking-step-row').innerHTML = `
+      <span class="step-icon-done mi">check_circle</span>
+      <span class="thinking-step-label">${STEPS[i].label}</span>
+      <span class="mi thinking-step-chevron">expand_more</span>`;
+
+    // Remove streaming sub-text, replace with rich content
+    const oldSub = el.querySelector('.thinking-step-sub');
+    if (oldSub) oldSub.remove();
+    const richContent = buildStepContent(STEPS[i]);
+    el.appendChild(richContent);
+
+    // Toggle on row click
+    const row = el.querySelector('.thinking-step-row');
+    const chev = el.querySelector('.thinking-step-chevron');
+    row.addEventListener('click', () => {
+      const open = richContent.classList.toggle('visible');
+      chev.textContent = open ? 'expand_less' : 'expand_more';
+    });
+  }
+
+  function activateStep(i) {
+    if (i >= STEPS.length) {
+      // Mark last step done, then collapse
+      markDone(i - 1);
+      setTimeout(() => {
+        const elapsed = ((Date.now() - startTime) / 1000).toFixed(2);
+        collapseThinking(card, elapsed);
+        setTimeout(() => showAIResponse(convArea, convScroll, queryText), 400);
+      }, 300);
+      return;
+    }
+
+    // Mark previous as done
+    if (i > 0) markDone(i - 1);
+
+    // Add new step to DOM (one by one)
+    const el = makeStepEl(STEPS[i], 'active');
+    stepsWrap.appendChild(el);
+    stepEls.push(el);
+
+    convScroll.scrollTop = convScroll.scrollHeight;
+
+    const delay = 700 + Math.random() * 500;
+    setTimeout(() => activateStep(i + 1), delay);
+  }
+
+  setTimeout(() => activateStep(0), 300);
+}
+
+function collapseThinking(card, elapsed) {
+  const header = card._header;
+  const stepsWrap = card._stepsWrap;
+
+  // All steps already marked done by animateThinking
+
+  // Replace header with collapsed version
+  header.innerHTML = `
+    <span class="mi thinking-done-icon" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24">check_circle</span>
+    <span class="thinking-header-title" style="font-weight:400;color:#6b7280">Thought for ${elapsed}s</span>
+    <div class="thinking-header-right">
+      <span class="mi thinking-chevron">expand_more</span>
+    </div>`;
+
+  // Collapse steps
+  stepsWrap.classList.add('hidden');
+
+  // Re-bind toggle
+  let open = false;
+  header.addEventListener('click', () => {
+    open = !open;
+    stepsWrap.classList.toggle('hidden', !open);
+    header.querySelector('.thinking-chevron').classList.toggle('open', open);
+  });
+}
+
+// ── Contract query detection ──
+function isContractQuery(text) {
+  return text && (text.includes('สัญญา') || text.includes('ต่ออายุ') || text.includes('ชำระงวด'));
+}
+
+// ── Contract thinking steps ──
+const CONTRACT_THINKING_STEPS = [
+  { label: 'วิเคราะห์คำขอ', sub: 'ระบุเงื่อนไข: งวดชำระสุดท้ายเดือนนี้ + แบ่งตามสถานะต่ออายุ…',
+    contentType: 'text',
+    content: 'คำขอมี 2 เงื่อนไข: (1) สัญญาบริการที่มีงวดชำระสุดท้ายในเดือนมิถุนายน 2568 และ (2) แบ่งตามสถานะการตั้งค่าต่ออายุอัตโนมัติ — จะค้นหาจากฐานข้อมูลสัญญา' },
+  { label: 'ค้นหาในฐานข้อมูลสัญญา', sub: 'กรองสัญญาที่มีกำหนดชำระงวดสุดท้ายในเดือนนี้…',
+    contentType: 'files',
+    content: ['Service_Contracts_Database.xlsx', 'Contract_Terms_2568.pdf'] },
+  { label: 'กรองตามเงื่อนไข', sub: 'พบสัญญา 5 รายการ — ดึงข้อมูลสถานะต่ออายุ…',
+    contentType: 'facts',
+    content: [
+      'Microsoft 365 Business — งวดสุดท้าย: 30 มิ.ย. 68 | Auto-renewal: ✓',
+      'Adobe Creative Cloud — งวดสุดท้าย: 15 มิ.ย. 68 | Auto-renewal: ✓',
+      'Salesforce CRM — งวดสุดท้าย: 28 มิ.ย. 68 | Auto-renewal: ✓',
+      'AWS Cloud Services — งวดสุดท้าย: 20 มิ.ย. 68 | Auto-renewal: ✗',
+      'Zoom Business — งวดสุดท้าย: 25 มิ.ย. 68 | Auto-renewal: ✗',
+    ] },
+  { label: 'จัดกลุ่มผลลัพธ์', sub: 'แบ่งเป็น: ตั้งค่าต่ออายุแล้ว 3 รายการ / ยังไม่ได้ตั้งค่า 2 รายการ…',
+    contentType: 'text',
+    content: 'สัญญาที่ตั้งค่าต่ออายุอัตโนมัติ: 3 รายการ — สัญญาที่ต้องดำเนินการ: 2 รายการ (AWS หมดอายุใน 12 วัน, Zoom หมดอายุใน 17 วัน)' },
+  { label: 'ประมวลผลสรุป', sub: 'จัดเรียงตามลำดับความเร่งด่วน…',
+    contentType: 'text',
+    content: 'สรุปรายการสัญญาทั้งหมด พร้อมระบุสัญญาที่ต้องดำเนินการต่ออายุหรือยกเลิกภายใน 12–17 วัน' },
+];
+
+// ── Contract response data ──
+const CONTRACT_RESPONSE = {
+  intro: 'พบสัญญาบริการ 5 รายการ ที่มีกำหนดชำระงวดสุดท้ายในเดือนมิถุนายน 2568',
+  heading: 'สัญญาที่ตั้งค่าต่ออายุอัตโนมัติแล้ว (3 รายการ)',
+  tableHeaders: ['ชื่อสัญญา', 'งวดสุดท้าย', 'มูลค่า/เดือน', 'สถานะ'],
+  tableRows: [
+    ['Microsoft 365 Business', '30 มิ.ย. 68', '฿32,500', 'ต่ออายุอัตโนมัติ ✓'],
+    ['Adobe Creative Cloud', '15 มิ.ย. 68', '฿18,200', 'ต่ออายุอัตโนมัติ ✓'],
+    ['Salesforce CRM', '28 มิ.ย. 68', '฿85,000', 'ต่ออายุอัตโนมัติ ✓'],
+  ],
+  actionHeading: 'สัญญาที่ยังไม่ได้ตั้งค่าต่ออายุ — ต้องดำเนินการ',
+  actionItems: [
+    'AWS Cloud Services — งวดสุดท้าย 20 มิ.ย. 68 | ฿124,800/เดือน | ต้องต่ออายุหรือยกเลิกภายใน 12 วัน',
+    'Zoom Business — งวดสุดท้าย 25 มิ.ย. 68 | ฿9,600/เดือน | ต้องต่ออายุหรือยกเลิกภายใน 17 วัน',
+  ],
+  citations: [
+    { name: 'Service_Contracts_Database.xlsx', pages: [1,2,3] },
+    { name: 'Contract_Terms_2568.pdf',         pages: [5] },
+  ]
+};
+
+// ── HR query detection ──
+function isHRQuery(text) {
+  return text && (text.includes('สิทธิ์') || text.includes('สวัสดิการ') || text.includes('ค่ารักษาพยาบาล') || text.includes('รักษาพยาบาล') || text.includes('Medical'));
+}
+
+// ── HR thinking steps ──
+const HR_THINKING_STEPS = [
+  { label: 'วิเคราะห์คำถาม', sub: 'ระบุประเภทคำถาม: สิทธิ์สวัสดิการค่ารักษาพยาบาลพนักงาน…',
+    contentType: 'text',
+    content: 'คำถามเกี่ยวกับสิทธิ์ค่ารักษาพยาบาลประจำปี 2026 — ต้องการข้อมูลจาก Medical Benefits Policy ฉบับปัจจุบัน ครอบคลุมวงเงิน, ประเภทการเบิก, เงื่อนไข และขั้นตอน' },
+  { label: 'วางแผนการค้นหา', sub: 'กำหนด queries สำหรับนโยบายสวัสดิการการแพทย์…',
+    contentType: 'queries',
+    content: ['สิทธิ์ค่ารักษาพยาบาลพนักงาน 2026 วงเงินต่อปี', 'Medical Benefits Policy OPD IPD coverage limit', 'เงื่อนไขการเบิกค่ารักษาพยาบาลโรงพยาบาลนอกสัญญา', 'สิทธิ์รักษาพยาบาลพนักงานทดลองงาน'] },
+  { label: 'ค้นหาเอกสาร', sub: 'ค้นหาเอกสารที่เกี่ยวข้องกับนโยบายสวัสดิการและสิทธิประโยชน์พนักงาน…',
+    contentType: 'files',
+    content: ['Medical_Benefits_Policy_2026.pdf'] },
+  { label: 'ดึงข้อมูลสิทธิ์', sub: 'อ่านวงเงิน เงื่อนไข และข้อยกเว้นจากนโยบาย…',
+    contentType: 'facts',
+    content: [
+      '[2] วงเงินค่ารักษาพยาบาลต่อปี: 150,000 บาท (ทั้ง OPD และ IPD)',
+      '[2] เบิกค่าห้องและอาหาร IPD สูงสุด: 3,000 บาทต่อวัน',
+      '[3] โรงพยาบาลนอกสัญญา: เบิกเองผ่าน HRMS พร้อมใบเสร็จ + ใบรับรองแพทย์',
+      '[3] พนักงานทดลองงาน: มีสิทธิ์เบิก IPD กรณีฉุกเฉิน/อุบัติเหตุ',
+    ] },
+  { label: 'ประมวลผลคำตอบ', sub: 'สรุปสิทธิ์ทั้งหมดพร้อม citation…',
+    contentType: 'text',
+    content: 'สรุปสวัสดิการค่ารักษาพยาบาลปี 2026 ครบ 6 ประเด็น — วงเงิน, ประเภทผู้ป่วย, ค่าห้อง, เงื่อนไขโรงพยาบาลนอกสัญญา, สิทธิ์ทดลองงาน' },
+];
+
+// ── HR response data ──
+const HR_RESPONSE = {
+  intro: 'ตรวจสอบ Medical Benefits Policy ปี 2026 เรียบร้อยแล้ว — สรุปสิทธิ์ที่พนักงานได้รับ',
+  heading: 'ในปี 2026 บริษัทมีสวัสดิการด้านการแพทย์ดังนี้',
+  items: [
+    'พนักงานได้รับสิทธิ์ค่ารักษาพยาบาลแบบครอบคลุม ทั้งแบบผู้ป่วยในและผู้ป่วยนอก',
+    'วงเงินค่ารักษาพยาบาลต่อปีอยู่ที่ 150,000 บาท',
+    'เบิกค่าห้องและค่าอาหารได้สูงสุด 3,000 บาทต่อวัน',
+    'ถ้าเข้ารักษาที่โรงพยาบาลที่ไม่ได้อยู่ในสัญญากับบริษัท ต้องเก็บใบเสร็จและใบรับรองแพทย์มาเบิกเองผ่านระบบ HRMS',
+    'พนักงานที่อยู่ในช่วงทดลองงานก็มีสิทธิ์เบิกค่าผู้ป่วยในได้ ในกรณีฉุกเฉินหรืออุบัติเหตุจากการทำงาน',
+  ],
+  closing: 'ถ้ามีคำถามเพิ่มเติมเกี่ยวกับสวัสดิการเหล่านี้ สอบถามได้เลย',
+  citation: { name: 'Medical Benefits Policy.pdf', pages: [2,3] },
+};
+
+// ── HR streaming response ──
+function streamHRResponse(convArea, convScroll) {
+  const r = HR_RESPONSE;
+  const ai = document.createElement('div');
+  ai.className = 'bubble-ai';
+  ai.style.lineHeight = '1.75';
+
+  const introEl = document.createElement('p');
+  introEl.style.cssText = 'margin:0 0 10px;color:var(--text-secondary);font-size:14px;';
+  ai.appendChild(introEl);
+
+  const headingEl = document.createElement('strong');
+  headingEl.style.cssText = 'display:block;margin-bottom:10px;font-size:14px;color:var(--text-primary);';
+  ai.appendChild(headingEl);
+
+  const listEl = document.createElement('ul');
+  listEl.style.cssText = 'margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;';
+  r.items.forEach(text => {
+    const li = document.createElement('li');
+    li.className = 'hr-item';
+    li.style.cssText = 'font-size:14px;color:var(--text-primary);line-height:1.65;opacity:0;transform:translateY(5px);transition:opacity 0.28s ease,transform 0.28s ease;';
+    li.textContent = text;
+    listEl.appendChild(li);
+  });
+  ai.appendChild(listEl);
+
+  convArea.appendChild(ai);
+  convScroll.scrollTop = convScroll.scrollHeight;
+
+  // Closing remark (plain text, not a bullet)
+  const closingEl = document.createElement('p');
+  closingEl.style.cssText = 'margin:12px 0 0;font-size:14px;color:var(--text-secondary);line-height:1.65;opacity:0;transition:opacity 0.3s ease;';
+  ai.appendChild(closingEl);
+
+  streamWords(introEl, r.intro, 320, () => {
+    streamWords(headingEl, r.heading, 270, () => {
+      const items = listEl.querySelectorAll('.hr-item');
+      items.forEach((el, i) => {
+        setTimeout(() => {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+          convScroll.scrollTop = convScroll.scrollHeight;
+          if (i === items.length - 1) {
+            setTimeout(() => {
+              closingEl.textContent = r.closing;
+              closingEl.style.opacity = '1';
+              convScroll.scrollTop = convScroll.scrollHeight;
+              setTimeout(() => {
+                convArea.appendChild(buildCitations([r.citation]));
+                appendActionButtons(convArea);
+                convScroll.scrollTop = convScroll.scrollHeight;
+              }, 350);
+            }, 300);
+          }
+        }, i * 230);
+      });
+    });
+  });
+}
+
+// ── Manufacturing query detection ──
+function isManufacturingQuery(text) {
+  return text && (text.includes('Error') || text.includes('Injection Molding') || text.includes('E-47') || text.includes('เครื่อง') && text.includes('ขึ้น'));
+}
+
+// ── Manufacturing thinking steps ──
+const MANUFACTURING_THINKING_STEPS = [
+  { label: 'วิเคราะห์ Error Code', sub: 'ระบุความหมายของ Error E-47 จากฐานข้อมูล…',
+    contentType: 'text',
+    content: 'Error E-47 บน Injection Molding #3 — จัดอยู่ในกลุ่ม Temperature Sensor Fault: เซ็นเซอร์วัดอุณหภูมิใน Zone B ส่งสัญญาณผิดปกติหรือขาดการเชื่อมต่อ' },
+  { label: 'ค้นหาในคู่มือเครื่องจักร', sub: 'กำลังค้นหา Error E-47 ใน Machine Manual v2.3…',
+    contentType: 'files',
+    content: ['Machine_Manual_v2.3.pdf'] },
+  { label: 'ตรวจสอบประวัติการซ่อม', sub: 'ดึงประวัติการแก้ไขปัญหาเดียวกันในอดีต…',
+    contentType: 'facts',
+    content: [
+      '[47] Error E-47: สาเหตุหลัก — Temperature Sensor Zone B ชำรุดหรือสายหลวม',
+      '[47] ขั้นตอน: ปิดเครื่อง → ตรวจสอบการเชื่อมต่อ → Restart PLC',
+      '[47] กรณีล่าสุด: 15 ม.ค. 67 แก้ไขโดยเปลี่ยน Sensor ใช้เวลา 45 นาที',
+    ] },
+  { label: 'ตรวจสอบสต็อกอะไหล่', sub: 'ตรวจสอบ Part# TS-2231 ในคลังสินค้า…',
+    contentType: 'facts',
+    content: [
+      '[47] Temperature Sensor Part# TS-2231 — Stock: 3 ชิ้น, Bin A-12',
+      '[47] Lead time สั่งเพิ่ม: 3–5 วันทำการ',
+    ] },
+  { label: 'ประมวลผลขั้นตอนแก้ไข', sub: 'จัดเรียงขั้นตอนพร้อมอ้างอิงเอกสาร…',
+    contentType: 'text',
+    content: 'สรุปขั้นตอนแก้ไข Error E-47 พร้อมข้อมูลอะไหล่และกรณีศึกษาจากประวัติการซ่อมบำรุง' },
+];
+
+// ── Manufacturing response data ──
+const MANUFACTURING_RESPONSE = {
+  intro: 'ตรวจสอบ Error E-47 ใน Machine Manual v2.3 และประวัติการซ่อมบำรุงเครื่อง #3 เรียบร้อยแล้ว',
+  heading: 'พบข้อมูลที่เกี่ยวข้อง',
+  items: [
+    { label: 'สาเหตุที่พบบ่อย', text: 'Sensor ชำรุด หรือสายสัญญาณหลวม' },
+    { label: 'ขั้นตอนเบื้องต้น', text: 'ปิดเครื่อง → ตรวจสอบการเชื่อมต่อ Sensor Zone B → Restart PLC' },
+    { label: 'อะไหล่', text: 'Temperature Sensor Part# TS-2231 (Stock: 3 ชิ้น, Bin A-12)' },
+    { label: 'กรณีล่าสุด', text: 'เครื่อง #3 เคยเกิดปัญหาเดียวกัน 15 ม.ค. 67 — แก้ไขโดย เปลี่ยน Sensor ใช้เวลา 45 นาที' },
+  ],
+  citation: { name: 'Machine Manual v2.3', pages: [47] },
+};
+
+// ── Manufacturing streaming response ──
+function streamManufacturingResponse(convArea, convScroll) {
+  const r = MANUFACTURING_RESPONSE;
+  const ai = document.createElement('div');
+  ai.className = 'bubble-ai';
+  ai.style.lineHeight = '1.75';
+
+  const introEl = document.createElement('p');
+  introEl.style.cssText = 'margin:0 0 10px;color:var(--text-secondary);font-size:14px;';
+  ai.appendChild(introEl);
+
+  const headingEl = document.createElement('strong');
+  headingEl.style.cssText = 'display:block;margin-bottom:10px;font-size:14px;color:var(--text-primary);';
+  ai.appendChild(headingEl);
+
+  const listEl = document.createElement('ul');
+  listEl.style.cssText = 'margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px;';
+  r.items.forEach(item => {
+    const li = document.createElement('li');
+    li.className = 'mfg-item';
+    li.style.cssText = 'display:flex;gap:6px;font-size:14px;line-height:1.65;opacity:0;transform:translateY(5px);transition:opacity 0.28s ease,transform 0.28s ease;';
+    li.innerHTML = `<span style="color:#6b7280">•</span><span><span style="font-weight:600;color:var(--text-primary)">${item.label}:</span> <span style="color:var(--text-primary)">${item.text}</span></span>`;
+    listEl.appendChild(li);
+  });
+  ai.appendChild(listEl);
+
+  convArea.appendChild(ai);
+  convScroll.scrollTop = convScroll.scrollHeight;
+
+  streamWords(introEl, r.intro, 320, () => {
+    streamWords(headingEl, r.heading, 300, () => {
+      const items = listEl.querySelectorAll('.mfg-item');
+      items.forEach((el, i) => {
+        setTimeout(() => {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+          convScroll.scrollTop = convScroll.scrollHeight;
+          if (i === items.length - 1) {
+            setTimeout(() => {
+              convArea.appendChild(buildCitations([r.citation]));
+              appendActionButtons(convArea);
+              convScroll.scrollTop = convScroll.scrollHeight;
+            }, 350);
+          }
+        }, i * 240);
+      });
+    });
+  });
+}
+
+// ── Education query detection ──
+function isEducationQuery(text) {
+  return text && (text.includes('สพฐ') || text.includes('หลักสูตร') || text.includes('2568') || text.includes('MOE') || text.includes('โรงเรียนต้องปรับ'));
+}
+
+// ── Education thinking steps ──
+const EDUCATION_THINKING_STEPS = [
+  { label: 'วิเคราะห์ไฟล์ที่แนบ', sub: 'กำลังอ่านประกาศสพฐ. ที่แนบมา…',
+    contentType: 'text',
+    content: 'ตรวจพบเอกสารประกาศสำนักงานคณะกรรมการการศึกษาขั้นพื้นฐาน (สพฐ.) ว่าด้วยหลักสูตรแกนกลางการศึกษาขั้นพื้นฐาน ปีการศึกษา 2568 — ประกอบด้วยสาระหลักสูตร, ตัวชี้วัด, แนวทางการจัดการเรียนรู้ และข้อกำหนดการรายงานผล' },
+  { label: 'อ่านประกาศหลักสูตรปี 2568', sub: 'ระบุประเด็นสำคัญและการเปลี่ยนแปลงหลัก…',
+    contentType: 'files',
+    content: ['MOE_Curriculum_2568.pdf'] },
+  { label: 'เปรียบเทียบกับหลักสูตรเดิม', sub: 'เทียบเคียงข้อกำหนดใหม่กับแนวปฏิบัติปัจจุบัน…',
+    contentType: 'table',
+    content: {
+      headers: ['ด้าน', 'หลักสูตรเดิม', 'หลักสูตร 2568'],
+      rows: [
+        ['Digital Literacy', 'ไม่บังคับ', 'บังคับทุกช่วงชั้น ภายใน พ.ค. 68'],
+        ['กิจกรรมนอกห้อง', 'ไม่กำหนด', '≥ 20% ของเวลาเรียน'],
+        ['รายงาน O-NET', 'ภายใน 60 วัน', 'ภายใน 30 วันหลังประกาศ'],
+      ]
+    }
+  },
+  { label: 'ระบุประเด็นที่ต้องดำเนินการ', sub: 'คัดกรองข้อกำหนดที่โรงเรียนต้องปรับ…',
+    contentType: 'facts',
+    content: [
+      '[3] ปรับแผนการสอนวิชาพื้นฐาน — ครอบคลุม Digital Literacy ทุกระดับชั้น',
+      '[7] จัดทำรายงานสัดส่วนกิจกรรมนอกห้องเรียน ≥ 20%',
+      '[9] ส่งแบบรายงานผล O-NET ภายใน 30 วันหลังประกาศ',
+      '[13] ปรับปรุง IEP สำหรับนักเรียนที่มีความต้องการพิเศษ',
+    ] },
+  { label: 'ประมวลผลรายการดำเนินการ', sub: 'จัดลำดับความสำคัญและระบุ deadline…',
+    contentType: 'text',
+    content: 'สรุป 5 ประเด็นที่โรงเรียนต้องดำเนินการ พร้อมอ้างอิงหน้าในเอกสารประกาศสพฐ. ที่เกี่ยวข้อง' },
+];
+
+// ── Education response data ──
+const EDUCATION_RESPONSE = {
+  intro: 'วิเคราะห์เอกสารประกาศสพฐ. หลักสูตรปี 2568 เรียบร้อยแล้ว — เปรียบเทียบกับหลักสูตรปัจจุบันและระบุประเด็นที่โรงเรียนต้องดำเนินการดังนี้',
+  heading: 'วิเคราะห์เอกสารเสร็จแล้ว พบ 5 ประเด็นที่ต้องดำเนินการ:',
+  items: [
+    'ปรับแผนการสอนวิชาพื้นฐานให้ครอบคลุม Digital Literacy ภายใน พ.ค. 68',
+    'จัดทำรายงานสัดส่วนกิจกรรมนอกห้องเรียน ≥ 20%',
+    'ส่งแบบรายงานผล O-NET ภายใน 30 วันหลังประกาศ',
+    'ปรับปรุง IEP สำหรับนักเรียนที่มีความต้องการพิเศษ',
+    'แจ้งผู้ปกครองผ่านช่องทางทางการ',
+  ],
+};
+
+// ── Education streaming response ──
+function streamEducationResponse(convArea, convScroll) {
+  const r = EDUCATION_RESPONSE;
+  const fileName = lastMessageFileName || 'MOE_Curriculum_2568.pdf';
+
+  const ai = document.createElement('div');
+  ai.className = 'bubble-ai';
+  ai.style.lineHeight = '1.75';
+
+  // Intro (gray)
+  const introEl = document.createElement('p');
+  introEl.style.cssText = 'margin:0 0 10px;color:var(--text-secondary);font-size:14px;';
+  ai.appendChild(introEl);
+
+  // Bold heading
+  const headingEl = document.createElement('strong');
+  headingEl.style.cssText = 'display:block;margin-bottom:10px;font-size:14px;line-height:1.6;color:var(--text-primary);';
+  ai.appendChild(headingEl);
+
+  // Bullet list
+  const listEl = document.createElement('ul');
+  listEl.style.cssText = 'margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;';
+  r.items.forEach(text => {
+    const li = document.createElement('li');
+    li.className = 'edu-item';
+    li.style.cssText = 'font-size:14px;color:var(--text-primary);line-height:1.65;opacity:0;transform:translateY(5px);transition:opacity 0.28s ease,transform 0.28s ease;';
+    li.textContent = text;
+    listEl.appendChild(li);
+  });
+  ai.appendChild(listEl);
+
+  convArea.appendChild(ai);
+  convScroll.scrollTop = convScroll.scrollHeight;
+
+  // Phase 1 — intro (~320 wpm)
+  streamWords(introEl, r.intro, 320, () => {
+    // Phase 2 — heading (~270 wpm)
+    streamWords(headingEl, r.heading, 270, () => {
+      // Phase 3 — reveal bullets one by one
+      const items = listEl.querySelectorAll('.edu-item');
+      items.forEach((el, i) => {
+        setTimeout(() => {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+          convScroll.scrollTop = convScroll.scrollHeight;
+          if (i === items.length - 1) {
+            setTimeout(() => {
+              convArea.appendChild(buildCitations([{ name: fileName, pages: [3,7,9,13,16] }]));
+              appendActionButtons(convArea);
+              convScroll.scrollTop = convScroll.scrollHeight;
+            }, 350);
+          }
+        }, i * 240);
+      });
+    });
+  });
+}
+
+// ── Healthcare query detection ──
+function isHealthcareQuery(text) {
+  return text && (text.includes('pending actions') || text.includes('เฝ้าระวัง') || text.includes('กะเช้า') || text.includes('สรุปงาน') || text.includes('Nursing') || text.includes('Ward'));
+}
+
+// ── Healthcare thinking steps ──
+const HEALTHCARE_THINKING_STEPS = [
+  { label: 'วิเคราะห์ไฟล์ที่แนบ', sub: 'กำลังอ่านและประมวลผลเอกสาร Nursing Notes…',
+    contentType: 'text',
+    content: 'ตรวจพบไฟล์ Nursing Notes กะกลางคืน (Night Shift) ของ Ward 5B — ประกอบด้วยบันทึกผู้ป่วย, Vital Signs, Medication Log และรายการ Pending Actions ที่ยังค้างอยู่' },
+  { label: 'อ่าน Nursing Notes กะกลางคืน', sub: 'แยกบันทึกตามห้องและสถานะ…',
+    contentType: 'files',
+    content: ['Ward_5B_Night_Notes.pdf'] },
+  { label: 'คัดแยก Pending Actions', sub: 'กำลังระบุรายการที่ยังต้องดำเนินการต่อ…',
+    contentType: 'facts',
+    content: [
+      '[3] ห้อง 507 — IV site ต้องเปลี่ยน เวลา 08:00 น.',
+      '[5] ห้อง 510 — รอ Discharge Order จากแพทย์ เอกสารพร้อมแล้ว',
+    ] },
+  { label: 'ระบุคนไข้ต้องเฝ้าระวัง', sub: 'ตรวจสอบ Vital Signs และ Flag ที่ผิดปกติ…',
+    contentType: 'facts',
+    content: [
+      '[2] ห้อง 502 คุณสมศรี — Fever 38.9°C เมื่อ 03:00 น. รอผล Blood Culture',
+      '[2] คำสั่งแพทย์: แจ้งทันทีถ้าไข้ > 39°C',
+    ] },
+  { label: 'ประมวลผลสรุปกะเช้า', sub: 'จัดเรียงรายการตามความเร่งด่วนสำหรับทีมกะเช้า…',
+    contentType: 'text',
+    content: 'สรุปงาน Morning Shift Handover พร้อมแยก: เฝ้าระวัง, Pending Actions และรายการเสร็จสิ้น — ใช้ข้อมูลจากไฟล์ที่แนบมาเป็นแหล่งอ้างอิง' },
+];
+
+// ── Healthcare response data ──
+const HEALTHCARE_RESPONSE = {
+  heading: 'วิเคราะห์ Nursing Notes เสร็จแล้ว',
+  subtitle: 'Morning Shift Brief — Ward 5B',
+  items: [
+    { tag: 'เฝ้าระวัง', tagColor: '#dc2626', tagBg: '#fef2f2',
+      text: 'ห้อง 502 คุณสมศรี — Fever 38.9°C เมื่อ 03:00 น. รอผล Blood Culture, แจ้งแพทย์ถ้า > 39°C' },
+    { tag: 'Pending', tagColor: '#d97706', tagBg: '#fffbeb',
+      text: 'ห้อง 507 ต้องทำ IV เปลี่ยน site เวลา 08:00 น.' },
+    { tag: 'Pending', tagColor: '#d97706', tagBg: '#fffbeb',
+      text: 'ห้อง 510 รอ Discharge Order จากแพทย์ — เอกสารพร้อมแล้ว' },
+    { tag: 'เสร็จแล้ว', tagColor: '#059669', tagBg: '#ecfdf5',
+      text: 'Medication Round 06:00 น. ครบทุกห้อง' },
+  ],
+};
+
+// ── Healthcare streaming response ──
+function streamHealthcareResponse(convArea, convScroll) {
+  const r = HEALTHCARE_RESPONSE;
+  const fileName = lastMessageFileName || 'Ward_5B_Night_Notes.pdf';
+
+  const ai = document.createElement('div');
+  ai.className = 'bubble-ai';
+  ai.style.lineHeight = '1.75';
+
+  // Bold heading
+  const headingEl = document.createElement('strong');
+  headingEl.style.cssText = 'display:block;margin-bottom:10px;font-size:14px;line-height:1.6;color:var(--text-primary);';
+  ai.appendChild(headingEl);
+
+  // Subtitle
+  const subEl = document.createElement('p');
+  subEl.style.cssText = 'margin:0 0 10px;font-size:14px;font-weight:500;color:var(--text-secondary);';
+  ai.appendChild(subEl);
+
+  // Bullet items (hidden)
+  const listWrap = document.createElement('div');
+  listWrap.style.cssText = 'display:flex;flex-direction:column;gap:8px;';
+  r.items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'hc-item';
+    row.style.cssText = 'display:flex;align-items:flex-start;gap:8px;opacity:0;transform:translateY(5px);transition:opacity 0.28s ease,transform 0.28s ease;';
+    const badge = document.createElement('span');
+    badge.style.cssText = `display:inline-block;flex-shrink:0;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;margin-top:2px;background:${item.tagBg};color:${item.tagColor};`;
+    badge.textContent = item.tag;
+    const txt = document.createElement('span');
+    txt.style.cssText = 'font-size:14px;color:var(--text-primary);line-height:1.6;';
+    txt.textContent = item.text;
+    row.appendChild(badge);
+    row.appendChild(txt);
+    listWrap.appendChild(row);
+  });
+  ai.appendChild(listWrap);
+
+  convArea.appendChild(ai);
+  convScroll.scrollTop = convScroll.scrollHeight;
+
+  // Phase 1 — stream heading word by word (~280 wpm)
+  streamWords(headingEl, r.heading, 280, () => {
+    // Phase 2 — stream subtitle (~300 wpm)
+    streamWords(subEl, r.subtitle, 300, () => {
+      // Phase 3 — reveal items one by one
+      const items = listWrap.querySelectorAll('.hc-item');
+      items.forEach((el, i) => {
+        setTimeout(() => {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+          convScroll.scrollTop = convScroll.scrollHeight;
+          if (i === items.length - 1) {
+            setTimeout(() => {
+              const citations = [{ name: fileName, pages: [] }];
+              convArea.appendChild(buildCitations(citations));
+              appendActionButtons(convArea);
+              convScroll.scrollTop = convScroll.scrollHeight;
+            }, 350);
+          }
+        }, i * 260);
+      });
+    });
+  });
+}
+
+// ── Finance streaming response ──
+const FINANCE_RESPONSE = {
+  heading: 'สรุปผลประกอบการทางการเงินของไตรมาสล่าสุด โดยจัดเรียงตามรายได้รวมจากสูงสุดไปต่ำสุด',
+  rows: [
+    { segment: 'โซลูชันองค์กร',      type: 'คำลิสกิตรีซอฟต์แวร์', revenue: '฿ 38.2M', expense: '฿ 24.1M', profit: '฿ 14.1M' },
+    { segment: 'บริการทางการเงิน',    type: 'ระบบชำระเงินดิจิทัล',  revenue: '฿ 31.4M', expense: '฿ 19.8M', profit: '฿ 11.6M' },
+    { segment: 'การผลิต',             type: 'อุปกรณ์อุตสาหกรรม',   revenue: '฿ 27.1M', expense: '฿ 18.9M', profit: '฿ 8.2M'  },
+    { segment: 'โซลูชันองค์กร',      type: 'บริการคลาวด์',         revenue: '฿ 24.5M', expense: '฿ 16.3M', profit: '฿ 8.2M'  },
+    { segment: 'การแก้ไขความตกลง',   type: 'โซลูชันสินเชื่อ',       revenue: '฿ 21.8M', expense: '฿ 14.2M', profit: '฿ 7.6M'  },
+  ],
+  citations: [
+    { name: 'Q1_2026_Revenue_Report.pdf',           pages: [4,5,12,13] },
+    { name: 'Financial_Performance_Dashboard.xlsx',  pages: [1,34,35,36] },
+    { name: 'Executive_Summary_Q1_2026.pdf',         pages: [1,2,3,4] },
+  ]
+};
+
+function isFinanceQuery(text) {
+  return text && (text.includes('ผลประกอบการ') || text.includes('รายได้') || text.includes('ไตรมาส'));
+}
+
+function showAIResponse(convArea, convScroll, queryText) {
+  if (isFinanceQuery(queryText)) {
+    streamFinanceResponse(convArea, convScroll);
+    return;
+  }
+  if (isInflationQuery(queryText)) {
+    streamInflationResponse(convArea, convScroll);
+    return;
+  }
+  if (isContractQuery(queryText)) {
+    streamContractResponse(convArea, convScroll);
+    return;
+  }
+  if (isHealthcareQuery(queryText)) {
+    streamHealthcareResponse(convArea, convScroll);
+    return;
+  }
+  if (isEducationQuery(queryText)) {
+    streamEducationResponse(convArea, convScroll);
+    return;
+  }
+  if (isManufacturingQuery(queryText)) {
+    streamManufacturingResponse(convArea, convScroll);
+    return;
+  }
+  if (isHRQuery(queryText)) {
+    streamHRResponse(convArea, convScroll);
+    return;
+  }
+  // Generic fallback
+  const ai = document.createElement('div');
+  ai.className = 'bubble-ai';
+  ai.innerHTML = `กำลังวิเคราะห์คำถาม "<strong>${(queryText||'ข้อมูล').slice(0,60)}</strong>"<br><br>KMAI ได้ประมวลผลและค้นหาข้อมูลจากเอกสารที่เกี่ยวข้องแล้ว — โปรดตรวจสอบข้อมูลสำคัญจากแหล่งอ้างอิงเสมอ`;
+  convArea.appendChild(ai);
+  const mockCitations = [
+    { name: 'Financial_Performance_Dashboard.xlsx', pages: [1,5] },
+    { name: 'Q1_2026_Revenue_Report.pdf',           pages: [3,8] },
+  ];
+  convArea.appendChild(buildCitations(mockCitations));
+  appendActionButtons(convArea);
+  convScroll.scrollTop = convScroll.scrollHeight;
+}
+
+// Helper: stream words into an element, call onDone when finished
+function streamWords(el, text, wpm, onDone) {
+  const words = text.split(' ');
+  let i = 0;
+  const delay = Math.round(60000 / wpm);
+  el.classList.add('stream-cursor');
+  const t = setInterval(() => {
+    i++;
+    el.textContent = words.slice(0, i).join(' ');
+    if (i >= words.length) {
+      clearInterval(t);
+      el.classList.remove('stream-cursor');
+      if (onDone) setTimeout(onDone, 120);
+    }
+  }, delay);
+}
+
+function streamFinanceResponse(convArea, convScroll) {
+  const r = FINANCE_RESPONSE;
+  const ai = document.createElement('div');
+  ai.className = 'bubble-ai';
+  ai.style.lineHeight = '1.75';
+
+  // Intro sentence
+  const introEl = document.createElement('p');
+  introEl.style.margin = '0 0 10px';
+  introEl.style.color = 'var(--text-secondary)';
+  introEl.style.fontSize = '13px';
+  ai.appendChild(introEl);
+
+  // Heading
+  const headingEl = document.createElement('strong');
+  headingEl.style.display = 'block';
+  headingEl.style.marginBottom = '12px';
+  headingEl.style.fontSize = '14px';
+  headingEl.style.lineHeight = '1.6';
+  headingEl.style.color = 'var(--text-primary)';
+  ai.appendChild(headingEl);
+
+  // Table — rows hidden initially
+  const tableWrap = document.createElement('div');
+  tableWrap.style.overflow = 'hidden';
+  const table = document.createElement('table');
+  table.className = 'ai-response-table';
+  table.innerHTML = `<thead><tr>
+    <th>หมวดธุรกิจ</th><th>ประเภท</th>
+    <th>รายได้<br><span style="font-weight:400;font-size:11px">(ไตรมาส 1/2026)</span></th>
+    <th>ค่าใช้จ่าย<br><span style="font-weight:400;font-size:11px">(ไตรมาส 1/2026)</span></th>
+    <th>กำไรสุทธิ<br><span style="font-weight:400;font-size:11px">(ไตรมาส 1/2026)</span></th>
+  </tr></thead>`;
+  const tbody = document.createElement('tbody');
+  r.rows.forEach(row => {
+    const tr = document.createElement('tr'); // starts invisible via CSS
+    tr.innerHTML = `
+      <td><strong>${row.segment}</strong></td>
+      <td>${row.type}</td>
+      <td class="revenue-val">${row.revenue}</td>
+      <td class="expense-val">${row.expense}</td>
+      <td class="profit-val">${row.profit}</td>`;
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  tableWrap.appendChild(table);
+  ai.appendChild(tableWrap);
+
+  convArea.appendChild(ai);
+  convScroll.scrollTop = convScroll.scrollHeight;
+
+  // Phase 1 — stream intro (fast, ~320 wpm)
+  const intro = 'ตรวจสอบข้อมูลจากรายงานการเงิน Q1/2026 เรียบร้อยแล้ว พบข้อมูลใน 3 แหล่ง — จัดเรียงตามรายได้รวมจากสูงสุดไปต่ำสุด';
+  streamWords(introEl, intro, 320, () => {
+    // Phase 2 — stream heading (~280 wpm)
+    streamWords(headingEl, r.heading, 280, () => {
+      // Phase 3 — reveal table rows one by one
+      const rows = tbody.querySelectorAll('tr');
+      rows.forEach((tr, i) => {
+        setTimeout(() => {
+          tr.classList.add('row-visible');
+          convScroll.scrollTop = convScroll.scrollHeight;
+          if (i === rows.length - 1) {
+            setTimeout(() => {
+              convArea.appendChild(buildCitations(r.citations));
+              appendActionButtons(convArea);
+              convScroll.scrollTop = convScroll.scrollHeight;
+            }, 350);
+          }
+        }, i * 200);
+      });
+    });
+  });
+}
+
+// ── Inflation query detection ──
+function isInflationQuery(text) {
+  return text && (text.includes('เงินเฟ้อ') || text.includes('inflation') || text.includes('CPI') || (text.includes('ปัจจัย') && text.includes('ติดตาม')));
+}
+
+// ── Inflation thinking steps (web search style) ──
+const INFLATION_THINKING_STEPS = [
+  { label: 'วิเคราะห์คำขอ', sub: 'ระบุ 2 ส่วน: อัตราเงินเฟ้อล่าสุด + ปัจจัยที่ควรติดตาม…',
+    contentType: 'text',
+    content: 'คำขอต้องการ 2 ส่วน: (1) ตัวเลขอัตราเงินเฟ้อล่าสุด (CPI) และ (2) ปัจจัยเสี่ยงที่ควรจับตาในช่วงต่อไป — จะค้นหาข้อมูลจากแหล่งข้อมูลทางการ' },
+  { label: 'ส่ง Search Queries', sub: 'กำลังค้นหาข้อมูลจากเว็บ…',
+    contentType: 'queries',
+    content: [
+      'site:bot.or.th อัตราเงินเฟ้อ CPI ล่าสุด 2568',
+      'site:nesdc.go.th อัตราเงินเฟ้อไทย 2568 ปัจจัยกดดัน',
+      'site:moc.go.th ดัชนีราคาผู้บริโภค พฤษภาคม 2568',
+      'Thailand inflation rate May 2025 factors energy food',
+    ] },
+  { label: 'อ่านผลลัพธ์จากเว็บ', sub: 'ได้รับผลลัพธ์ 6 แหล่ง — กำลังดึงข้อมูลสำคัญ…',
+    contentType: 'facts',
+    content: [
+      'bot.or.th — CPI ทั่วไป พ.ค. 2568: +0.89% YoY, ลดลงจาก +1.04% เดือนก่อน',
+      'moc.go.th — ราคาพลังงานในประเทศปรับตัวตามตลาดโลก น้ำมันดิบ Brent ~$78/bbl',
+      'nesdc.go.th — แรงกดดันเงินเฟ้อจากค่าเงินบาทอ่อนตัว ~35.2 บาท/USD',
+      'bot.or.th — กนง. คงอัตราดอกเบี้ยนโยบาย 2.25% ในการประชุมล่าสุด',
+    ] },
+  { label: 'ประมวลผลสรุป', sub: 'สรุปตัวเลขและจัดลำดับปัจจัยที่ควรติดตาม…',
+    contentType: 'text',
+    content: 'สรุปอัตราเงินเฟ้อล่าสุด +0.89% พร้อมระบุ 5 ปัจจัยที่ควรจับตาในช่วงครึ่งปีหลัง 2568' },
+];
+
+// ── Inflation response data ──
+const INFLATION_RESPONSE = {
+  intro: 'ค้นหาข้อมูลจาก 6 แหล่งเรียบร้อยแล้ว — สรุปอัตราเงินเฟ้อล่าสุดและปัจจัยที่ควรติดตาม',
+  stat: 'อัตราเงินเฟ้อทั่วไป (CPI) เดือนพฤษภาคม 2568 อยู่ที่ +0.89% (YoY) ลดลงจาก +1.04% ในเดือนเมษายน',
+  heading: 'ปัจจัยที่ควรติดตาม',
+  items: [
+    'ราคาพลังงาน — น้ำมันดิบ Brent ยังผันผวน ส่งผลต่อต้นทุนการผลิตและขนส่งทั่วประเทศ',
+    'ราคาอาหารสด — ผักและผลไม้มีแนวโน้มสูงขึ้นในช่วงฤดูแล้ง จากสภาพอากาศที่แปรปรวน',
+    'อัตราดอกเบี้ยนโยบาย — กนง. คงดอกเบี้ยที่ 2.25% มีนัยต่อต้นทุนการกู้ยืมและการบริโภค',
+    'ค่าเงินบาท — บาทอ่อนค่าเพิ่มแรงกดดันเงินเฟ้อจากสินค้านำเข้า โดยเฉพาะพลังงาน',
+    'อุปสงค์ในประเทศ — การฟื้นตัวของการท่องเที่ยวและการส่งออกส่งผลต่อกำลังซื้อภาคครัวเรือน',
+  ],
+  citations: [
+    { name: 'bot.or.th',    pages: [] },
+    { name: 'nesdc.go.th',  pages: [] },
+    { name: 'moc.go.th',    pages: [] },
+  ]
+};
+
+// ── Inflation streaming response ──
+function streamInflationResponse(convArea, convScroll) {
+  const r = INFLATION_RESPONSE;
+  const ai = document.createElement('div');
+  ai.className = 'bubble-ai';
+  ai.style.lineHeight = '1.75';
+
+  // Intro (gray)
+  const introEl = document.createElement('p');
+  introEl.style.cssText = 'margin:0 0 12px;color:var(--text-secondary);font-size:14px;';
+  ai.appendChild(introEl);
+
+  // Stat callout card
+  const statCard = document.createElement('div');
+  statCard.style.cssText = 'background:#f0f1ff;border-left:3px solid var(--brand);border-radius:6px;padding:10px 14px;margin-bottom:16px;opacity:0;transition:opacity 0.3s ease;';
+  const statEl = document.createElement('p');
+  statEl.style.cssText = 'margin:0;font-size:14px;font-weight:500;color:var(--text-primary);line-height:1.6;';
+  statCard.appendChild(statEl);
+  ai.appendChild(statCard);
+
+  // Heading
+  const headingEl = document.createElement('strong');
+  headingEl.style.cssText = 'display:block;margin-bottom:10px;font-size:14px;color:var(--text-primary);';
+  ai.appendChild(headingEl);
+
+  // Bullet items
+  const listEl = document.createElement('ul');
+  listEl.style.cssText = 'margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;';
+  r.items.forEach(text => {
+    const li = document.createElement('li');
+    li.className = 'infl-item';
+    li.style.cssText = 'font-size:14px;color:var(--text-primary);line-height:1.65;opacity:0;transform:translateY(5px);transition:opacity 0.28s ease,transform 0.28s ease;';
+    li.textContent = text;
+    listEl.appendChild(li);
+  });
+  ai.appendChild(listEl);
+
+  convArea.appendChild(ai);
+  convScroll.scrollTop = convScroll.scrollHeight;
+
+  // Phase 1 — intro
+  streamWords(introEl, r.intro, 320, () => {
+    // Phase 2 — reveal stat card + stream text
+    statCard.style.opacity = '1';
+    streamWords(statEl, r.stat, 260, () => {
+      // Phase 3 — heading
+      streamWords(headingEl, r.heading, 270, () => {
+        // Phase 4 — reveal bullets
+        const items = listEl.querySelectorAll('.infl-item');
+        items.forEach((el, i) => {
+          setTimeout(() => {
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+            convScroll.scrollTop = convScroll.scrollHeight;
+            if (i === items.length - 1) {
+              setTimeout(() => {
+                convArea.appendChild(buildCitations(r.citations));
+                appendActionButtons(convArea);
+                convScroll.scrollTop = convScroll.scrollHeight;
+              }, 350);
+            }
+          }, i * 230);
+        });
+      });
+    });
+  });
+}
+
+// ── Contract streaming response ──
+function streamContractResponse(convArea, convScroll) {
+  const r = CONTRACT_RESPONSE;
+  const ai = document.createElement('div');
+  ai.className = 'bubble-ai';
+  ai.style.lineHeight = '1.75';
+
+  // Intro (gray)
+  const introEl = document.createElement('p');
+  introEl.style.cssText = 'margin:0 0 10px;color:var(--text-secondary);font-size:14px;';
+  ai.appendChild(introEl);
+
+  // Heading
+  const headingEl = document.createElement('strong');
+  headingEl.style.cssText = 'display:block;margin-bottom:12px;font-size:14px;line-height:1.6;color:var(--text-primary);';
+  ai.appendChild(headingEl);
+
+  // Comparison table (hidden rows)
+  const tableWrap = document.createElement('div');
+  tableWrap.style.cssText = 'margin-bottom:16px;opacity:0;transition:opacity 0.25s ease;';
+  const table = document.createElement('table');
+  table.className = 'ai-response-table';
+  const thead = document.createElement('thead');
+  thead.innerHTML = `<tr>${r.tableHeaders.map(h=>`<th>${h}</th>`).join('')}</tr>`;
+  table.appendChild(thead);
+  const tbody = document.createElement('tbody');
+  r.tableRows.forEach(row => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = row.map((c,i) => `<td${i===0?' style="font-weight:500"':''}>${c}</td>`).join('');
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  tableWrap.appendChild(table);
+  ai.appendChild(tableWrap);
+
+  // Action section (hidden)
+  const actionWrap = document.createElement('div');
+  actionWrap.style.cssText = 'opacity:0;transition:opacity 0.25s ease;';
+  const actionHeadEl = document.createElement('strong');
+  actionHeadEl.style.cssText = 'display:block;margin-bottom:8px;font-size:14px;color:var(--text-primary);';
+  actionHeadEl.textContent = r.actionHeading;
+  actionWrap.appendChild(actionHeadEl);
+  const ul = document.createElement('ul');
+  ul.style.cssText = 'margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;';
+  r.actionItems.forEach(txt => {
+    const li = document.createElement('li');
+    li.className = 'law-action-item';
+    li.style.cssText = 'font-size:14px;color:var(--text-primary);line-height:1.65;opacity:0;transform:translateY(5px);transition:opacity 0.28s ease,transform 0.28s ease;';
+    li.textContent = txt;
+    ul.appendChild(li);
+  });
+  actionWrap.appendChild(ul);
+  ai.appendChild(actionWrap);
+
+  convArea.appendChild(ai);
+  convScroll.scrollTop = convScroll.scrollHeight;
+
+  // Phase 1 — intro
+  streamWords(introEl, r.intro, 320, () => {
+    // Phase 2 — heading
+    streamWords(headingEl, r.heading, 270, () => {
+      // Phase 3 — reveal table rows
+      tableWrap.style.opacity = '1';
+      const rows = tbody.querySelectorAll('tr');
+      rows.forEach((tr, i) => {
+        setTimeout(() => {
+          tr.classList.add('row-visible');
+          convScroll.scrollTop = convScroll.scrollHeight;
+        }, i * 180);
+      });
+      // Phase 4 — reveal action section after table
+      setTimeout(() => {
+        actionWrap.style.opacity = '1';
+        const items = ul.querySelectorAll('.law-action-item');
+        items.forEach((el, i) => {
+          setTimeout(() => {
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+            convScroll.scrollTop = convScroll.scrollHeight;
+            if (i === items.length - 1) {
+              setTimeout(() => {
+                convArea.appendChild(buildCitations(r.citations));
+                appendActionButtons(convArea);
+                convScroll.scrollTop = convScroll.scrollHeight;
+              }, 350);
+            }
+          }, i * 230);
+        });
+      }, rows.length * 180 + 200);
+    });
+  });
+}
+
+function appendActionButtons(convArea) {
+  const actions = document.createElement('div');
+  actions.className = 'ai-actions';
+  actions.innerHTML = `
+    <button class="ai-action-btn ai-action-icon" title="Copy"><span class="mi">content_copy</span></button>
+    <button class="ai-action-btn ai-action-icon" title="Thumbs up"><span class="mi">thumb_up</span></button>
+    <button class="ai-action-btn ai-action-icon" title="Thumbs down"><span class="mi">thumb_down</span></button>
+    <button class="ai-action-btn ai-action-icon" title="Regenerate"><span class="mi">refresh</span></button>`;
+  convArea.appendChild(actions);
+}
+
+// ── Citations builder ──
+const CITATION_LIMIT = 5;
+
+function buildCitations(citations) {
+  const wrap = document.createElement('div');
+  wrap.className = 'citations-wrap';
+
+  const title = document.createElement('div');
+  title.className = 'citations-title';
+  title.textContent = 'Citations';
+  wrap.appendChild(title);
+
+  const list = document.createElement('div');
+  list.className = 'citations-list';
+  wrap.appendChild(list);
+
+  const hasMore = citations.length > CITATION_LIMIT;
+  let expanded = false;
+
+  function renderList() {
+    list.innerHTML = '';
+    const visible = expanded ? citations : citations.slice(0, CITATION_LIMIT);
+    visible.forEach(c => {
+      const row = document.createElement('div');
+      row.className = 'citation-row';
+      const fname = document.createElement('span');
+      fname.className = 'citation-filename';
+      fname.textContent = c.name;
+      row.appendChild(fname);
+      const pages = document.createElement('div');
+      pages.className = 'citation-pages';
+      c.pages.forEach(p => {
+        const pg = document.createElement('span');
+        pg.className = 'citation-page';
+        pg.textContent = `[${p}]`;
+        pages.appendChild(pg);
+      });
+      row.appendChild(pages);
+      list.appendChild(row);
+    });
+  }
+
+  renderList();
+
+  if (hasMore) {
+    const toggle = document.createElement('button');
+    toggle.className = 'citations-toggle';
+    function updateToggle() {
+      toggle.innerHTML = expanded
+        ? '<span>Show less</span><span class="mi">expand_less</span>'
+        : '<span>Show more</span><span class="mi">expand_more</span>';
+    }
+    updateToggle();
+    toggle.onclick = () => {
+      expanded = !expanded;
+      renderList();
+      updateToggle();
+    };
+    wrap.appendChild(toggle);
+  }
+
+  return wrap;
+}
+
+// ── Lightbox ──
+function openLightbox(src, name) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox-name').textContent = name;
+  document.getElementById('img-lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox(e) {
+  if (e && e.target !== document.getElementById('img-lightbox')) return;
+  document.getElementById('img-lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('img-lightbox').classList.remove('open');
+});
+
+// ── Per-conversation thinking steps ──
+const CONV_THINKING_STEPS = {
+  15: HR_THINKING_STEPS,
+  14: MANUFACTURING_THINKING_STEPS,
+  13: EDUCATION_THINKING_STEPS,
+  12: HEALTHCARE_THINKING_STEPS,
+  11: CONTRACT_THINKING_STEPS,
+  1: [ // ผลประกอบการไตรมาสล่าสุด
+    { label: 'วิเคราะห์คำขอ', contentType: 'text',
+      content: 'คำขอเป็นการขอสรุปผลประกอบการทางการเงิน ไตรมาสล่าสุด (Q1/2026) จัดเรียงตามรายได้สูงสุด — ต้องดึงข้อมูลจากรายงานการเงินและ dashboard หลายไฟล์' },
+    { label: 'กำหนดแนวทางค้นหา', contentType: 'queries',
+      content: ['ผลประกอบการรายได้ไตรมาส 1/2026 แยกตามหน่วยธุรกิจ', 'ค่าใช้จ่ายและกำไรสุทธิ Q1 2026 summary', 'Financial performance dashboard Q1 revenue ranking', 'Executive summary Q1 2026 business segment'] },
+    { label: 'ค้นหาเอกสาร', contentType: 'files',
+      content: ['Q1_2026_Revenue_Report.pdf', 'Financial_Performance_Dashboard.xlsx', 'Executive_Summary_Q1_2026.pdf'] },
+    { label: 'ดึงข้อมูลหลัก', contentType: 'facts',
+      content: ['[4] โซลูชันองค์กร (คำลิสกิตรีซอฟต์แวร์): รายได้ ฿38.2M, กำไร ฿14.1M', '[5] บริการทางการเงิน (ระบบชำระเงินดิจิทัล): รายได้ ฿31.4M', '[12] การผลิต (อุปกรณ์อุตสาหกรรม): รายได้ ฿27.1M', '[34] การแก้ไขความตกลง (โซลูชันสินเชื่อ): รายได้ ฿21.8M'] },
+    { label: 'จัดเรียงและประมวลผล', contentType: 'table',
+      content: { headers: ['หมวดธุรกิจ','รายได้ Q1/2026','กำไรสุทธิ'], rows: [['โซลูชันองค์กร','฿ 38.2M','฿ 14.1M'],['บริการทางการเงิน','฿ 31.4M','฿ 11.6M'],['การผลิต','฿ 27.1M','฿ 8.2M'],['การแก้ไขความตกลง','฿ 21.8M','฿ 7.6M']] } },
+    { label: 'ประมวลผลคำตอบ', contentType: 'text',
+      content: 'จัดรูปแบบตารางสรุปผลประกอบการ ไตรมาส 1/2026 เรียงตามรายได้สูงสุด พร้อมอ้างอิงเอกสารต้นฉบับ 3 ไฟล์' },
+  ],
+  2: [ // Best Banks for Low-Interest Loans
+    { label: 'วิเคราะห์คำขอ', contentType: 'text',
+      content: 'ผู้ใช้ต้องการเปรียบเทียบธนาคารที่ให้สินเชื่ออัตราดอกเบี้ยต่ำที่สุดในประเทศไทย ปี 2026' },
+    { label: 'กำหนดแนวทางค้นหา', contentType: 'queries',
+      content: ['อัตราดอกเบี้ยสินเชื่อบุคคลธนาคารไทย 2026', 'เปรียบเทียบ MRR MLR ธนาคารพาณิชย์ไทย', 'สินเชื่อบ้าน รถยนต์ อัตราต่ำสุด', 'Best personal loan rates Thailand 2026'] },
+    { label: 'ค้นหาเอกสาร', contentType: 'files',
+      content: ['Bank_Rate_Comparison_2026.pdf', 'Interest_Rate_Policy_BOT.pdf', 'Personal_Loan_Products.xlsx'] },
+    { label: 'ดึงข้อมูลอัตราดอกเบี้ย', contentType: 'facts',
+      content: ['[1] KBank: MRR 7.275% — สินเชื่อบุคคลเริ่มต้น 9.99% ต่อปี', '[3] SCB: สินเชื่อบ้านเริ่มต้น 3.5% (ปีแรก)', '[8] TTB: สินเชื่อรถยนต์เริ่มต้น 2.39% ต่อปี'] },
+    { label: 'ประมวลผลคำตอบ', contentType: 'text',
+      content: 'สรุปเปรียบเทียบธนาคารพร้อมเงื่อนไข และแนะนำตัวเลือกตามวัตถุประสงค์ของสินเชื่อ' },
+  ],
+  3: [ // Tips for Improving Credit Score
+    { label: 'วิเคราะห์คำขอ', contentType: 'text',
+      content: 'ผู้ใช้ต้องการคำแนะนำในการเพิ่มคะแนน Credit Score เพื่อให้สามารถขอสินเชื่อได้ในอัตราดอกเบี้ยที่ดีขึ้น' },
+    { label: 'ค้นหาเอกสาร', contentType: 'files',
+      content: ['NCB_Credit_Score_Guide.pdf', 'Credit_Improvement_Best_Practices.pdf'] },
+    { label: 'ดึงข้อมูลคำแนะนำ', contentType: 'facts',
+      content: ['[2] ชำระหนี้ตรงเวลาทุกงวด — ปัจจัยสำคัญที่สุด (35% ของคะแนน)', '[5] ใช้วงเงินไม่เกิน 30% ของวงเงินบัตรทั้งหมด', '[9] ไม่ยื่นขอสินเชื่อหลายแห่งพร้อมกันภายใน 6 เดือน'] },
+    { label: 'ประมวลผลคำตอบ', contentType: 'text',
+      content: 'สรุปขั้นตอนการปรับปรุง Credit Score พร้อมระยะเวลาที่คาดหวัง' },
+  ],
+  4: [
+    { label: 'วิเคราะห์คำขอ', contentType: 'text', content: 'เปรียบเทียบความแตกต่างระหว่างสินเชื่อมีหลักประกัน (Secured) และไม่มีหลักประกัน (Unsecured) ทั้งในแง่อัตราดอกเบี้ย วงเงิน และความเสี่ยง' },
+    { label: 'ค้นหาเอกสาร', contentType: 'files', content: ['Loan_Types_Comparison.pdf', 'BOT_Lending_Guidelines_2026.pdf'] },
+    { label: 'ดึงข้อมูลเปรียบเทียบ', contentType: 'table', content: { headers: ['ประเภท','อัตราดอกเบี้ย','วงเงินสูงสุด','ต้องใช้หลักประกัน'], rows: [['Secured Loan','ต่ำกว่า (3–7%)','สูง (ตามมูลค่าหลักประกัน)','ใช่'],['Unsecured Loan','สูงกว่า (9–28%)','จำกัด (ตามรายได้)','ไม่']] } },
+    { label: 'ประมวลผลคำตอบ', contentType: 'text', content: 'สรุปข้อดีข้อเสียของแต่ละประเภทพร้อมแนะนำว่าเหมาะกับสถานการณ์ใด' },
+  ],
+  5: [
+    { label: 'วิเคราะห์คำขอ', contentType: 'text', content: 'ผู้ใช้ต้องการทราบว่า Credit Score ระดับใดถือว่าดี และแบ่งประเภทอย่างไรตามเกณฑ์ของ NCB ประเทศไทย' },
+    { label: 'ค้นหาเอกสาร', contentType: 'files', content: ['NCB_Credit_Score_Guide.pdf', 'Lending_Criteria_Banks_2026.pdf'] },
+    { label: 'ดึงข้อมูล', contentType: 'facts', content: ['[3] คะแนน 750–850: ดีเยี่ยม — ได้อัตราดอกเบี้ยดีที่สุด', '[5] คะแนน 650–749: ดี — ขอสินเชื่อส่วนใหญ่ได้', '[7] คะแนต่ำกว่า 580: ต้องปรับปรุงก่อนขอสินเชื่อ'] },
+    { label: 'ประมวลผลคำตอบ', contentType: 'text', content: 'สรุปตารางเกณฑ์คะแนนและผลที่ได้รับ' },
+  ],
+  6: [
+    { label: 'วิเคราะห์คำขอ', contentType: 'text', content: 'เปรียบเทียบอัตราดอกเบี้ยบัญชีออมทรัพย์และเงินฝากประจำของธนาคารต่างๆ ในปัจจุบัน' },
+    { label: 'ค้นหาเอกสาร', contentType: 'files', content: ['Savings_Rate_Comparison_2026.pdf', 'Fixed_Deposit_Products.xlsx'] },
+    { label: 'ดึงข้อมูล', contentType: 'facts', content: ['[2] TTB: ออมทรัพย์พิเศษ 1.50% ต่อปี', '[4] KBank: เงินฝากประจำ 12 เดือน 1.75% ต่อปี', '[6] SCB: e-Saving 1.20% ต่อปี'] },
+    { label: 'ประมวลผลคำตอบ', contentType: 'text', content: 'เปรียบเทียบผลตอบแทนและเงื่อนไขขั้นต่ำ' },
+  ],
+  7: [
+    { label: 'วิเคราะห์คำขอ', contentType: 'text', content: 'ผู้ใช้ต้องการทราบขั้นตอนและเอกสารที่ต้องเตรียมสำหรับการขอสินเชื่อรถยนต์' },
+    { label: 'กำหนดแนวทางค้นหา', contentType: 'queries', content: ['เอกสารขอสินเชื่อรถยนต์ธนาคารไทย', 'เงื่อนไขการอนุมัติสินเชื่อรถยนต์ 2026', 'Car loan approval requirements Thailand'] },
+    { label: 'ค้นหาเอกสาร', contentType: 'files', content: ['Car_Loan_Checklist.pdf', 'Auto_Finance_Products_2026.pdf'] },
+    { label: 'ดึงข้อมูลเอกสาร', contentType: 'facts', content: ['[1] บัตรประชาชน + ทะเบียนบ้าน (สำเนา)', '[3] สลิปเงินเดือน 3 เดือนล่าสุด หรือ Bank Statement 6 เดือน', '[5] รายได้ขั้นต่ำ 15,000 บาท/เดือน (ส่วนใหญ่)', '[8] ใช้เวลาอนุมัติ 3–7 วันทำการ'] },
+    { label: 'ประมวลผลคำตอบ', contentType: 'text', content: 'สรุป checklist เอกสารและขั้นตอนการยื่นขอสินเชื่อรถยนต์' },
+  ],
+  8: [
+    { label: 'วิเคราะห์คำขอ', contentType: 'text', content: 'ผู้ใช้ต้องการเข้าใจวิธีคำนวณดอกเบี้ยสินเชื่อแบบต่างๆ เช่น Flat Rate, Effective Rate และ Reducing Balance' },
+    { label: 'ค้นหาเอกสาร', contentType: 'files', content: ['Interest_Calculation_Guide.pdf', 'BOT_Consumer_Finance_Glossary.pdf'] },
+    { label: 'ดึงข้อมูล', contentType: 'facts', content: ['[2] Flat Rate: คิดจากเงินต้นเต็มจำนวนตลอดระยะเวลา — ง่ายแต่แพงกว่าจริง', '[5] Effective Rate: อัตราจริงหลังหักเงินต้นที่ผ่อนชำระแล้ว', '[8] Reducing Balance: ดอกเบี้ยลดลงตามยอดคงเหลือ — ถูกกว่า Flat Rate'] },
+    { label: 'ประมวลผลคำตอบ', contentType: 'text', content: 'อธิบายสูตรคำนวณพร้อมตัวอย่างเปรียบเทียบ' },
+  ],
+  9: [
+    { label: 'วิเคราะห์คำขอ', contentType: 'text', content: 'ผู้ใช้ต้องการวิธีปิดหนี้บัตรเครดิตให้เร็วขึ้นและประหยัดดอกเบี้ย' },
+    { label: 'กำหนดแนวทางค้นหา', contentType: 'queries', content: ['วิธีชำระหนี้บัตรเครดิตเร็วที่สุด', 'Debt snowball vs avalanche strategy', 'ปิดหนี้บัตรเครดิตหลายใบพร้อมกัน'] },
+    { label: 'ค้นหาเอกสาร', contentType: 'files', content: ['Debt_Management_Guide.pdf', 'Credit_Card_Policy_2026.pdf'] },
+    { label: 'ดึงข้อมูลกลยุทธ์', contentType: 'facts', content: ['[4] Avalanche Method: จ่ายขั้นต่ำทุกบัตร + เงินเพิ่มเติมไปที่บัตรดอกเบี้ยสูงสุดก่อน', '[7] Snowball Method: ปิดบัตรยอดน้อยสุดก่อน สร้าง momentum', '[10] Balance Transfer: โอนหนี้มาที่บัตรดอกเบี้ย 0% ชั่วคราว (มีเงื่อนไข)'] },
+    { label: 'ประมวลผลคำตอบ', contentType: 'text', content: 'แนะนำแผน 4 ขั้นตอนในการชำระหนี้บัตรเครดิตให้มีประสิทธิภาพ' },
+  ],
+  10: [
+    { label: 'วิเคราะห์คำขอ', contentType: 'text', content: 'ผู้ใช้ต้องการทราบข้อดีและข้อเสียของการกู้สินเชื่อบุคคล เพื่อประกอบการตัดสินใจ' },
+    { label: 'ค้นหาเอกสาร', contentType: 'files', content: ['Personal_Loan_Products.xlsx', 'Consumer_Finance_Report_2026.pdf'] },
+    { label: 'ดึงข้อมูล', contentType: 'table', content: { headers: ['ด้าน','ข้อดี','ข้อเสีย'], rows: [['อัตราดอกเบี้ย','คงที่ คาดเดาได้','สูงกว่าสินเชื่อมีหลักประกัน'],['เงื่อนไข','ไม่ต้องค้ำประกัน','วงเงินต่ำกว่า'],['ความเร็ว','อนุมัติเร็ว 1–3 วัน','มีค่าธรรมเนียมจัดการ']] } },
+    { label: 'ประมวลผลคำตอบ', contentType: 'text', content: 'สรุปข้อดีข้อเสียและแนะนำสถานการณ์ที่เหมาะสมสำหรับสินเชื่อบุคคล' },
+  ],
+};
+
+// ── Mock conversations ──
+const MOCK_CONVERSATIONS = {
+  15: {
+    userMsg: 'ปีนี้บริษัทให้สิทธิ์ค่ารักษาพยาบาลอะไรบ้างนะ',
+    thinkTime: '5.10',
+    isHR: true,
+    aiText: null,
+    citations: [{ name: 'Medical Benefits Policy.pdf', pages: [2,3] }],
+  },
+  14: {
+    userMsg: 'เครื่อง Injection Molding #3 ขึ้น Error E-47 ต้องแก้ยังไง',
+    thinkTime: '5.10',
+    isManufacturing: true,
+    aiText: null,
+    citations: [{ name: 'Machine Manual v2.3', pages: [47] }],
+  },
+  13: {
+    userMsg: 'มีประกาศใหม่จากสพฐ. เรื่องหลักสูตรปี 2568 อยากรู้ว่าโรงเรียนต้องปรับอะไรบ้าง',
+    thinkTime: '5.10',
+    isEducation: true,
+    aiText: null,
+    citations: [{ name: 'MOE_Curriculum_2568.pdf', pages: [3,7,9,13,16] }],
+    fileCard: { name: 'MOE_Curriculum_2568.pdf', size: '1.8 KB' },
+  },
+  12: {
+    userMsg: 'ช่วยสรุป pending actions และคนไข้ที่ต้องเฝ้าระวังของกะเช้าหน่อย',
+    thinkTime: '5.10',
+    isHealthcare: true,
+    aiText: null,
+    citations: [{ name: 'Ward_5B_Night_Notes.pdf', pages: [] }],
+    fileCard: { name: 'Ward_5B_Night_Notes.pdf', size: '2.4 KB' },
+  },
+  11: {
+    userMsg: 'ขอดูสัญญาบริการที่มีกำหนดชำระงวดสุดท้ายในเดือนนี้และตั้งค่าต่ออายุอัตโนมัติไว้ แล้วค่อยแสดงรายการที่ไม่ได้ตั้งค่าต่ออายุอัตโนมัติ',
+    thinkTime: '5.10',
+    isContract: true,
+    aiText: null,
+    citations: CONTRACT_RESPONSE.citations
+  },
+  1: {
+    userMsg: 'ขอดูสรุปผลประกอบการไตรมาสล่าสุด โดยจัดเรียงตามรายได้สูงสุดก่อน',
+    thinkTime: '5.10',
+    isFinance: true, // render as finance table
+    aiText: null,
+    citations: [
+      { name: 'Q1_2026_Revenue_Report.pdf',          pages: [4,5,12,13] },
+      { name: 'Financial_Performance_Dashboard.xlsx', pages: [1,34,35,36] },
+      { name: 'Executive_Summary_Q1_2026.pdf',        pages: [1,2,3,4] },
+    ]
+  },
+  2: {
+    userMsg: 'Best Banks for Low-Interest Loans in Thailand 2026',
+    thinkTime: '7.42',
+    aiText: `<strong>ธนาคารที่มีอัตราดอกเบี้ยสินเชื่อต่ำที่สุดในไทย ปี 2026</strong><br><br>
+<strong>สินเชื่อบ้าน (Home Loan)</strong><br>
+• <strong>KBank</strong> — เริ่มต้น 2.99% ต่อปี (2 ปีแรก) | MRR 7.275%<br>
+• <strong>SCB</strong> — เริ่มต้น 3.25% ต่อปี (ปีแรก) | มีโปรแกรมพิเศษสำหรับลูกค้า SCB Easy<br>
+• <strong>GHB</strong> — เริ่มต้น 3.00% ต่อปี (บ้านระดับราคาปานกลาง)<br><br>
+<strong>สินเชื่อรถยนต์ (Car Loan)</strong><br>
+• <strong>TTB</strong> — เริ่มต้น 2.39% ต่อปี (Fixed)<br>
+• <strong>KBank</strong> — เริ่มต้น 2.49% ต่อปี<br><br>
+<strong>สินเชื่อบุคคล (Personal Loan)</strong><br>
+• <strong>KTC</strong> — เริ่มต้น 9.99% ต่อปี (วงเงินสูงสุด 5 เท่าของรายได้)<br>
+• <strong>Citibank (UOB)</strong> — เริ่มต้น 10.99% ต่อปี<br><br>
+<em>อัตราดอกเบี้ยข้างต้นเป็นอัตราโปรโมชั่น ขึ้นอยู่กับคุณสมบัติของผู้กู้และเงื่อนไขของธนาคาร</em>`,
+    citations: [
+      { name: 'Bank_Rate_Comparison_2026.pdf',   pages: [1,3,8] },
+      { name: 'Interest_Rate_Policy_BOT.pdf',    pages: [5,12] },
+      { name: 'Personal_Loan_Products.xlsx',     pages: [2,4,9] },
+    ]
+  },
+  3: {
+    userMsg: 'Tips for Improving Credit Score',
+    thinkTime: '6.18',
+    aiText: `<strong>5 วิธีเพิ่ม Credit Score อย่างได้ผล</strong><br><br>
+<strong>1. ชำระหนี้ตรงเวลาทุกงวด</strong> — ปัจจัยที่มีผลต่อคะแนนมากที่สุด (ประมาณ 35%) แม้แต่การค้างชำระเพียง 1 ครั้งก็กระทบคะแนนได้นาน 2 ปี<br><br>
+<strong>2. ควบคุมการใช้วงเงินบัตรเครดิต</strong> — ควรใช้ไม่เกิน 30% ของวงเงินทั้งหมด เช่น วงเงิน 100,000 บาท ควรใช้ไม่เกิน 30,000 บาท<br><br>
+<strong>3. ไม่ยื่นขอสินเชื่อหลายแห่งพร้อมกัน</strong> — การ "Hard Inquiry" แต่ละครั้งกระทบคะแนนเล็กน้อย ควรเว้นระยะอย่างน้อย 6 เดือน<br><br>
+<strong>4. รักษาประวัติสินเชื่อเก่าไว้</strong> — บัญชีที่มีประวัติยาวนานช่วยเพิ่มคะแนน อย่าปิดบัตรเครดิตเก่าที่ไม่มีค่าธรรมเนียม<br><br>
+<strong>5. ตรวจสอบรายงานเครดิตบูโร</strong> — ขอรายงานฟรี 1 ครั้ง/ปี จาก NCB เพื่อตรวจสอบความถูกต้อง<br><br>
+<em>คะแนนมักเพิ่มขึ้นอย่างเห็นได้ชัดภายใน 6–12 เดือน หากทำตามข้อแนะนำสม่ำเสมอ</em>`,
+    citations: [
+      { name: 'NCB_Credit_Score_Guide.pdf',              pages: [2,5,9] },
+      { name: 'Credit_Improvement_Best_Practices.pdf',   pages: [10,14] },
+    ]
+  },
+  4: {
+    userMsg: 'Difference Between Secured and Unsecured Loans',
+    thinkTime: '5.33',
+    aiText: `<strong>ความแตกต่างระหว่างสินเชื่อมีหลักประกัน และไม่มีหลักประกัน</strong><br><br>
+<strong>Secured Loan (มีหลักประกัน)</strong><br>
+ต้องนำทรัพย์สิน เช่น บ้าน ที่ดิน รถยนต์ มาค้ำประกัน อัตราดอกเบี้ยต่ำกว่า (3–7%) เพราะธนาคารมีความเสี่ยงต่ำกว่า วงเงินสูงกว่า ตัวอย่าง: สินเชื่อบ้าน, สินเชื่อรถยนต์<br><br>
+<strong>Unsecured Loan (ไม่มีหลักประกัน)</strong><br>
+ไม่ต้องใช้หลักประกัน อนุมัติเร็วกว่า แต่อัตราดอกเบี้ยสูงกว่า (9–28%) เพราะธนาคารรับความเสี่ยงเพิ่มขึ้น วงเงินจำกัด ตัวอย่าง: สินเชื่อบุคคล, บัตรเครดิต<br><br>
+<strong>สรุปเปรียบเทียบ</strong><br>
+เลือก Secured ถ้า: ต้องการวงเงินสูง อัตราดอกเบี้ยต่ำ และมีทรัพย์สินค้ำประกัน<br>
+เลือก Unsecured ถ้า: ต้องการเงินเร็ว วงเงินไม่มาก และไม่มีทรัพย์สินค้ำประกัน`,
+    citations: [
+      { name: 'Loan_Types_Comparison.pdf',        pages: [3,7,11] },
+      { name: 'BOT_Lending_Guidelines_2026.pdf',  pages: [5,8] },
+    ]
+  },
+  5: {
+    userMsg: 'What Is a Good Credit Score?',
+    thinkTime: '4.87',
+    aiText: `<strong>เกณฑ์ Credit Score และความหมาย (ระบบ NCB ประเทศไทย)</strong><br><br>
+คะแนนเครดิตบูโรในไทยอยู่ในช่วง 300–900 คะแนน โดยทั่วไปมีการแบ่งระดับดังนี้<br><br>
+• <strong>750–900 (ดีเยี่ยม)</strong> — ได้รับการอนุมัติสินเชื่อเกือบทุกประเภท ในอัตราดอกเบี้ยดีที่สุด<br>
+• <strong>650–749 (ดี)</strong> — ขอสินเชื่อส่วนใหญ่ได้ อาจต้องมีเอกสารเพิ่มเติม<br>
+• <strong>580–649 (พอใช้)</strong> — อาจได้รับการอนุมัติแต่ดอกเบี้ยสูงกว่า<br>
+• <strong>ต่ำกว่า 580 (ต้องปรับปรุง)</strong> — ธนาคารส่วนใหญ่ปฏิเสธการให้สินเชื่อ<br><br>
+<strong>เป้าหมายที่ดี:</strong> มุ่งสู่คะแนน 700+ เพื่อให้มีตัวเลือกสินเชื่อที่หลากหลายและอัตราดอกเบี้ยที่ดี`,
+    citations: [
+      { name: 'NCB_Credit_Score_Guide.pdf',     pages: [3,5,7] },
+      { name: 'Lending_Criteria_Banks_2026.pdf', pages: [4,6] },
+    ]
+  },
+  6: {
+    userMsg: 'Which Bank Has the Best Savings Interest Rate?',
+    thinkTime: '6.91',
+    aiText: `<strong>เปรียบเทียบอัตราดอกเบี้ยออมทรัพย์ และเงินฝากประจำ ปี 2026</strong><br><br>
+<strong>บัญชีออมทรัพย์ (Savings)</strong><br>
+• <strong>TTB Me Save</strong> — 1.50% ต่อปี (เงื่อนไข: ไม่ถอนเกิน 3 ครั้ง/เดือน)<br>
+• <strong>KBank K-eSaving</strong> — 1.30% ต่อปี (สำหรับบัญชีออนไลน์)<br>
+• <strong>SCB Easy e-Saving</strong> — 1.20% ต่อปี<br><br>
+<strong>เงินฝากประจำ 12 เดือน (Fixed Deposit)</strong><br>
+• <strong>KBank</strong> — 1.75% ต่อปี<br>
+• <strong>Krungthai</strong> — 1.70% ต่อปี<br>
+• <strong>BBL</strong> — 1.65% ต่อปี<br><br>
+<em>อัตราดอกเบี้ยอาจเปลี่ยนแปลง กรุณาตรวจสอบกับธนาคารโดยตรง</em>`,
+    citations: [
+      { name: 'Savings_Rate_Comparison_2026.pdf', pages: [2,5,8] },
+      { name: 'Fixed_Deposit_Products.xlsx',      pages: [1,4] },
+    ]
+  },
+  7: {
+    userMsg: 'Steps to Get Approved for a Car Loan',
+    thinkTime: '7.24',
+    aiText: `<strong>ขั้นตอนการขอสินเชื่อรถยนต์และเอกสารที่ต้องเตรียม</strong><br><br>
+<strong>เอกสารพื้นฐานที่ต้องใช้</strong><br>
+• บัตรประชาชน + ทะเบียนบ้าน (สำเนา)<br>
+• สลิปเงินเดือน 3 เดือนล่าสุด หรือ Bank Statement 6 เดือน<br>
+• หนังสือรับรองการทำงาน (อายุไม่เกิน 3 เดือน)<br>
+• สัญญาจะซื้อจะขายรถยนต์จากดีลเลอร์<br><br>
+<strong>เงื่อนไขทั่วไป</strong><br>
+• รายได้ขั้นต่ำ: 15,000 บาท/เดือน (บางธนาคารกำหนดต่างกัน)<br>
+• อายุงาน: ไม่ต่ำกว่า 6 เดือน–1 ปี<br>
+• ไม่มีประวัติค้างชำระ NPL ในช่วง 2 ปีที่ผ่านมา<br><br>
+<strong>ระยะเวลาดำเนินการ</strong><br>
+อนุมัติภายใน 3–7 วันทำการหลังได้รับเอกสารครบ`,
+    citations: [
+      { name: 'Car_Loan_Checklist.pdf',          pages: [1,3,5,8] },
+      { name: 'Auto_Finance_Products_2026.pdf',  pages: [4,7] },
+    ]
+  },
+  8: {
+    userMsg: 'Understanding Loan Interest Rate Calculations',
+    thinkTime: '8.05',
+    aiText: `<strong>วิธีคำนวณดอกเบี้ยสินเชื่อ 3 รูปแบบหลัก</strong><br><br>
+<strong>1. Flat Rate (อัตราคงที่)</strong><br>
+คำนวณจากเงินต้นเต็มจำนวนตลอดระยะเวลากู้ เช่น กู้ 100,000 บาท 3 ปี Flat Rate 5% → ดอกเบี้ยรวม = 100,000 × 5% × 3 = 15,000 บาท แม้จะผ่อนชำระไปแล้วก็ตาม<br><br>
+<strong>2. Effective Rate / Reducing Balance</strong><br>
+คำนวณจากยอดเงินต้นคงเหลือ ดอกเบี้ยลดลงตามที่ผ่อนชำระ จึงประหยัดกว่า Flat Rate ถึง 40–50% ใช้กับสินเชื่อบ้านและรถยนต์ส่วนใหญ่<br><br>
+<strong>3. Compound Interest</strong><br>
+ดอกเบี้ยทบต้น — ดอกเบี้ยที่ค้างชำระถูกนำไปคิดดอกเบี้ยต่อในงวดถัดไป มักพบในบัตรเครดิตที่ไม่ชำระเต็มจำนวน<br><br>
+<strong>เคล็ดลับ:</strong> ขอดู APR (Annual Percentage Rate) จากธนาคาร ซึ่งรวมค่าธรรมเนียมทั้งหมดไว้ด้วย เพื่อเปรียบเทียบที่แท้จริง`,
+    citations: [
+      { name: 'Interest_Calculation_Guide.pdf',      pages: [2,5,8,11] },
+      { name: 'BOT_Consumer_Finance_Glossary.pdf',   pages: [3,6] },
+    ]
+  },
+  9: {
+    userMsg: 'How to Pay Off Credit Card Debt Faster',
+    thinkTime: '6.64',
+    aiText: `<strong>แผนปิดหนี้บัตรเครดิตให้เร็วขึ้น</strong><br><br>
+<strong>กลยุทธ์ที่ 1 — Avalanche Method (ประหยัดดอกเบี้ยมากสุด)</strong><br>
+จ่ายขั้นต่ำทุกบัตร แล้วนำเงินเพิ่มเติมไปชำระบัตรที่มีอัตราดอกเบี้ยสูงสุดก่อน เมื่อปิดแล้วย้ายเงินก้อนนั้นไปบัตรถัดไป<br><br>
+<strong>กลยุทธ์ที่ 2 — Snowball Method (สร้าง momentum)</strong><br>
+ปิดบัตรยอดน้อยสุดก่อน เพื่อลดจำนวนบัตร และสร้างแรงจูงใจในการชำระต่อเนื่อง<br><br>
+<strong>กลยุทธ์ที่ 3 — Balance Transfer</strong><br>
+โอนหนี้มาที่บัตรหรือสินเชื่อดอกเบี้ย 0% ชั่วคราว (ปกติ 3–6 เดือน) แล้วเร่งชำระให้หมดก่อนสิ้นสุดโปรโมชั่น<br><br>
+<strong>สิ่งที่ควรทำควบคู่:</strong> หยุดใช้บัตรที่กำลังปิดหนี้ และกำหนดงบการชำระรายเดือนที่แน่นอน`,
+    citations: [
+      { name: 'Debt_Management_Guide.pdf',   pages: [4,7,10] },
+      { name: 'Credit_Card_Policy_2026.pdf', pages: [6,9] },
+    ]
+  },
+  10: {
+    userMsg: 'Pros and Cons of Taking a Personal Loan',
+    thinkTime: '5.98',
+    aiText: `<strong>ข้อดีและข้อเสียของการกู้สินเชื่อบุคคล</strong><br><br>
+<strong>✅ ข้อดี</strong><br>
+• ไม่ต้องใช้หลักประกัน — ไม่เสี่ยงกับทรัพย์สิน<br>
+• อนุมัติเร็ว — บางธนาคารอนุมัติภายใน 24 ชั่วโมง<br>
+• ดอกเบี้ยคงที่ตลอดสัญญา — คาดการณ์ค่าใช้จ่ายได้<br>
+• วัตถุประสงค์ยืดหยุ่น — ใช้ได้หลายอย่าง ฉุกเฉิน รีโนเวท ท่องเที่ยว<br><br>
+<strong>⚠ ข้อเสีย</strong><br>
+• อัตราดอกเบี้ยสูงกว่าสินเชื่อมีหลักประกัน (9–28%)<br>
+• วงเงินจำกัด — โดยทั่วไปไม่เกิน 5 เท่าของรายได้<br>
+• มีค่าธรรมเนียมจัดการ และค่าปรับหากชำระก่อนกำหนด<br><br>
+<strong>เหมาะสมเมื่อ:</strong> ต้องการเงินเร็ว วงเงินไม่มาก และมั่นใจว่าชำระคืนได้ตรงเวลา`,
+    citations: [
+      { name: 'Personal_Loan_Products.xlsx',      pages: [2,5] },
+      { name: 'Consumer_Finance_Report_2026.pdf', pages: [8,12,15] },
+    ]
+  }
+};
+
+function loadConversation(id) {
+  const data = MOCK_CONVERSATIONS[id];
+  if (!data) return;
+
+  const convArea = document.getElementById('conv-area');
+  const convScroll = document.getElementById('conv-scroll');
+  const greetWrap = document.getElementById('greeting-wrap');
+  const modelPill = document.getElementById('model-pill');
+
+  convArea.innerHTML = '';
+  convArea.classList.add('visible');
+  greetWrap.style.display = 'none';
+  convScroll.classList.add('chat-mode');
+  const titleMap = { 1: 'ผลประกอบการ', 11: 'สัญญาบริการ — งวดสุดท้ายเดือนนี้', 12: 'สรุปงานกะเช้า', 13: 'หลักสูตรใหม่จากสพฐ.ปี 2568', 14: 'Error E-47 บนเครื่อง Injection Molding #3', 15: 'สิทธิ์ค่ารักษาพยาบาล' };
+  document.getElementById('chat-title').textContent = titleMap[id] || data.userMsg;
+
+  // File card (if conversation has one)
+  if (data.fileCard) {
+    const fc = document.createElement('div');
+    fc.className = 'conv-file-card';
+    fc.style.alignSelf = 'flex-end';
+    fc.innerHTML = `
+      <div class="conv-file-icon"><img src="${getFileIconSrc(data.fileCard.name)}" alt="PDF"></div>
+      <div class="conv-file-info">
+        <div class="conv-file-name">${data.fileCard.name}</div>
+        <div class="conv-file-size">${data.fileCard.size}</div>
+      </div>`;
+    convArea.appendChild(fc);
+  }
+
+  // User bubble
+  const userBubble = document.createElement('div');
+  userBubble.className = 'bubble-user';
+  userBubble.textContent = data.userMsg;
+  convArea.appendChild(userBubble);
+
+  // Thinking card — collapsed (done state)
+  const thinkCard = buildCollapsedThinkingCard(data.thinkTime, CONV_THINKING_STEPS[id]);
+  convArea.appendChild(thinkCard);
+
+  // AI response
+  if (data.isFinance) {
+    // Render finance table statically (already resolved)
+    const r = FINANCE_RESPONSE;
+    const ai = document.createElement('div');
+    ai.className = 'bubble-ai';
+    const headingEl = document.createElement('strong');
+    headingEl.style.display = 'block';
+    headingEl.style.marginBottom = '12px';
+    headingEl.style.fontSize = '14px';
+    headingEl.style.lineHeight = '1.6';
+    headingEl.textContent = r.heading;
+    ai.appendChild(headingEl);
+    const table = document.createElement('table');
+    table.className = 'ai-response-table';
+    table.innerHTML = `<thead><tr>
+      <th>หมวดธุรกิจ</th><th>ประเภท</th>
+      <th>รายได้<br><span style="font-weight:400;font-size:11px">(ไตรมาส 1/2026)</span></th>
+      <th>ค่าใช้จ่าย<br><span style="font-weight:400;font-size:11px">(ไตรมาส 1/2026)</span></th>
+      <th>กำไรสุทธิ<br><span style="font-weight:400;font-size:11px">(ไตรมาส 1/2026)</span></th>
+    </tr></thead><tbody>${r.rows.map(row=>`<tr class="row-visible">
+      <td><strong>${row.segment}</strong></td><td>${row.type}</td>
+      <td class="revenue-val">${row.revenue}</td>
+      <td class="expense-val">${row.expense}</td>
+      <td class="profit-val">${row.profit}</td>
+    </tr>`).join('')}</tbody>`;
+    ai.appendChild(table);
+    convArea.appendChild(ai);
+  } else if (data.isHR) {
+    const r = HR_RESPONSE;
+    const ai = document.createElement('div');
+    ai.className = 'bubble-ai';
+    ai.style.lineHeight = '1.75';
+    const hEl = document.createElement('strong');
+    hEl.style.cssText = 'display:block;margin-bottom:10px;font-size:14px;';
+    hEl.textContent = r.heading;
+    ai.appendChild(hEl);
+    const ul = document.createElement('ul');
+    ul.style.cssText = 'margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;';
+    r.items.forEach(txt => {
+      const li = document.createElement('li');
+      li.style.cssText = 'font-size:14px;color:var(--text-primary);line-height:1.65;';
+      li.textContent = txt;
+      ul.appendChild(li);
+    });
+    ai.appendChild(ul);
+    if (r.closing) {
+      const cl = document.createElement('p');
+      cl.style.cssText = 'margin:12px 0 0;font-size:14px;color:var(--text-secondary);line-height:1.65;';
+      cl.textContent = r.closing;
+      ai.appendChild(cl);
+    }
+    convArea.appendChild(ai);
+  } else if (data.isManufacturing) {
+    const r = MANUFACTURING_RESPONSE;
+    const ai = document.createElement('div');
+    ai.className = 'bubble-ai';
+    ai.style.lineHeight = '1.75';
+    const hEl = document.createElement('strong');
+    hEl.style.cssText = 'display:block;margin-bottom:10px;font-size:14px;';
+    hEl.textContent = r.heading;
+    ai.appendChild(hEl);
+    const ul = document.createElement('ul');
+    ul.style.cssText = 'margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px;';
+    r.items.forEach(item => {
+      const li = document.createElement('li');
+      li.style.cssText = 'display:flex;gap:6px;font-size:14px;line-height:1.65;';
+      li.innerHTML = `<span style="color:#6b7280">•</span><span><span style="font-weight:600">${item.label}:</span> ${item.text}</span>`;
+      ul.appendChild(li);
+    });
+    ai.appendChild(ul);
+    convArea.appendChild(ai);
+  } else if (data.isEducation) {
+    const r = EDUCATION_RESPONSE;
+    const ai = document.createElement('div');
+    ai.className = 'bubble-ai';
+    ai.style.lineHeight = '1.75';
+    const hEl = document.createElement('strong');
+    hEl.style.cssText = 'display:block;margin-bottom:10px;font-size:14px;';
+    hEl.textContent = r.heading;
+    ai.appendChild(hEl);
+    const ul = document.createElement('ul');
+    ul.style.cssText = 'margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;';
+    r.items.forEach(txt => {
+      const li = document.createElement('li');
+      li.style.cssText = 'font-size:14px;color:var(--text-primary);line-height:1.65;';
+      li.textContent = txt;
+      ul.appendChild(li);
+    });
+    ai.appendChild(ul);
+    convArea.appendChild(ai);
+  } else if (data.isHealthcare) {
+    const r = HEALTHCARE_RESPONSE;
+    const ai = document.createElement('div');
+    ai.className = 'bubble-ai';
+    ai.style.lineHeight = '1.75';
+    const hEl = document.createElement('strong');
+    hEl.style.cssText = 'display:block;margin-bottom:10px;font-size:14px;';
+    hEl.textContent = r.heading;
+    ai.appendChild(hEl);
+    const sEl = document.createElement('p');
+    sEl.style.cssText = 'margin:0 0 10px;font-size:14px;font-weight:500;color:var(--text-secondary);';
+    sEl.textContent = r.subtitle;
+    ai.appendChild(sEl);
+    const lw = document.createElement('div');
+    lw.style.cssText = 'display:flex;flex-direction:column;gap:8px;';
+    r.items.forEach(item => {
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;align-items:flex-start;gap:8px;';
+      row.innerHTML = `<span style="display:inline-block;flex-shrink:0;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;margin-top:2px;background:${item.tagBg};color:${item.tagColor};">${item.tag}</span><span style="font-size:14px;color:var(--text-primary);line-height:1.6;">${item.text}</span>`;
+      lw.appendChild(row);
+    });
+    ai.appendChild(lw);
+    convArea.appendChild(ai);
+  } else if (data.isContract) {
+    const r = CONTRACT_RESPONSE;
+    const ai = document.createElement('div');
+    ai.className = 'bubble-ai';
+    ai.style.lineHeight = '1.75';
+    const hEl = document.createElement('strong');
+    hEl.style.cssText = 'display:block;margin-bottom:12px;font-size:14px;';
+    hEl.textContent = r.heading;
+    ai.appendChild(hEl);
+    // Comparison table
+    const tbl = document.createElement('table');
+    tbl.className = 'ai-response-table';
+    tbl.style.marginBottom = '16px';
+    tbl.innerHTML = `<thead><tr>${r.tableHeaders.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${r.tableRows.map(row=>`<tr class="row-visible">${row.map((c,i)=>`<td${i===0?' style="font-weight:500"':''}>${c}</td>`).join('')}</tr>`).join('')}</tbody>`;
+    ai.appendChild(tbl);
+    // Action section
+    const aHead = document.createElement('strong');
+    aHead.style.cssText = 'display:block;margin-bottom:8px;font-size:14px;';
+    aHead.textContent = r.actionHeading;
+    ai.appendChild(aHead);
+    const ul = document.createElement('ul');
+    ul.style.cssText = 'margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;';
+    r.actionItems.forEach(txt => {
+      const li = document.createElement('li');
+      li.style.cssText = 'font-size:14px;color:var(--text-primary);line-height:1.65;';
+      li.textContent = txt;
+      ul.appendChild(li);
+    });
+    ai.appendChild(ul);
+    convArea.appendChild(ai);
+  } else {
+    const ai = document.createElement('div');
+    ai.className = 'bubble-ai';
+    ai.innerHTML = data.aiText;
+    convArea.appendChild(ai);
+  }
+
+  // Citations
+  convArea.appendChild(buildCitations(data.citations));
+
+  // Actions
+  const actions = document.createElement('div');
+  actions.className = 'ai-actions';
+  actions.innerHTML = `
+    <button class="ai-action-btn ai-action-icon" title="Copy"><span class="mi">content_copy</span></button>
+    <button class="ai-action-btn ai-action-icon" title="Thumbs up"><span class="mi">thumb_up</span></button>
+    <button class="ai-action-btn ai-action-icon" title="Thumbs down"><span class="mi">thumb_down</span></button>
+    <button class="ai-action-btn ai-action-icon" title="Regenerate"><span class="mi">refresh</span></button>`;
+  convArea.appendChild(actions);
+
+  convScroll.scrollTop = 0;
+}
+
+function buildCollapsedThinkingCard(elapsed, customSteps) {
+  const card = document.createElement('div');
+  card.className = 'thinking-card';
+
+  const header = document.createElement('div');
+  header.className = 'thinking-header';
+  header.innerHTML = `
+    <span class="mi thinking-done-icon" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24">check_circle</span>
+    <span class="thinking-header-title" style="font-weight:400;color:#6b7280">Thought for ${elapsed}s</span>
+    <div class="thinking-header-right">
+      <span class="mi thinking-chevron">expand_more</span>
+    </div>`;
+  card.appendChild(header);
+
+  // Steps (pre-done)
+  const stepsWrap = document.createElement('div');
+  stepsWrap.className = 'thinking-steps hidden';
+  const steps = customSteps || THINKING_STEPS;
+  steps.forEach((step, i) => {
+    const el = document.createElement('div');
+    el.className = 'thinking-step done';
+    const richContent = buildStepContent(step);
+    el.innerHTML = `
+      <div class="thinking-step-row">
+        <span class="step-icon-done mi">check_circle</span>
+        <span class="thinking-step-label">${step.label}</span>
+        <span class="mi thinking-step-chevron">expand_more</span>
+      </div>`;
+    el.appendChild(richContent);
+    const row = el.querySelector('.thinking-step-row');
+    const chev = el.querySelector('.thinking-step-chevron');
+    row.addEventListener('click', () => {
+      const open = richContent.classList.toggle('visible');
+      chev.textContent = open ? 'expand_less' : 'expand_more';
+    });
+    stepsWrap.appendChild(el);
+  });
+  card.appendChild(stepsWrap);
+
+  // Toggle
+  let open = false;
+  header.addEventListener('click', () => {
+    open = !open;
+    stepsWrap.classList.toggle('hidden', !open);
+    header.querySelector('.thinking-chevron').classList.toggle('open', open);
+  });
+  return card;
+}
+
+function loadChat(el) {
+  // legacy — unused, selectChat handles it
+}
+</script>
+</body>
+</html>
