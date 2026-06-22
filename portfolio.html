@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Hatairat W. (Joon) — Product & UX/UI Designer</title>
+<script>if('scrollRestoration' in history)history.scrollRestoration='manual';if(location.hash)history.replaceState(null,'',location.pathname);</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:#F0EDE5;color:#1C1A14;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+:root{
+  --bg:#F0EDE5;
+  --bg2:#E8E4D8;
+  --surface:#FAFAF7;
+  --surface2:#EDE9DF;
+  --border:#D8D3C8;
+  --border2:#C0BAA8;
+  --text:#1C1A14;
+  --muted:#7A7568;
+  --dim:#A09880;
+  --accent:#8C1A1A;
+  --accent2:#A82828;
+  --serif:'Outfit',sans-serif;
+}
+
+/* ── NAV ── */
+nav{position:fixed;inset:0 0 auto;z-index:100;height:60px;padding:0 56px;display:flex;align-items:center;justify-content:space-between;background:rgba(240,237,229,.97);border-bottom:1px solid var(--border)}
+.logo{font-family:var(--serif);font-size:18px;color:var(--text);letter-spacing:.01em;flex-shrink:0}
+.nav-links{position:absolute;left:50%;transform:translateX(-50%);display:flex;gap:2px}
+.nav-a{padding:7px 14px;border-radius:6px;font-size:13px;color:var(--muted);text-decoration:none;transition:.15s}
+.nav-a:hover{color:var(--text);background:rgba(0,0,0,.05)}
+.nav-resume{padding:7px 14px;border-radius:6px;background:transparent;color:var(--muted);font-size:13px;font-weight:500;text-decoration:none;border:1px solid var(--border);transition:.2s;flex-shrink:0}
+.nav-resume:hover{color:var(--text);border-color:var(--border2);background:rgba(0,0,0,.04)}
+.nav-cta{padding:8px 18px;border-radius:6px;background:var(--accent);color:#fff;font-size:13px;font-weight:600;text-decoration:none;transition:.2s;flex-shrink:0}
+.nav-cta:hover{background:var(--accent2);transform:translateY(-1px)}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;align-items:center;padding:130px 56px 80px;position:relative;overflow:hidden}
+.noise{position:absolute;inset:0;opacity:.018;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:160px}
+.hero-orb{position:absolute;border-radius:50%;pointer-events:none;will-change:transform}
+.orb1{width:640px;height:640px;top:-180px;right:-80px;background:radial-gradient(circle,rgba(140,26,26,.09) 0%,transparent 65%);animation:orbDrift1 12s ease-in-out infinite}
+.orb2{width:480px;height:480px;bottom:-140px;left:-60px;background:radial-gradient(circle,rgba(168,40,40,.06) 0%,transparent 65%);animation:orbDrift2 16s ease-in-out infinite}
+@keyframes orbDrift1{0%,100%{transform:translate(0,0) scale(1)}40%{transform:translate(-40px,30px) scale(1.08)}75%{transform:translate(30px,-20px) scale(.95)}}
+@keyframes orbDrift2{0%,100%{transform:translate(0,0) scale(1)}35%{transform:translate(35px,-25px) scale(1.06)}70%{transform:translate(-25px,35px) scale(.97)}}
+.hero-inner{max-width:1120px;margin:0 auto;width:100%;position:relative;z-index:1;display:grid;grid-template-columns:1fr auto;gap:80px;align-items:center}
+.hero-left{}
+.hero-pill{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:999px;background:rgba(0,0,0,.04);border:1px solid var(--border);font-size:12px;color:var(--muted);margin-bottom:28px}
+.hero-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.22);animation:blink 2s ease infinite}
+@keyframes blink{0%,100%{box-shadow:0 0 0 3px rgba(34,197,94,.22)}50%{box-shadow:0 0 0 6px rgba(34,197,94,.08)}}
+.hero-avatar{width:120px;height:120px;border-radius:50%;object-fit:cover;margin-bottom:28px;border:3px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,.1);display:block}
+.hero-eyebrow{font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:18px}
+h1{font-family:var(--serif);font-size:clamp(56px,7vw,96px);line-height:1.0;color:var(--text);margin-bottom:28px;font-weight:600;letter-spacing:-.03em}
+h1 em{font-style:normal;font-weight:300;color:transparent;-webkit-text-stroke:1.5px var(--border2)}
+.hero-desc{font-size:18px;line-height:1.75;color:var(--muted);max-width:480px;margin-bottom:44px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn-fill{padding:13px 28px;border-radius:7px;background:var(--accent);color:#fff;font-size:14px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:.2s;border:none;cursor:pointer}
+.btn-fill:hover{background:var(--accent2);transform:translateY(-2px);box-shadow:0 8px 28px rgba(140,26,26,.22)}
+.btn-ghost{padding:13px 28px;border-radius:7px;background:transparent;color:var(--text);font-size:14px;font-weight:500;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:.2s;border:1px solid var(--border2)}
+.btn-ghost:hover{background:rgba(0,0,0,.04);border-color:var(--text)}
+.hero-stats{display:flex;gap:40px;margin-top:56px;padding-top:40px;border-top:1px solid var(--border)}
+.s-num{font-family:var(--serif);font-size:44px;color:var(--text);line-height:1}
+.s-lbl{font-size:12px;color:var(--dim);margin-top:6px;line-height:1.4}
+.hero-right{flex-shrink:0}
+.hero-card{width:280px;background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:24px;box-shadow:0 2px 16px rgba(0,0,0,.06)}
+.hc-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:16px}
+.hc-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.hc-item:last-child{border:none}
+.hc-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;background:var(--bg2)}
+.hc-name{font-size:13px;font-weight:500;color:var(--text)}
+.hc-sub{font-size:11px;color:var(--dim);margin-top:1px}
+.hc-badge{margin-left:auto;font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;background:rgba(140,26,26,.08);color:var(--accent);border:1px solid rgba(140,26,26,.18);white-space:nowrap}
+.hc-new{background:rgba(140,26,26,.08);color:var(--accent);border-color:rgba(140,26,26,.22)}
+
+/* ── SECTION WRAPPER ── */
+.wrap{max-width:1120px;margin:0 auto;padding:0 56px}
+.section{padding:96px 0}
+.s-tag{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;display:block}
+h2{font-family:var(--serif);font-size:clamp(40px,4.5vw,62px);line-height:1.05;color:var(--text);margin-bottom:16px;font-weight:600;letter-spacing:-.025em}
+h2 em{font-style:normal;font-weight:300;color:var(--accent)}
+.s-desc{font-size:16px;line-height:1.75;color:var(--muted);max-width:500px;margin-bottom:48px}
+.rule{height:1px;background:linear-gradient(90deg,var(--accent) 0%,transparent 70%);width:40px;margin-bottom:12px}
+
+/* ── PROJECT GRID ── */
+.proj-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.proj-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;overflow:hidden;cursor:pointer;transition:transform .25s,box-shadow .25s,border-color .25s;display:flex;flex-direction:column;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.proj-card:hover{border-color:var(--border2);transform:translateY(-5px);box-shadow:0 20px 48px rgba(0,0,0,.12)}
+.col-7{grid-column:span 7}
+.col-5{grid-column:span 5}
+.col-6{grid-column:span 6}
+.col-12{grid-column:span 12}
+.col-4{grid-column:span 4}
+.col-8{grid-column:span 8}
+
+.pv{position:relative;overflow:hidden;flex-shrink:0}
+.pv-sm{height:200px}
+.pv-md{height:260px}
+.pv-lg{height:320px}
+.pv-xl{height:380px}
+.pv-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.pv-grad-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,8,4,.9) 0%,rgba(10,8,4,.15) 55%,transparent 100%)}
+
+.ai-strip{position:absolute;top:14px;left:14px;display:flex;gap:6px;flex-wrap:wrap;z-index:2}
+.ai-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;font-size:10px;font-weight:700;letter-spacing:.04em;backdrop-filter:blur(12px);border:1px solid;white-space:nowrap}
+.ai-pill.purple{background:rgba(124,58,237,.22);border-color:rgba(124,58,237,.4);color:#e9d5ff}
+.ai-pill.blue{background:rgba(59,130,246,.22);border-color:rgba(59,130,246,.4);color:#bfdbfe}
+.ai-pill.green{background:rgba(34,197,94,.18);border-color:rgba(34,197,94,.38);color:#bbf7d0}
+.ai-pill.orange{background:rgba(249,115,22,.2);border-color:rgba(249,115,22,.38);color:#fed7aa}
+
+.pb{padding:22px 24px 26px;flex:1;display:flex;flex-direction:column}
+.proj-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.ptag{padding:3px 9px;border-radius:999px;font-size:10px;font-weight:600;background:var(--bg2);border:1px solid var(--border);color:var(--muted)}
+h3{font-family:var(--serif);font-size:20px;line-height:1.25;color:var(--text);margin-bottom:8px;font-weight:600;letter-spacing:-.01em}
+.proj-desc{font-size:13px;line-height:1.65;color:var(--muted);flex:1}
+.proj-footer{display:flex;align-items:center;justify-content:space-between;margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}
+.proj-link{font-size:12px;font-weight:600;color:var(--accent);text-decoration:none;display:flex;align-items:center;gap:5px;transition:gap .15s}
+.proj-link:hover{gap:9px}
+.proj-year{font-size:11px;color:var(--dim)}
+
+/* ── EXPERTISE ── */
+.exp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.exp-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px;transition:.2s;cursor:default;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.exp-card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.08)}
+.exp-ico{font-size:24px;margin-bottom:18px}
+.exp-title{font-family:var(--serif);font-size:18px;color:var(--text);margin-bottom:8px}
+.exp-desc{font-size:13px;color:var(--muted);line-height:1.6}
+
+/* ── SKILLS ── */
+.skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:0}
+.skill-cat{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:7px 14px;border-radius:7px;font-size:12px;font-weight:500;color:var(--muted);background:var(--surface);border:1px solid var(--border);transition:.15s;cursor:default}
+.chip:hover{color:var(--text);border-color:var(--border2)}
+.chip.hi{background:rgba(140,26,26,.07);border-color:rgba(140,26,26,.2);color:var(--accent)}
+.chip.hi:hover{background:rgba(140,26,26,.12);border-color:rgba(140,26,26,.35)}
+
+/* ── CONTACT ── */
+.contact-row{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;background:var(--accent);border-radius:24px;padding:64px}
+.c-title{font-family:var(--serif);font-size:clamp(36px,4vw,56px);line-height:1.1;color:#fff;margin-bottom:14px}
+.c-sub{font-size:15px;line-height:1.7;color:rgba(255,255,255,.65);margin-bottom:32px}
+.c-links{display:flex;flex-direction:column;gap:12px}
+.c-link{display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);text-decoration:none;color:#fff;transition:.15s}
+.c-link:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.28);transform:translateX(4px)}
+.c-icon{width:38px;height:38px;border-radius:9px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.c-lbl{font-size:11px;color:rgba(255,255,255,.5);font-weight:500;text-transform:uppercase;letter-spacing:.06em}
+.c-val{font-size:13px;font-weight:500;color:#fff;margin-top:2px}
+.btn-fill-light{padding:13px 28px;border-radius:7px;background:#fff;color:var(--accent);font-size:14px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:.2s;border:none;cursor:pointer}
+.btn-fill-light:hover{opacity:.9;transform:translateY(-2px);box-shadow:0 8px 24px rgba(140,26,26,.25)}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);padding:24px 56px;display:flex;align-items:center;justify-content:space-between}
+.ft-name{font-family:var(--serif);font-size:15px;color:var(--text)}
+.ft-copy{font-size:12px;color:var(--dim)}
+
+/* ── CURSOR ── */
+.cglow{position:fixed;pointer-events:none;z-index:0;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(140,26,26,.05) 0%,transparent 70%);margin-left:-200px;margin-top:-200px;will-change:transform}
+
+/* ── BANNER SHIMMER — opacity-only, no extra compositor layer ── */
+.pv{contain:layout style paint}
+.pv::before{content:'';position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 70% 60% at 30% 25%,rgba(255,255,255,.13),transparent 60%);animation:pvShimmer 6s ease-in-out infinite;animation-delay:var(--pv-delay,0s);pointer-events:none}
+.pv-grad-overlay{z-index:1}
+@keyframes pvShimmer{
+  0%,100%{opacity:.4}
+  50%{opacity:1}
+}
+/* ── BANNER TITLE ── */
+.pv-title{position:absolute;bottom:20px;left:20px;right:20px;z-index:3;font-family:'Outfit',sans-serif;font-size:clamp(20px,2.4vw,34px);font-weight:700;color:#fff;letter-spacing:-.03em;line-height:1.0}
+.pv-title em{font-style:normal;font-weight:300;display:block;color:rgba(255,255,255,.28);letter-spacing:-.025em}
+
+/* ── WORK CATEGORIES ── */
+.cat-head{display:flex;align-items:center;gap:16px;margin:44px 0 18px}
+.cat-head:first-of-type{margin-top:0}
+.cat-head span{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);white-space:nowrap}
+.cat-line{flex:1;height:1px;background:var(--border)}
+.pg3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:0}
+.pg2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:0}
+
+/* ── MODAL ── */
+.modal-bg{position:fixed;inset:0;background:rgba(8,5,3,.78);z-index:300;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(14px)}
+.modal-bg.open{opacity:1;pointer-events:all}
+.modal-inner{background:var(--surface);border:1px solid var(--border);border-radius:20px;max-width:1100px;width:98%;max-height:94vh;overflow-y:auto;overflow-anchor:none;position:relative;transform:translateY(32px);transition:transform .4s cubic-bezier(.22,1,.36,1);box-shadow:0 48px 120px rgba(0,0,0,.26)}
+.modal-bg.open .modal-inner{transform:none}
+.resume-mobile-view{display:none}
+.resume-desktop-view{display:block}
+.modal-x{position:fixed;top:24px;right:24px;z-index:400;width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.12);color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;backdrop-filter:blur(8px)}
+.modal-x:hover{background:rgba(255,255,255,.22)}
+/* Banner */
+.m-banner{height:260px;border-radius:20px 20px 0 0;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:28px 32px}
+.m-banner-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(6,4,2,.85) 0%,rgba(6,4,2,.2) 60%,transparent 100%)}
+.m-banner-text{position:relative;z-index:2}
+.m-banner-cat{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:6px}
+.m-banner-title{font-family:var(--serif);font-size:28px;font-weight:600;color:#fff;line-height:1.2;letter-spacing:-.01em}
+/* Content */
+.m-section{padding:20px 32px;border-bottom:1px solid var(--border)}
+.m-section:last-child{border-bottom:none;padding-bottom:32px}
+.m-slabel{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:12px}
+.m-text{font-size:13.5px;line-height:1.85;color:var(--muted)}
+/* Info grid */
+.m-info{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:12px;overflow:hidden;margin-top:0}
+.m-ic{background:var(--bg2);padding:16px 18px}
+.m-ick{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
+.m-icv{font-size:13px;font-weight:600;color:var(--text)}
+/* Deliverables */
+.m-dels{display:flex;flex-wrap:wrap;gap:8px}
+.m-del{padding:6px 14px;border-radius:8px;background:var(--bg2);border:1px solid var(--border);font-size:12px;color:var(--text);font-weight:500}
+/* AI pills in modal */
+.m-ai-pills{display:flex;flex-wrap:wrap;gap:6px}
+/* Images in modal */
+.m-imgs{display:flex;flex-direction:column;gap:14px;padding:20px 32px 4px}
+.m-img{width:100%;border-radius:12px;display:block;border:1px solid var(--border)}
+.m-img-sm{width:auto;max-width:390px;max-height:210px;border-radius:10px;display:block;margin:0 auto;border:1px solid var(--border);object-fit:contain;padding:16px;background:var(--surface)}
+/* PDF embed in modal */
+.m-pdf{width:100%;height:700px;border:none;border-radius:12px;display:block;margin-top:4px}
+/* Video embed in modal */
+.m-video{width:100%;aspect-ratio:16/9;border:none;border-radius:12px;display:block}
+.m-video-local{width:100%;border-radius:12px;display:block;outline:none}
+/* Sub-project cards in modal */
+.m-subcards{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:20px 32px 0}
+.m-subcard{border-radius:14px;overflow:hidden;border:1px solid var(--border);background:var(--surface);transition:.2s}
+.m-subcard:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,.1)}
+.m-subcard-banner{height:200px;position:relative;overflow:hidden}
+.m-subcard-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(6,4,2,.6) 0%,transparent 60%)}
+.m-subcard-title{padding:14px 16px;font-size:14px;font-weight:600;color:var(--text);line-height:1.35}
+.m-subcard-sub{padding:0 16px 14px;font-size:12px;color:var(--muted)}
+/* Back button */
+.m-back-btn{display:none;align-items:center;gap:6px;padding:20px 16px 20px 32px;font-size:12px;font-weight:600;color:var(--muted);background:none;border:none;cursor:pointer;transition:.15s}
+.m-back-btn:hover{color:var(--text)}
+/* Case Study link */
+.m-notion-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:9px;background:var(--bg2);border:1px solid var(--border2);font-size:13px;font-weight:600;color:var(--text);text-decoration:none;transition:.2s}
+.m-notion-btn:hover{background:var(--surface2);border-color:var(--text);transform:translateX(3px)}
+
+/* ── RESPONSIVE — TABLET ── */
+@media(max-width:960px){
+  nav,footer{padding:0 24px}
+  .hero{padding:100px 24px 60px}
+  .hero-inner{grid-template-columns:1fr}
+  .hero-right{display:none}
+  .wrap{padding:0 24px}
+  .proj-grid,.exp-grid,.skills-grid,.pg3,.pg2{grid-template-columns:1fr}
+  .col-7,.col-5,.col-6,.col-12,.col-4,.col-8{grid-column:span 12}
+  .contact-row{grid-template-columns:1fr;padding:36px}
+  .m-subcards{grid-template-columns:1fr 1fr}
+}
+
+/* ── RESPONSIVE — MOBILE ── */
+@media(max-width:640px){
+  /* Nav */
+  nav{padding:0 16px;height:52px}
+  .nav-links{display:none}
+  .nav-resume{display:none}
+  .logo{font-size:16px}
+  .nav-cta{padding:6px 13px;font-size:12px}
+
+  /* Hero — fill screen so Selected Work is below fold */
+  .hero{padding:80px 16px 64px;min-height:100svh}
+  .hero-inner{grid-template-columns:1fr;gap:0}
+  .hero-right{display:none}
+  .hero-avatar{width:88px;height:88px;margin-bottom:20px}
+  .hero-desc{font-size:15px;margin-bottom:28px}
+  .hero-btns{gap:8px;flex-direction:row;flex-wrap:wrap}
+  .hero-btns .btn-fill,.hero-btns .btn-ghost{flex:1;min-width:0;padding:10px 8px;font-size:12px;justify-content:center;text-align:center}
+  .hero-stats{gap:20px;flex-wrap:wrap;margin-top:32px;padding-top:24px}
+  .s-num{font-size:30px}
+  .s-lbl{font-size:11px}
+
+  /* Wrap & sections */
+  .wrap{padding:0 16px}
+  .section{padding:52px 0}
+  h2{margin-bottom:12px}
+  .s-desc{font-size:14px;margin-bottom:32px}
+
+  /* Project cards */
+  .proj-grid{gap:10px}
+  .pv-sm{height:160px}
+  .pv-md{height:200px}
+  .pv-lg{height:220px}
+  .pv-xl{height:260px}
+  .pv-title{font-size:22px;bottom:14px;left:14px}
+  .pb{padding:16px 18px 20px}
+  h3{font-size:17px}
+  .proj-desc{font-size:12px}
+
+  /* Expertise */
+  .exp-grid{gap:10px}
+  .exp-card{padding:20px}
+
+  /* Skills */
+  .skills-grid{gap:20px}
+
+  /* Contact */
+  .contact-row{padding:24px 20px;gap:20px;border-radius:18px}
+  .c-sub{font-size:14px;margin-bottom:24px}
+  .c-link{padding:12px 14px;gap:12px}
+
+  /* Footer */
+  footer{padding:16px;flex-direction:column;gap:6px;text-align:center}
+
+  /* Resume modal — compact sheet on mobile */
+  #resume-modal{align-items:center}
+  .resume-modal-inner{width:92%!important;border-radius:20px!important;max-height:auto!important;height:auto!important}
+  .resume-header{padding:16px!important}
+  .resume-desktop-view{display:none!important}
+  .resume-mobile-view{display:flex!important;flex-direction:column;align-items:center;gap:20px;padding:28px 24px 32px}
+
+  /* Project modal — bottom sheet style */
+  .modal-bg{align-items:flex-end}
+  .modal-inner{border-radius:20px 20px 0 0;width:100%;max-height:92vh;transform:translateY(100%);display:flex;flex-direction:column}
+  .modal-bg.open .modal-inner{transform:translateY(0)}
+  /* Reorder: imgs + video before sections */
+  .m-back-btn{order:1}
+  .m-banner{order:2}
+  #m-tags{order:3}
+  .m-subcards{order:4}
+  .m-imgs{order:5}
+  #m-pdf-wrap{order:6}
+  #m-video-wrap{order:6}
+  #m-video-local-wrap{order:6}
+  .m-section{order:7}
+  /* X — fixed ที่ขอบบนของ bottom sheet ไม่หายตามสคโรล */
+  .modal-x{top:calc(8svh + 10px);right:12px;width:32px;height:32px;font-size:12px}
+  /* Banner — flex-shrink:0 กันแบนเนอร์ถูกบีบตอนภาพโหลด */
+  .m-banner{height:220px;padding:16px;flex-shrink:0}
+  .m-banner-title{font-size:20px}
+  .m-banner-cat{font-size:9px}
+  .m-back-btn{padding:14px 12px 10px 16px;font-size:11px}
+  .m-section{padding:14px 16px}
+  .m-slabel{margin-bottom:8px}
+  .m-text{font-size:13px}
+  .m-subcards{grid-template-columns:1fr !important;padding:14px 16px 0}
+  .m-subcard-banner{height:160px}
+  .m-imgs{padding:12px 16px 4px}
+  .m-text-first .m-imgs{order:8}
+  .m-img-sm{max-width:100%}
+  .m-video{border-radius:8px}
+  #m-tags{padding:12px 16px 0 !important}
+  #m-pdf-wrap,#m-video-wrap,#m-video-local-wrap{padding:0 16px 20px !important}
+}
+
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<div class="cglow" id="cglow"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Joon.</div>
+  <div class="nav-links">
+    <a class="nav-a" href="#work">Work</a>
+    <a class="nav-a" href="#expertise">Expertise</a>
+    <a class="nav-a" href="#skills">Skills</a>
+    <a class="nav-a" href="#contact">Contact</a>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+    <a class="nav-resume" href="HatairatW-Resume2026_1.pdf" download="HatairatW-Resume2026_1.pdf">Resume ↓</a>
+    <a class="nav-cta" href="mailto:wa.hatairat@gmail.com">Let's talk →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="noise"></div>
+  <div class="hero-orb orb1"></div>
+  <div class="hero-orb orb2"></div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <img src="avatar.jpg" class="hero-avatar" alt="Joon"/>
+      <div class="hero-eyebrow">Product & UX/UI Designer</div>
+      <h1>Hatairat<br/><em>W.</em> Joon</h1>
+      <p class="hero-desc">8 years designing AI-powered and data-driven digital experiences — from UX strategy to high-fidelity UI and scalable design systems.</p>
+      <div class="hero-btns">
+        <a class="btn-fill" href="#work">View Work →</a>
+        <button class="btn-ghost" onclick="openResume()" style="gap:7px;font-family:inherit">View Resume &#x2197;&#xFE0E;</button>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-card">
+        <div class="hc-label">Tools & Skills</div>
+        <div class="hc-item">
+          <div class="hc-icon" style="background:#7c3aed18">◆</div>
+          <div><div class="hc-name">Figma</div><div class="hc-sub">UI Design · Design Systems</div></div>
+        </div>
+        <div class="hc-item">
+          <div class="hc-icon" style="background:#ff604018">🎨</div>
+          <div><div class="hc-name">Adobe Suite</div><div class="hc-sub">Illustrator · Ps · Ae · Pr</div></div>
+        </div>
+        <div class="hc-item">
+          <div class="hc-icon" style="background:#3b82f618">🌀</div>
+          <div><div class="hc-name">Blender</div><div class="hc-sub">3D · Visual Direction</div></div>
+        </div>
+        <div class="hc-item">
+          <div class="hc-icon" style="background:#22c55e14">🤖</div>
+          <div><div class="hc-name">AI Tools</div><div class="hc-sub">Claude · ChatGPT · Gemini · Grok</div></div>
+        </div>
+        <div class="hc-item">
+          <div class="hc-icon" style="background:#22c55e14">🌐</div>
+          <div><div class="hc-name">Wix · Google Suite</div><div class="hc-sub">Web & Productivity</div></div>
+        </div>
+        <div class="hc-item">
+          <div class="hc-icon" style="background:#f9731618">🗣</div>
+          <div><div class="hc-name">Thai · English</div><div class="hc-sub">Native · Working proficiency</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<div class="wrap" id="work">
+<section class="section">
+  <div class="rule"></div>
+  <span class="s-tag">✦ Selected Work</span>
+  <h2>Selected<br/><em>Work</em></h2>
+  <p class="s-desc">End-to-end design across product, brand, and creative — from research to pixel-perfect delivery.</p>
+
+  <!-- Category 1: Product & UX -->
+  <div class="cat-head reveal"><span>Product &amp; UX Design</span><div class="cat-line"></div></div>
+  <div class="pg3">
+
+    <div class="proj-card reveal" onclick="openProject('knowly')" style="cursor:pointer">
+      <div class="pv pv-md" style="background:linear-gradient(150deg,#050218,#0E0640,#1E0C7A,#3218B8)">
+        <div class="pv-grad-overlay"></div>
+        <div class="pv-title">Knowly<em>AI Knowledge</em></div>
+      </div>
+      <div class="pb">
+        <div class="proj-tags"><span class="ptag">AI Product</span><span class="ptag">SaaS</span><span class="ptag">Design System</span></div>
+        <h3>Knowly — AI Knowledge Assistant</h3>
+        <p class="proj-desc">End-to-end AI product design from system tokens to chat interface.</p>
+        <div class="proj-footer"><span class="proj-link">View details →</span></div>
+      </div>
+    </div>
+
+    <div class="proj-card reveal" onclick="openProject('reputation')" style="cursor:pointer">
+      <div class="pv pv-md" style="background:linear-gradient(150deg,#080400,#241000,#582800,#A04C10)">
+        <div class="pv-grad-overlay"></div>
+        <div class="pv-title">Reputation<em>Monitoring</em></div>
+      </div>
+      <div class="pb">
+        <div class="proj-tags"><span class="ptag">Dashboard</span><span class="ptag">Web App</span></div>
+        <h3>AI Reputation Monitoring</h3>
+        <p class="proj-desc">Real-time brand intelligence dashboard with AI sentiment analysis.</p>
+        <div class="proj-footer"><span class="proj-link">View details →</span></div>
+      </div>
+    </div>
+
+    <div class="proj-card reveal" onclick="openProject('mobile')" style="cursor:pointer">
+      <div class="pv pv-md" style="background:linear-gradient(150deg,#020408,#081A30,#103658,#1A507C)">
+        <div class="pv-grad-overlay"></div>
+        <div class="pv-title">Mobile App<em>UX Design</em></div>
+      </div>
+      <div class="pb">
+        <div class="proj-tags"><span class="ptag">Mobile</span><span class="ptag">iOS &amp; Android</span><span class="ptag">UX Research</span></div>
+        <h3>Mobile App UX Redesign</h3>
+        <p class="proj-desc">Full UX redesign — AI-assisted research identified drop-off patterns 3× faster.</p>
+        <div class="proj-footer"><span class="proj-link">View details →</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Category 2: Brand & Visual -->
+  <div class="cat-head reveal"><span>Brand &amp; Visual</span><div class="cat-line"></div></div>
+  <div class="pg2">
+
+    <div class="proj-card reveal" onclick="openProject('brand')" style="cursor:pointer">
+      <div class="pv pv-lg" style="background:linear-gradient(150deg,#050200,#190900,#402000,#7C4010)">
+        <div class="pv-grad-overlay"></div>
+        <div class="pv-title">Brand<em>Identity</em></div>
+      </div>
+      <div class="pb">
+        <div class="proj-tags"><span class="ptag">Branding</span><span class="ptag">Visual Identity</span><span class="ptag">Logo</span><span class="ptag">Guidelines</span></div>
+        <h3>Brand Identity Systems</h3>
+        <p class="proj-desc">Logo, typography, color systems and brand playbooks — AI mood boards accelerated direction exploration from days to hours.</p>
+        <div class="proj-footer"><span class="proj-link">View details →</span></div>
+      </div>
+    </div>
+
+    <div class="proj-card reveal" onclick="openProject('visual')" style="cursor:pointer">
+      <div class="pv pv-lg" style="background:linear-gradient(150deg,#060108,#1C0828,#3E1454,#6A207E)">
+        <div class="pv-grad-overlay"></div>
+        <div class="pv-title">Visual<em>Comm.</em></div>
+      </div>
+      <div class="pb">
+        <div class="proj-tags"><span class="ptag">Graphic Design</span><span class="ptag">Print</span><span class="ptag">Editorial</span></div>
+        <h3>Visual Communication</h3>
+        <p class="proj-desc">Posters, editorial layouts, social assets, and print-ready artwork. AI image generation used for rapid concept exploration.</p>
+        <div class="proj-footer"><span class="proj-link">View details →</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Category 3: Web & Motion -->
+  <div class="cat-head reveal"><span>Web &amp; Motion</span><div class="cat-line"></div></div>
+  <div class="pg2">
+
+    <div class="proj-card reveal" onclick="openProject('web')" style="cursor:pointer">
+      <div class="pv pv-lg" style="background:linear-gradient(150deg,#010108,#07081C,#10143C,#1C2058)">
+        <div class="pv-grad-overlay"></div>
+        <div class="pv-title">Web Design<em>& Dev</em></div>
+      </div>
+      <div class="pb">
+        <div class="proj-tags"><span class="ptag">Web Design</span><span class="ptag">Framer</span><span class="ptag">Frontend</span></div>
+        <h3>Web Design &amp; Development</h3>
+        <p class="proj-desc">Responsive websites from concept to live — Framer AI and Cursor reduced production time while keeping full creative control.</p>
+        <div class="proj-footer"><span class="proj-link">View details →</span></div>
+      </div>
+    </div>
+
+    <div class="proj-card reveal" onclick="openProject('motion')" style="cursor:pointer">
+      <div class="pv pv-lg" style="background:linear-gradient(150deg,#040101,#160305,#360810,#6A0F18)">
+        <div class="pv-grad-overlay"></div>
+        <div class="pv-title">Motion<em>& Video</em></div>
+      </div>
+      <div class="pb">
+        <div class="proj-tags"><span class="ptag">Motion</span><span class="ptag">After Effects</span><span class="ptag">Video</span></div>
+        <h3>Motion &amp; Video</h3>
+        <p class="proj-desc">Motion graphics and brand video — from social animation to full productions. Runway ML used for AI-assisted video concepts.</p>
+        <div class="proj-footer"><span class="proj-link">View details →</span></div>
+      </div>
+    </div>
+
+    <div class="proj-card reveal" onclick="openProject('aicreative')" style="cursor:pointer">
+      <div class="pv pv-lg" style="background:linear-gradient(150deg,#010408,#041020,#082040,#0A3060,#0E4888)">
+        <div class="pv-grad-overlay"></div>
+        <div class="pv-title">AI<em>Creative</em></div>
+      </div>
+      <div class="pb">
+        <div class="proj-tags"><span class="ptag">Generative AI</span><span class="ptag">Grok</span><span class="ptag">Gemini</span></div>
+        <h3>AI-Generated Creative Work</h3>
+        <p class="proj-desc">End-to-end creative production using AI tools — visuals from Gemini & ChatGPT, video from Grok & Flow, voiceover from Google AI Studio, edited in Premiere Pro.</p>
+        <div class="proj-footer"><span class="proj-link">View details →</span></div>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+</div>
+
+<!-- EXPERTISE -->
+<div class="wrap" id="expertise">
+<section class="section">
+  <div class="rule"></div>
+  <span class="s-tag">✦ Expertise</span>
+  <h2>What I <em>Do</em></h2>
+  <div class="exp-grid">
+    <div class="exp-card reveal">
+      <div class="exp-ico">🎯</div>
+      <div class="exp-title">Product & UX Design</div>
+      <div class="exp-desc">Intuitive web and mobile experiences — from user flows to high-fidelity UI in Figma, turning complex needs into clean interfaces.</div>
+    </div>
+    <div class="exp-card reveal">
+      <div class="exp-ico">🗺</div>
+      <div class="exp-title">UX Strategy</div>
+      <div class="exp-desc">User journeys, information architecture, and interaction flows to simplify complex products and help users complete tasks faster.</div>
+    </div>
+    <div class="exp-card reveal">
+      <div class="exp-ico">🤖</div>
+      <div class="exp-title">AI-Driven Design</div>
+      <div class="exp-desc">Leverage AI tools to inform design decisions, generate concept variations, and personalize digital experiences at scale.</div>
+    </div>
+    <div class="exp-card reveal">
+      <div class="exp-ico">🎨</div>
+      <div class="exp-title">Brand & Visual Systems</div>
+      <div class="exp-desc">Cohesive visual systems — from branding to scalable design systems — ensuring consistency across products and marketing.</div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- SKILLS -->
+<div class="wrap" id="skills">
+<section class="section">
+  <div class="rule"></div>
+  <span class="s-tag">✦ Skills & Tools</span>
+  <h2>Skills &<br/><em>Tools</em></h2>
+  <div class="skills-grid">
+
+    <div class="skill-col reveal">
+      <div class="skill-cat">🎯 UX/UI Design</div>
+      <div class="chips">
+        <span class="chip">User Interface Design (UI)</span>
+        <span class="chip">Wireframing & Prototyping</span>
+        <span class="chip">User Flows</span>
+        <span class="chip">Responsive Web & Mobile</span>
+        <span class="chip">Usability Testing & Iteration</span>
+        <span class="chip">Design Systems & UI Kits</span>
+        <span class="chip">Figma</span>
+      </div>
+    </div>
+
+    <div class="skill-col reveal">
+      <div class="skill-cat">🎨 Graphic & Motion</div>
+      <div class="chips">
+        <span class="chip">Adobe Illustrator</span>
+        <span class="chip">Photoshop</span>
+        <span class="chip">After Effects</span>
+        <span class="chip">Premiere Pro</span>
+        <span class="chip">Storyboarding & Visual Direction</span>
+        <span class="chip">Brand Identity & Visual Assets</span>
+        <span class="chip">3D · Blender</span>
+      </div>
+    </div>
+
+    <div class="skill-col reveal">
+      <div class="skill-cat">🌐 Web & Tools</div>
+      <div class="chips">
+        <span class="chip">Wix</span>
+        <span class="chip">Google Suite</span>
+      </div>
+      <div class="skill-cat" style="margin-top:22px">🤖 AI Tools</div>
+      <div class="chips">
+        <span class="chip">Claude</span>
+        <span class="chip">ChatGPT</span>
+        <span class="chip">Gemini</span>
+        <span class="chip">Grok</span>
+      </div>
+      <div class="skill-cat" style="margin-top:22px">🗣 Languages</div>
+      <div class="chips">
+        <span class="chip">Thai — Native</span>
+        <span class="chip">English — Working proficiency</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+</div>
+
+<!-- CONTACT -->
+<div class="wrap" id="contact" style="padding-bottom:80px">
+  <div class="contact-row reveal">
+    <div>
+      <div class="rule"></div>
+      <span class="s-tag">✦ Let's Connect</span>
+      <div class="c-title">Open to<br/><em>opportunities</em></div>
+      <p class="c-sub">Interested in product design roles, creative collaborations, and AI-driven design projects. Feel free to reach out.</p>
+      <a class="btn-fill" href="mailto:wa.hatairat@gmail.com">Send a message →</a>
+    </div>
+    <div class="c-links">
+      <a class="c-link" href="mailto:wa.hatairat@gmail.com">
+        <div class="c-icon">✉</div>
+        <div><div class="c-lbl">Email</div><div class="c-val">wa.hatairat@gmail.com</div></div>
+      </a>
+      <a class="c-link" href="https://www.linkedin.com/in/hatairat-w/" target="_blank">
+        <div class="c-icon" style="font-size:13px;font-weight:700">in</div>
+        <div><div class="c-lbl">LinkedIn</div><div class="c-val">linkedin.com/in/hatairat-w</div></div>
+      </a>
+      <a class="c-link" href="#">
+        <div class="c-icon">📍</div>
+        <div><div class="c-lbl">Location</div><div class="c-val">Bangkok, Thailand</div></div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- RESUME POPUP -->
+<div class="modal-bg" id="resume-modal" onclick="closeResume()">
+  <button class="modal-x" onclick="closeResume()">✕</button>
+  <div class="modal-inner resume-modal-inner" onclick="event.stopPropagation()" style="max-width:960px;padding:0;overflow:hidden">
+    <div class="resume-header" style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid var(--border);flex-shrink:0">
+      <span style="font-size:14px;font-weight:600;color:var(--text)">Resume — Hatairat W. (Joon)</span>
+    </div>
+    <!-- Desktop: iframe preview -->
+    <div class="resume-desktop-view">
+      <iframe src="HatairatW-Resume2026_1.pdf#zoom=page-width&toolbar=0" style="width:100%;height:88vh;border:none;display:block"></iframe>
+    </div>
+    <!-- Mobile: open natively in Safari PDF viewer -->
+    <div class="resume-mobile-view">
+      <p style="font-size:14px;color:var(--muted);text-align:center;line-height:1.6">PDF preview works best on desktop.<br/>Tap below to open or download.</p>
+      <div style="display:flex;flex-direction:column;gap:12px;width:100%">
+        <a href="HatairatW-Resume2026_1.pdf" target="_blank" class="btn-fill" style="justify-content:center;gap:7px">Open Resume &#x2197;&#xFE0E;</a>
+        <a href="HatairatW-Resume2026_1.pdf" download="HatairatW-Resume2026_1.pdf" class="btn-ghost" style="justify-content:center;gap:7px">Download &#x2193;&#xFE0E;</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal" onclick="closeModal()">
+  <button class="modal-x" onclick="closeModal()">✕</button>
+  <div class="modal-inner" onclick="event.stopPropagation()">
+
+    <!-- Back button -->
+    <button class="m-back-btn" id="m-back-btn" onclick="">← Back</button>
+
+    <!-- Banner -->
+    <div class="m-banner" id="m-banner">
+      <div class="m-banner-overlay"></div>
+      <div class="m-banner-text">
+        <div class="m-banner-cat" id="m-cat"></div>
+        <div class="m-banner-title" id="m-title"></div>
+      </div>
+    </div>
+
+    <!-- Tags -->
+    <div style="padding:18px 32px 0;display:flex;flex-wrap:wrap;gap:6px" id="m-tags"></div>
+
+    <!-- Sub-project cards (shown only when subcards exist in pdata) -->
+    <div class="m-subcards" id="m-subcards" style="display:none"></div>
+
+    <!-- Overview -->
+    <div class="m-section">
+      <div class="m-slabel">Overview</div>
+      <p class="m-text" id="m-desc"></p>
+    </div>
+
+    <!-- Process -->
+    <div class="m-section">
+      <div class="m-slabel">Process</div>
+      <p class="m-text" id="m-process"></p>
+    </div>
+
+    <!-- Deliverables -->
+    <div class="m-section">
+      <div class="m-slabel">Deliverables</div>
+      <div class="m-dels" id="m-del"></div>
+    </div>
+
+    <!-- Prototype preview + link -->
+    <div id="m-proto-wrap" style="display:none;padding:20px 32px 28px">
+      <div class="m-slabel" style="margin-bottom:12px">Interactive Prototype</div>
+      <a id="m-proto-link" class="m-notion-btn" href="#" target="_blank" style="margin-bottom:14px">View Prototype →</a>
+      <div id="m-proto-preview" style="position:relative;width:100%;overflow:hidden;border-radius:14px;border:1px solid var(--border);background:#050218;margin-top:14px;cursor:pointer" onclick="window.open(document.getElementById('m-proto-link').href,'_blank')">
+        <iframe id="m-proto-frame" style="position:absolute;top:0;left:0;width:1920px;height:1080px;border:none;pointer-events:none;transform-origin:top left" scrolling="no"></iframe>
+        <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 60%,rgba(5,2,24,.55))"></div>
+      </div>
+    </div>
+
+    <!-- Images (shown only when imgs exist in pdata) -->
+    <div class="m-imgs" id="m-imgs"></div>
+
+    <!-- PDF embed (shown only when pdf exists in pdata) -->
+    <div id="m-pdf-wrap" style="padding:0 32px 28px;display:none">
+      <embed id="m-pdf" class="m-pdf" type="application/pdf"/>
+    </div>
+    <!-- Video embed (shown only when video exists in pdata) -->
+    <div id="m-video-wrap" style="padding:0 32px 28px;display:none">
+      <iframe id="m-video" class="m-video" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+    </div>
+    <!-- Local video (shown only when videoFile exists in pdata) -->
+    <div style="padding:0 32px 28px" id="m-video-local-wrap" style="display:none">
+      <video id="m-video-local" class="m-video-local" controls playsinline></video>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-name">Hatairat W. (Joon)</div>
+  <div class="ft-copy">© 2026 · Product & UX/UI Designer</div>
+</footer>
+
+<script>
+// banner ambient drift — randomise delay so cards don't move in sync
+document.querySelectorAll('.pv').forEach(pv => {
+  pv.style.setProperty('--pv-delay', -(Math.random()*9).toFixed(2)+'s');
+});
+
+// cursor glow — RAF throttled, GPU-only transform
+const cg = document.getElementById('cglow');
+let cgX=0,cgY=0,cgTick=false;
+document.addEventListener('mousemove', e => {
+  cgX=e.clientX; cgY=e.clientY;
+  if(!cgTick){ cgTick=true; requestAnimationFrame(()=>{ cg.style.transform=`translate(${cgX}px,${cgY}px)`; cgTick=false; }); }
+});
+
+// reveal on scroll
+const io = new IntersectionObserver(entries => {
+  entries.forEach((e,i) => {
+    if(e.isIntersecting){
+      setTimeout(() => e.target.classList.add('in'), i * 60);
+      io.unobserve(e.target);
+    }
+  });
+}, {threshold:.08});
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// project data
+const pdata = {
+  knowly:{
+    title:"Knowly — AI Knowledge Assistant",
+    cat:"Product Design · SaaS",
+    year:"2024", role:"Lead Product Designer", scope:"End-to-End",
+    tags:["AI Product","Design System","Full UI"],
+    desc:"End-to-end design of an AI-powered knowledge management platform — from design system tokens to landing page and chat-based app interface. Built on a foundation of semantic design tokens covering color, spacing, typography, and motion.",
+    process:"Began with competitive analysis of AI productivity tools to identify whitespace opportunities. Mapped the core knowledge capture → retrieval loop, then built a 200+ component design system before moving to high-fidelity screens for the landing page and in-app chat interface. Claude was used for UX copy direction; Figma AI accelerated component variant generation.",
+    ai:["Figma AI","Claude","Prompt Engineering"],
+    del:["Design System","Design Tokens","Landing Page","App UI","Component Library"],
+    grad:"linear-gradient(150deg,#050218,#0E0640,#1E0C7A,#3218B8)",
+    proto:"../KMAI UI/Prototype/kmai-finance (4).html"
+  },
+  reputation:{
+    title:"AI-Powered Reputation Monitoring Platform",
+    cat:"Dashboard Design · Web App",
+    year:"2024", role:"UX/UI Designer", scope:"Web App",
+    tags:["Dashboard","Web App","AI Analytics"],
+    desc:"A monitoring and analytics platform designed to help businesses track their brand perception in real-time — bringing all the data that matters into one clear, actionable dashboard. The result is an intuitive interface that makes complex data easy to read, helping marketing teams move faster and make smarter decisions.",
+    process:"The process spanned end-to-end: from User Research and problem framing, through User Flows and Wireframes, to a cohesive Design System and polished High-Fidelity UI — all built with responsiveness in mind.",
+    ai:["AI Analytics","Figma"],
+    del:["User Research","User Flows","Wireframes","Design System","High-Fidelity UI","Responsive Prototype"],
+    grad:"linear-gradient(150deg,#080400,#241000,#582800,#A04C10)",
+    imgs:["BrandReputation-Port.jpg"]
+  },
+  mobile:{
+    title:"Mobile App UX — Persona Health & Seatly",
+    cat:"Mobile UX · iOS & Android",
+    year:"2024", role:"UX Designer", scope:"iOS & Android",
+    tags:["Mobile","iOS & Android","UX Research","Health App","Restaurant Booking"],
+    desc:"UX design across two mobile products: Persona Health — an AI-powered personalised health platform that helps users track and understand their health data — and Seatly, a restaurant discovery and table-booking app. Both projects focused on reducing friction in complex user journeys and making data-heavy experiences feel approachable and personal.",
+    process:"For Persona Health: mapped the core onboarding and daily health-check loop, identifying where users lost motivation or trust in the data. Designed a personalised home screen that surfaces the most relevant health insights based on user goals. For Seatly: audited the existing booking flow, ran usability tests to locate drop-off points, then redesigned the search-to-confirm journey with clearer affordances, real-time availability, and a streamlined payment step. Both apps were prototyped in Figma and tested iteratively.",
+    ai:["ChatGPT","UX Research AI"],
+    del:["User Flows","Wireframes","High-Fidelity UI (iOS & Android)","Usability Test Report","Prototype","Handoff Spec"],
+    grad:"linear-gradient(150deg,#020408,#081A30,#103658,#1A507C)",
+    subcards:[
+      {title:"Persona Health – UX/UI Redesign", sub:"AI-powered health tracking platform", grad:"linear-gradient(150deg,#010C0A,#042A1C,#085C38,#0E8050)", bannerImg:"minimal_ui_mobile_app_mockup.webp", projectId:"personahealth"},
+      {title:"Seatly – Your Table. Your Choice.", sub:"Restaurant discovery & table booking", grad:"linear-gradient(150deg,#06040A,#140C22,#241440,#341C58)", bannerImg:"iPhone_15_Pro.webp", projectId:"seatly"}
+    ]
+  },
+  seatly:{
+    title:"Seatly – Your Table. Your Choice.",
+    cat:"Mobile UX · iOS App",
+    tags:["Mobile","iOS","Restaurant","Booking App","UX Research"],
+    desc:"Seatly is a restaurant discovery and table-booking app designed to eliminate the friction of traditional reservations. Users can discover restaurants, see real-time table availability through an interactive floor plan, and book their preferred table — no phone calls, no uncertainty, no unwanted seats.",
+    process:"Identified three core pain points: users disliked calling restaurants, felt uncertain about table availability, and often ended up with tables they didn't want. Designed an interactive floor map that lets users visually select their exact table before confirming. Also designed a restaurant-side dashboard for managing bookings and reducing no-shows. Prototyped and tested the full discovery-to-confirmation flow in Figma.",
+    del:["User Research & Pain Points","User Flows","Wireframes","Interactive Floor Map UI","High-Fidelity UI (iOS)","Restaurant Dashboard","Prototype"],
+    grad:"linear-gradient(150deg,#06040A,#140C22,#241440,#341C58)",
+    bannerImg:"iPhone_15_Pro.webp",
+    backTo:"mobile"
+  },
+  personahealth:{
+    title:"Persona Health – UX/UI Redesign",
+    cat:"Mobile UX · iOS App",
+    tags:["Mobile","iOS","Health App","UX Research","AI"],
+    desc:"Persona Health is an AI-powered personalised health platform that helps users track and understand their health data. The redesign focused on reducing friction in the onboarding journey and making data-heavy health metrics feel approachable and personal — surfacing the right information at the right moment based on each user's goals.",
+    process:"Mapped the core onboarding and daily health-check loop, identifying where users lost motivation or trust in the data. Designed a personalised home screen that surfaces the most relevant health insights based on user goals. Prototyped in Figma and tested iteratively with real users to validate hierarchy and interaction patterns.",
+    del:["User Research","User Flows","Wireframes","High-Fidelity UI (iOS)","Prototype","Usability Test Report"],
+    grad:"linear-gradient(150deg,#010C0A,#042A1C,#085C38,#0E8050)",
+    bannerImg:"minimal_ui_mobile_app_mockup.webp",
+    imgs:["PersonaHealth_-_compress.webp"],
+    backTo:"mobile"
+  },
+  sertisbrandbook:{
+    title:"Sertis Brandbook",
+    cat:"Brand Design · Brand Guidelines",
+    tags:["Branding","Brand Guidelines","Tech","Corporate Identity"],
+    desc:"The 2025 Sertis Brandbook establishes the visual identity and brand standards for Sertis — a leading data and AI technology company. The document covers logo usage, typography, color system, and brand tone to ensure consistency across all company touchpoints.",
+    process:"Developed a comprehensive brand guideline document covering all aspects of the Sertis visual identity — from logo clear space and misuse rules to color specifications, typography hierarchy, and application examples across digital and print.",
+    del:["Brand Guideline Document","Logo Usage Rules","Color System","Typography Guidelines","Application Examples"],
+    grad:"linear-gradient(150deg,#02040E,#060C24,#0E183C,#162450)",
+    bannerImg:"Sertis_Logo_White.png",
+    bannerFit:"contain",
+    bannerBg:"#0A1428",
+    pdf:"2025_Sertis_Brandbook.pdf",
+    backTo:"brandpackaging"
+  },
+  primehealth:{
+    title:"Prime Health Biotech – 9PLUS",
+    cat:"Brand Design · Packaging",
+    tags:["Branding","Packaging","Logo","Print","Supplement"],
+    desc:"Logo and packaging design for Prime Health Biotech's 9PLUS supplement — a product targeting individuals and couples preparing for pregnancy. The project required a delicate balance between trustworthy, professional aesthetics and a warm, hopeful tone — communicating health, care, and optimism while ensuring clarity for consumers both online and in-store.",
+    process:"Developed visual direction around the emotional journey of starting a family — soft, reassuring forms paired with clean typographic hierarchy. Final design was applied in real production, including product labels and packaging boxes.",
+    del:["Logo Design","Label Design","Packaging Box Design","Print-Ready Files"],
+    grad:"linear-gradient(150deg,#0A0204,#280810,#5A1422,#8C263A)",
+    bannerImg:"Product-Packaging-Box-Mockup-min.webp",
+    bannerFit:"contain",
+    bannerBg:"#A8D4CF",
+    imgs:[{src:"PrimeHealth-Logo-01.webp",small:true},"Product-Packaging-Box-Mockup-min.webp","PrimeHealth_BOX-02.jpg"],
+    backTo:"brandpackaging"
+  },
+  brandpackaging:{
+    title:"Branding & Packaging Design",
+    cat:"Brand Design · Packaging",
+    tags:["Branding","Packaging","Logo","Print"],
+    desc:"Brand identity and packaging design projects — from supplement product packaging to children's store branding. Each project delivered a cohesive visual system tailored to its audience and applied across real production materials.",
+    process:"Each project started with brand discovery and audience research, moving through logo concept, visual system, and final production-ready assets.",
+    del:["Logo Design","Packaging Design","Brand Guidelines","Print-Ready Files"],
+    grad:"linear-gradient(150deg,#0A0204,#280810,#5A1422,#8C263A)",
+    backTo:"brand",
+    subcards:[
+      {title:"Sertis Brandbook", sub:"Tech company · Brand guidelines", grad:"linear-gradient(150deg,#02040E,#060C24,#0E183C,#162450)", bannerImg:"Sertis_Logo_White.png", bannerFit:"contain", bannerBg:"#0A1428", projectId:"sertisbrandbook"},
+      {title:"Prime Health Biotech – 9PLUS", sub:"Supplement packaging · Pregnancy care", grad:"#A8D4CF", bannerImg:"Product-Packaging-Box-Mockup-min.webp", bannerFit:"contain", projectId:"primehealth"},
+      {title:"Kiddie Cove", sub:"Baby store · Logo & Brand Identity", grad:"#F5F3EF", bannerImg:"KiddieCove_Logo_Color.jpg", bannerFit:"contain", projectId:"kiddiecove"}
+    ]
+  },
+  kiddiecove:{
+    title:"Kiddie Cove",
+    cat:"Logo & Brand Identity · Retail",
+    tags:["Logo","Branding","Brand Guidelines","Kids","Retail"],
+    desc:"Brand identity design for Kiddie Cove — a children's store. The project covers logo design and a full brand guideline document, establishing a cohesive visual language that's playful, warm, and trustworthy for both kids and parents.",
+    process:"Developed a logo mark and full brand system — covering logo usage, typography, color palette, and brand tone. Delivered a comprehensive brand guideline document to ensure consistency across all touchpoints from signage to packaging.",
+    del:["Logo Design (Color & Mono)","Brand Guideline PDF","Typography System","Color Palette","Usage Rules"],
+    grad:"#F0F4FF",
+    bannerImg:"KiddieCove_Logo_Color.jpg",
+    bannerFit:"contain",
+    bannerBg:"#F0F4FF",
+    imgs:[{src:"KiddieCove_Logo_Color.jpg",small:true}],
+    backTo:"brandpackaging"
+  },
+  crasocial:{
+    title:"CRA Social Media Artwork – Health Awareness Campaign",
+    cat:"Graphic Design · Social Media",
+    tags:["Social Media","Health Campaign","CRA","Facebook","Illustration"],
+    desc:"A series of digital artworks for CRA's official Facebook page supporting health awareness initiatives. Designed to educate the public on topics including healthy eating, disease prevention, mental health, and general wellness — combining clear messaging with accessible layouts and vibrant visuals tailored to Facebook's audience.",
+    process:"Each piece balanced CRA's branding guidelines with eye-catching layouts. Used vibrant colors and informative illustrations to make health topics digestible and shareable. Focused on clarity, public impact, and consistent tone of voice across the full campaign.",
+    del:["Social Media Artwork Series","Health Awareness Visuals","Facebook-Optimised Assets","Campaign Template Set"],
+    grad:"#F5F7FF",
+    bannerImg:"56cd29609b9bccc8e49a89fdfb43b0f8.webp",
+    bannerFit:"contain",
+    bannerBg:"#F5F7FF",
+    imgs:["covid-CRA1-01-min.webp","headache_cra2-01-min.webp","HPV-CRV6-01-min.webp"],
+    backTo:"brandingdesign"
+  },
+  eventbackdrop:{
+    title:"Event Backdrop Design – Olino, Central Rama 2",
+    cat:"Graphic Design · Event & Print",
+    tags:["Event Design","Backdrop","Print","Brand Activation","Retail"],
+    desc:"A backdrop designed for Olino — a Japanese-style beverage and dessert brand — for use at its promotional space in Central Rama 2. Created to reflect the brand's playful yet premium image while remaining visually clean and eye-catching within a busy mall environment. Used as part of a real-world brand activation, helping attract foot traffic and serve as a photo-friendly spot for customers.",
+    process:"Focused on logo placement, product highlights, and color balance to align with Olino's brand identity and marketing goals. Delivered as a print-ready high-resolution vinyl file for event production.",
+    del:["Backdrop Design","Print-Ready File (High-res Vinyl)","Brand-Aligned Layout","Event Activation Asset"],
+    grad:"#F8F5F0",
+    bannerImg:"images.png",
+    bannerFit:"contain",
+    bannerBg:"#F8F5F0",
+    imgs:[{src:"olino-1sty(1).webp", width:25}],
+    backTo:"brandingdesign"
+  },
+  digitalsignage:{
+    title:"Digital Signage Design – Client Presentation",
+    cat:"Graphic Design · Digital Signage",
+    tags:["Digital Signage","Presentation","Commercial","Marketing","Templates"],
+    desc:"Digital signage layouts designed as presentation prototypes to be pitched to clients. Focused on creating clear, high-impact visuals that effectively communicate brand messages in public or commercial spaces. Delivered flexible, reusable templates for the business development team to use when proposing signage solutions across different industries.",
+    process:"Emphasised readability, visual hierarchy, and adaptability for different screen sizes and content types. Designed to be versatile enough for various client verticals while maintaining visual impact and brand clarity.",
+    del:["Digital Signage Templates","Screen-Ready Layouts","Multi-format Adaptations","Client Presentation Deck"],
+    grad:"linear-gradient(150deg,#020408,#061220,#0C2040,#143060)",
+    bannerImg:"SertisSign_copy-min.webp",
+    bannerFit:"cover",
+    bannerBg:"#0D1B2A",
+    imgs:["SertisSign_copy-min.webp","AquariumCorner-min.webp","Coke_Corner-min.webp"],
+    backTo:"brandingdesign"
+  },
+  momentumdigital:{
+    title:"Momentum Digital",
+    cat:"Logo Design · Tech Identity",
+    tags:["Logo","Branding","Tech","Minimal","Identity"],
+    desc:"The Momentum Digital logo embodies modernity and forward-thinking through a minimalistic and sharp design. The clean, upward-slanting 'M' symbolizes growth, innovation, and continuous momentum — perfectly reflecting the brand's focus on digital transformation. The monochromatic color palette enhances its sleek, professional appeal, making it suitable for tech-forward and progressive companies.",
+    process:"Started with brand discovery to define personality and positioning around digital growth. Explored multiple mark directions before landing on the upward 'M' — refined in Illustrator across monochromatic tones, then delivered as a full suite of variants for all use cases.",
+    del:["Primary Logo","Monochrome Variants","Horizontal & Stacked Layouts","PNG/SVG/EPS Export"],
+    grad:"#111111",
+    bannerImg:"679shots_so (1).png",
+    bannerFit:"contain",
+    bannerBg:"#111111",
+    imgs:["679shots_so (1).png"],
+    backTo:"logodesign"
+  },
+  qiscapital:{
+    title:"QIS Capital",
+    cat:"Logo Design · Financial Identity",
+    tags:["Logo","Branding","Finance","Serif","Identity"],
+    desc:"The QIS Capital logo features a classic serif typeface paired with a gradient blue hue, conveying trust, stability, and professionalism. The wave-like flourish on the 'Q' adds a touch of sophistication and movement, subtly suggesting financial flow or adaptability. This design reflects a brand rooted in tradition, yet open to dynamic market shifts.",
+    process:"Defined the brand's positioning around heritage and trust. Explored serif directions that balanced traditional financial aesthetics with a modern gradient treatment. Delivered full logo suite with name card application.",
+    del:["Primary Logo","Gradient & Monochrome Variants","Name Card Design","PNG/SVG/EPS Export"],
+    grad:"#EEF2F8",
+    bannerImg:"QIS.jpg",
+    bannerFit:"contain",
+    bannerBg:"#EEF2F8",
+    imgs:[{src:"QIS-Logo-Black-03.png",small:true},{src:"QIS.jpg",width:70}],
+    backTo:"logodesign"
+  },
+  logodesign:{
+    title:"Logo Design",
+    cat:"Brand Design · Identity",
+    tags:["Logo","Brand Identity","Typography"],
+    desc:"Logo design for two distinct brands — each with its own personality, positioning, and visual language. From a minimal tech mark to a sophisticated financial identity.",
+    process:"Each logo started with a brand brief to define personality and positioning. Explored multiple directions in Illustrator before refining to a final mark with full suite of variations ready for all use cases.",
+    del:["Logo Suite (PNG/SVG/EPS)","Colour & Monochrome Variants","Usage Guidelines"],
+    grad:"#111111",
+    bannerImg:"679shots_so (1).png",
+    bannerFit:"contain",
+    bannerBg:"#111111",
+    backTo:"brand",
+    subcards:[
+      {title:"Momentum Digital", sub:"Minimal tech identity · Growth & innovation", grad:"#111111", bannerImg:"679shots_so (1).png", bannerFit:"contain", bannerBg:"#111111", projectId:"momentumdigital"},
+      {title:"QIS Capital", sub:"Classic serif · Trust & financial sophistication", grad:"#EEF2F8", bannerImg:"QIS.jpg", bannerFit:"contain", projectId:"qiscapital"}
+    ]
+  },
+  brandingdesign:{
+    title:"Marketing & Campaign",
+    cat:"Graphic Design · Campaign & Signage",
+    tags:["Social Media","Campaign","Event","Signage","Marketing"],
+    desc:"Campaign visuals and marketing materials for digital platforms and physical spaces — including social media artwork, event backdrops, and digital signage. Focused on clear messaging and engaging visuals that drive brand awareness and audience engagement.",
+    process:"Each project started with a creative brief and visual direction aligned to the brand's identity and campaign goals. Executed in Illustrator and Photoshop, delivering print-ready and screen-ready assets across formats.",
+    del:["Social Media Artwork","Event Backdrop","Digital Signage Templates","Print & Screen-Ready Files"],
+    grad:"linear-gradient(150deg,#080204,#1C0408,#3C0810,#5C0C18)",
+    backTo:"visual",
+    subcards:[
+      {title:"CRA Social Media Artwork", sub:"Health awareness · Facebook campaign", grad:"#F5F7FF", bannerImg:"56cd29609b9bccc8e49a89fdfb43b0f8.webp", bannerFit:"contain", bannerBg:"#F5F7FF", projectId:"crasocial"},
+      {title:"Event Backdrop – Olino", sub:"Japanese beverage brand · Central Rama 2", grad:"#F8F5F0", bannerImg:"images.png", bannerFit:"contain", bannerBg:"#F8F5F0", projectId:"eventbackdrop"},
+      {title:"Digital Signage Design", sub:"Client presentation · Commercial spaces", bannerImg:"SertisSign_copy-min.webp", bannerFit:"cover", bannerBg:"#0D1B2A", projectId:"digitalsignage"}
+    ]
+  },
+  brand:{
+    title:"Brand Identity Systems",
+    cat:"Brand Design · Visual Identity",
+    year:"2023–2024", role:"Brand & Visual Designer", scope:"Multi-project",
+    tags:["Branding","Visual Identity","Logo","Brand Guidelines"],
+    desc:"Multiple full-cycle brand identity projects — logo design, packaging, typography systems, and comprehensive brand guidelines. Each project tailored to the brand's personality and audience, from supplement packaging to corporate identity.",
+    process:"For each client, started with brand discovery to extract personality, values, and competitive position. Moved through concept exploration in Illustrator, refined to final assets in Figma, and delivered full brand guidelines playbooks.",
+    del:["Logo Suite (PNG/SVG/EPS)","Brand Guidelines PDF","Typography System","Color System","Packaging Design","Asset Library"],
+    grad:"linear-gradient(150deg,#050200,#190900,#402000,#7C4010)",
+    subcards:[
+      {title:"Branding & Packaging Design", sub:"Supplement brand for pregnancy preparation", grad:"linear-gradient(150deg,#0A0204,#280810,#5A1422,#8C263A)", projectId:"brandpackaging"},
+      {title:"Logo Design", sub:"Momentum Digital · QIS Capital", grad:"linear-gradient(150deg,#02040A,#081020,#122040,#1A2C58)", projectId:"logodesign"}
+    ]
+  },
+  visual:{
+    title:"Visual Communication & Creative Work",
+    cat:"Graphic Design · Brand & Marketing",
+    year:"2022–2024", role:"Graphic Designer", scope:"Multi-format",
+    tags:["Graphic Design","Branding","Packaging","Logo","Marketing Campaign"],
+    desc:"Creating cohesive visual, branding, and marketing designs that deliver consistent brand experiences across digital and physical touchpoints. Projects span branding and packaging design, logo design, and marketing and campaign materials — all anchored in a clear visual direction and strong attention to production quality.",
+    process:"Each project started with a creative brief and mood-boarding phase to align on visual direction before any execution. Worked primarily in Figma for layout and composition, Illustrator for logo and vector artwork, and Photoshop for photo treatment and retouching. Lightroom was used for colour grading across campaign photography. Sub-projects include Branding & Packaging Design, Logo Design, and Marketing & Campaign materials — each delivered to print and digital production standards.",
+    ai:["Midjourney","DALL·E"],
+    del:["Brand Identity & Packaging","Logo Suite (PNG/SVG/EPS)","Campaign Visuals","Marketing Assets","Print-Ready Files"],
+    grad:"linear-gradient(150deg,#060108,#1C0828,#3E1454,#6A207E)",
+    subcards:[
+      {title:"Marketing & Campaign", sub:"Social media · Events · Signage", grad:"linear-gradient(150deg,#080204,#1C0408,#3C0810,#5C0C18)", projectId:"brandingdesign"},
+      {title:"Visual Content for Business Communication", sub:"Brochures · Roll-up banners · Corporate materials", bannerImg:"sertis-brochure.jpg", bannerFit:"cover", bannerBg:"#1a1f2e", projectId:"visualcontent"},
+      {title:"3D Dessert Rendering", sub:"Blender · Modelling & Rendering", bannerImg:"3d-milkshake.jpg", bannerFit:"cover", bannerBg:"#f5d0d8", projectId:"dessert3d"}
+    ]
+  },
+  visualcontent:{
+    title:"Visual Content for Business Communication",
+    cat:"Graphic Design · Corporate Communication",
+    tags:["Brochure","Corporate","Roll-up Banner","Marketing","Print Design"],
+    desc:"Designed and developed a range of marketing materials for Sertis, covering all key aspects of the company's communication needs — from product brochures and solutions materials to corporate profile documents and roll-up banners for trade shows and events.",
+    process:"Developed each material from a clear communication brief — defining objective, audience, and key message before moving to design. Created product brochures for technical features like Face Scan, solutions brochures covering AI and data analytics services, corporate profile brochures for brand credibility, and roll-up banners for exhibitions and events. All materials ensured consistent branding, strong visual identity, and clear messaging across all marketing and event channels.",
+    del:["Product Brochures","Solutions Brochures","Corporate Brochures","Roll-up Banners","Print-Ready Files"],
+    grad:"linear-gradient(150deg,#02060E,#061428,#0C2448,#103060)",
+    bannerImg:"sertis-brochure.jpg",
+    bannerFit:"cover",
+    bannerBg:"#1a1f2e",
+    imgs:["sertis-brochure.jpg","sertis-rollup.jpg","sertis-brochure3.jpg"],
+    backTo:"visual"
+  },
+  dessert3d:{
+    title:"3D Dessert Rendering",
+    cat:"3D Design · Digital Art",
+    tags:["3D","Blender","Rendering","Digital Art","Food Design"],
+    desc:"A playful and vibrant 3D dessert scene featuring a translucent yellow pudding topped with a bright red cherry alongside a creamy strawberry milkshake in a clear glass. The design highlights soft lighting and realistic textures — from the glossy pudding surface to the subtle gradients in the pink milkshake — capturing the refreshing, sweet mood through careful material and lighting work.",
+    process:"Focused on capturing the sweet, refreshing mood of the scene by carefully adjusting materials, lighting, and reflections in Blender. Each food item was modelled from scratch with particular attention to translucency and surface detail. This project built hands-on experience with modelling, shading, and rendering, especially in creating food-themed 3D artwork that looks both delicious and visually charming.",
+    del:["3D Rendered Artwork","Blender Scene File","High-Resolution PNG Export"],
+    grad:"linear-gradient(150deg,#1E0A0E,#3C1020,#6E1A30,#A02040)",
+    bannerImg:"3d-milkshake.jpg",
+    bannerFit:"cover",
+    bannerBg:"#f5d0d8",
+    imgs:["3d-milkshake.jpg","3d-pudding.png"],
+    backTo:"visual"
+  },
+  web:{
+    title:"Web Design & Development",
+    cat:"Web Design · UX & Frontend",
+    year:"2023–2024", role:"Web Designer & Developer", scope:"Responsive Web",
+    tags:["Web Design","UX","Wix","Responsive","Brand Identity"],
+    desc:"Designing and developing websites that balance UX, UI, and brand identity into one cohesive experience. The process covers information architecture, wireframing, and UI design in Figma — then builds out to responsive, live websites. Projects include a company website and a subsidiary website, both built to reflect the brand while being intuitive and easy to navigate.",
+    process:"Started each project with information architecture and sitemap planning to ensure content hierarchy was clear before touching visuals. Wireframed key pages in Figma, validated structure with stakeholders, then designed the full UI with a consistent component system. Moved to Wix for the live build, configuring responsive layouts, CMS, and SEO settings. Focused on maintaining brand consistency from Figma to final publish.",
+    ai:["ChatGPT","Figma AI"],
+    del:["Information Architecture","Wireframes","High-Fidelity UI","Responsive Web Build (Wix)","Design Spec"],
+    grad:"linear-gradient(150deg,#010108,#07081C,#10143C,#1C2058)",
+    subcards:[
+      {title:"Company Website – Design & Development", sub:"Sertis · UX research · Full build", bannerImg:"Uweb.webp", bannerFit:"cover", bannerBg:"#040D1E", projectId:"companywebsite"},
+      {title:"Subsidiary Website – UX/UI Design", sub:"QIS Capital · Figma · Wix", bannerImg:"web.jpg", bannerFit:"cover", bannerBg:"#EEF2F8", projectId:"subsidiarywebsite"}
+    ]
+  },
+  companywebsite:{
+    title:"Company Website – Design & Development",
+    cat:"Web Design · UX & Frontend",
+    tags:["Web Design","UX Research","Figma","Wix","Responsive","Google Analytics"],
+    desc:"Independently designed and developed the company website from concept to launch, taking full ownership of both visual identity and user experience. The goal was to create a platform that clearly communicates the brand and keeps users engaged through a clean layout, intuitive navigation, and accessible content. The site is continuously updated based on real user feedback and behavior data from Google Analytics.",
+    process:"Started with user interviews to validate structure and content priorities, then mapped a full sitemap before any visual design began. Wireframed key pages in Figma, refined to high-fidelity UI with a consistent component system, and built the live site in Wix with responsive layouts and CMS. Post-launch, focused on refining structure, improving content flow, and optimising call-to-actions based on analytics and user behavior. Live at sertiscorp.com.",
+    del:["User Interview Insights","Sitemap","High-Fidelity UI","Responsive Web Build","Google Analytics Setup","Ongoing Optimisation"],
+    grad:"linear-gradient(150deg,#010108,#07081C,#10143C,#1C2058)",
+    bannerImg:"Uweb.webp",
+    bannerFit:"cover",
+    bannerBg:"#040D1E",
+    imgs:["Uweb.webp"],
+    backTo:"web"
+  },
+  subsidiarywebsite:{
+    title:"Subsidiary Website – UX/UI Design",
+    cat:"Web Design · UX/UI",
+    tags:["Web Design","UX/UI","Wix","Figma","Brand Identity","Responsive"],
+    desc:"Designed and developed a website for a subsidiary company, focusing on creating a distinct brand identity while maintaining alignment with the parent company. Balanced the need for visual differentiation with consistent brand language, delivering a clean and professional digital presence.",
+    process:"Defined the information architecture and content structure first, ensuring the subsidiary's unique value proposition was clearly communicated without straying from the parent brand guidelines. Designed the full UI in Figma, then built and launched in Wix with responsive layouts, CMS configuration, and SEO settings. Ongoing optimisation was driven by Google Analytics data.",
+    del:["Information Architecture","High-Fidelity UI","Responsive Web Build (Wix)","Brand-Aligned Design System","SEO Setup"],
+    grad:"linear-gradient(150deg,#010108,#07081C,#10143C,#1C2058)",
+    bannerImg:"web.jpg",
+    bannerFit:"cover",
+    bannerBg:"#EEF2F8",
+    imgs:["web.jpg"],
+    backTo:"web"
+  },
+  motion:{
+    title:"Motion & Video Production",
+    cat:"Motion Design · Video Editing",
+    year:"2022–2024", role:"Motion Designer & Video Editor", scope:"Brand & Product",
+    tags:["Motion Graphics","Video Editing","After Effects","Premiere Pro","Storytelling"],
+    desc:"Creating video content that communicates clearly and memorably — through strong storytelling and visual pacing. Work ranges from product promos and brand introductions to explainer videos, always built around mood, rhythm, and clarity. Sub-projects include Sertis Tech Focus (brand and thought-leadership video) and a Product Explainer video.",
+    process:"Each piece started with a storyboard and script review to lock the narrative structure before any editing began. Video editing was handled in Premiere Pro for pacing and assembly, with motion graphics and title sequences built in After Effects. Audio mixing and sound design used Adobe Audition. For product explainers, worked closely with the product team to distil complex features into clear, visual storytelling moments that held attention from start to finish.",
+    ai:["Runway ML","Adobe Sensei"],
+    del:["Storyboard","Motion Graphics","Brand Video (Sertis Tech Focus)","Product Explainer","Export Package (16:9 / 9:16 / 1:1)"],
+    grad:"linear-gradient(150deg,#040101,#160305,#360810,#6A0F18)",
+    subcards:[
+      {title:"Sertis Tech Focus – Video Content", sub:"YouTube series · Scriptwriting · Direction", bannerImg:"techfocus-thumbnail.jpg", bannerFit:"cover", bannerBg:"#0A1A3A", projectId:"techfocus"},
+      {title:"Product Explainer – Motion Video", sub:"Motion design · Storyboard · Full production", bannerImg:"product-explainer-thumb.png", bannerFit:"cover", bannerBg:"#0D1B2E", projectId:"productexplainer"}
+    ]
+  },
+  techfocus:{
+    title:"Sertis Tech Focus – Video Content",
+    cat:"Motion Design · Video Production",
+    tags:["Video","YouTube","Motion Graphics","Scriptwriting","Direction","After Effects"],
+    desc:"Created Sertis Tech Focus, an approachable video series designed to demystify data-related roles and AI tools for a general audience. The goal was to simplify complex topics with a light, engaging tone — making technical content accessible and entertaining for non-technical viewers.",
+    process:"Involved in the entire production process — from scriptwriting and storyboarding to directing and video editing. Each episode was planned around a clear learning outcome, with visual storytelling and pacing designed to hold viewer attention throughout. Thumbnail design and YouTube channel assets were also handled to ensure consistent branding across the series.",
+    del:["Script & Storyboard","Video Direction","Motion Graphics","Thumbnail Design","YouTube Channel Assets","Export Package"],
+    grad:"linear-gradient(150deg,#040101,#160305,#360810,#6A0F18)",
+    bannerImg:"techfocus-thumbnail.jpg",
+    bannerFit:"cover",
+    bannerBg:"#0A1A3A",
+    video:"https://www.youtube.com/embed/LxgBfo9cTuM?list=PLRsG7MIjo60qYn0aEqGRiSFrNDkDB8iMr",
+    backTo:"motion"
+  },
+  productexplainer:{
+    title:"Product Explainer – Motion Video",
+    cat:"Motion Design · Video Production",
+    tags:["Motion Video","Product Demo","After Effects","Premiere Pro","Storyboard","Explainer"],
+    desc:"Created a motion video to promote a new product feature, covering the full production process from scriptwriting and storyboarding to final motion design. Focused on simplifying complex functionality into clear, engaging visuals while maintaining strong pacing and storytelling.",
+    process:"Started with a script and storyboard to lock the narrative before any production began. Motion graphics and UI animations were built in After Effects, with final assembly and audio in Premiere Pro. Worked closely with the product team to distil key features into concise, visually compelling moments that communicated the product's value clearly and quickly.",
+    del:["Script & Storyboard","Motion Graphics","UI Animation","Final Video Edit","Export Package (16:9 / 9:16 / 1:1)"],
+    grad:"linear-gradient(150deg,#040101,#160305,#360810,#6A0F18)",
+    bannerImg:"product-explainer-thumb.png",
+    bannerFit:"cover",
+    bannerBg:"#0D1B2E",
+    video:"https://www.youtube.com/embed/dkAKD_qTjPc",
+    backTo:"motion"
+  },
+  aicreative:{
+    title:"AI-Generated Creative Work",
+    cat:"Generative AI · Motion & Visual",
+    tags:["Generative AI","Grok","Flow","Gemini","ChatGPT","Google AI Studio","Premiere Pro"],
+    desc:"An end-to-end creative production built entirely with AI tools — from visual generation to video creation and voiceover. Explored the full pipeline of AI-assisted content creation, combining multiple tools across different stages of production to deliver a cohesive final piece.",
+    process:"Visuals were generated using Gemini and ChatGPT image generation, each prompted and curated for visual consistency. Video content was produced using Grok and Flow, handling motion and scene composition. Voiceover was generated through Google AI Studio with careful prompt tuning for tone and pacing. All elements were assembled and colour-graded in Adobe Premiere Pro for the final edit.",
+    del:["AI-Generated Visuals","AI Video Production","AI Voiceover","Final Edited Video"],
+    grad:"linear-gradient(150deg,#010408,#041020,#082040,#0A3060,#0E4888)",
+    subcards:[
+      {title:"AI Video Production", sub:"Grok · Flow · Gemini · Google AI Studio", bannerImg:"https://img.youtube.com/vi/quXyGeE9sHg/maxresdefault.jpg", bannerFit:"cover", bannerBg:"#010408", projectId:"aivideo1"}
+    ]
+  },
+  aivideo1:{
+    title:"AI Video Production",
+    cat:"Generative AI · Motion & Visual",
+    tags:["Generative AI","Grok","Flow","Gemini","ChatGPT","Google AI Studio","Premiere Pro"],
+    desc:"An end-to-end creative production built entirely with AI tools — from visual generation to video creation and voiceover. Explored the full pipeline of AI-assisted content creation, combining multiple tools across different stages of production to deliver a cohesive final piece.",
+    process:"Visuals were generated using Gemini and ChatGPT image generation, each prompted and curated for visual consistency. Video content was produced using Grok and Flow, handling motion and scene composition. Voiceover was generated through Google AI Studio with careful prompt tuning for tone and pacing. All elements were assembled and colour-graded in Adobe Premiere Pro for the final edit.",
+    del:["AI-Generated Visuals","AI Video Production","AI Voiceover","Final Edited Video"],
+    grad:"linear-gradient(150deg,#010408,#041020,#082040,#0A3060,#0E4888)",
+    bannerImg:"https://img.youtube.com/vi/quXyGeE9sHg/maxresdefault.jpg",
+    bannerFit:"cover",
+    bannerBg:"#010408",
+    video:"https://www.youtube.com/embed/quXyGeE9sHg",
+    backTo:"aicreative"
+  }
+};
+
+function openProject(id){
+  const p = pdata[id];
+  const bannerEl = document.getElementById('m-banner');
+  if(p.bannerImg){
+    const fit = p.bannerFit || 'cover';
+    const pos = fit === 'contain' ? 'center' : 'top';
+    const bg = p.bannerBg || '#111';
+    bannerEl.style.background = `${bg} url('${p.bannerImg}') ${pos}/${fit} no-repeat`;
+  } else {
+    bannerEl.style.background = p.grad;
+  }
+  // Text-first flag (moves images after sections on mobile)
+  const mInner = document.querySelector('#modal .modal-inner');
+  p.textFirst ? mInner.classList.add('m-text-first') : mInner.classList.remove('m-text-first');
+  // Back button
+  const backBtn = document.getElementById('m-back-btn');
+  if(p.backTo){ backBtn.style.display='flex'; backBtn.onclick=()=>openProject(p.backTo); }
+  else { backBtn.style.display='none'; backBtn.onclick=null; }
+  document.getElementById('m-cat').textContent = p.cat;
+  document.getElementById('m-title').textContent = p.title;
+  document.getElementById('m-desc').textContent = p.desc;
+  document.getElementById('m-process').textContent = p.process;
+  document.getElementById('m-tags').innerHTML = p.tags.map(t=>`<span class="ptag">${t}</span>`).join('');
+  document.getElementById('m-del').innerHTML = p.del.map(d=>`<span class="m-del">${d}</span>`).join('');
+  // Sub-project cards
+  const subcardsEl = document.getElementById('m-subcards');
+  if(p.subcards && p.subcards.length){
+    subcardsEl.innerHTML = p.subcards.map(s=>`
+      <div class="m-subcard" ${s.projectId?`onclick="openProject('${s.projectId}')" style="cursor:pointer"`:''}>
+        <div class="m-subcard-banner" style="background:${s.bannerImg?(()=>{const fit=s.bannerFit||'cover';const pos=fit==='contain'?'center':'top';const bg=s.bannerBg||'#111';return `${bg} url('${s.bannerImg}') ${pos}/${fit} no-repeat`;})():s.grad}">
+          <div class="m-subcard-overlay"></div>
+        </div>
+        <div class="m-subcard-title">${s.title}</div>
+        <div class="m-subcard-sub">${s.sub}</div>
+      </div>`).join('');
+    subcardsEl.style.display='grid';
+  } else {
+    subcardsEl.innerHTML='';
+    subcardsEl.style.display='none';
+  }
+  // Images
+  const imgsEl = document.getElementById('m-imgs');
+  if(p.imgs && p.imgs.length){
+    imgsEl.innerHTML = p.imgs.map(img=>{
+      const src = typeof img==='string'?img:img.src;
+      const small = typeof img==='object'&&img.small;
+      const width = typeof img==='object'&&img.width ? img.width : null;
+      const cls = small?'m-img-sm':'m-img';
+      const style = width ? `style="width:${width}%;margin:0 auto"` : '';
+      return `<img class="${cls}" src="${src}" alt="${p.title}" loading="lazy" ${style}/>`;
+    }).join('');
+    imgsEl.style.display='flex';
+  } else {
+    imgsEl.innerHTML='';
+    imgsEl.style.display='none';
+  }
+  // Prototype preview
+  const protoWrap = document.getElementById('m-proto-wrap');
+  if(p.proto){
+    document.getElementById('m-proto-link').href=p.proto;
+    protoWrap.style.display='block';
+    requestAnimationFrame(()=>{
+      const preview = document.getElementById('m-proto-preview');
+      const scale = preview.offsetWidth / 1920;
+      const frame = document.getElementById('m-proto-frame');
+      frame.style.transform = `scale(${scale})`;
+      preview.style.height = (1080 * scale) + 'px';
+      frame.src = p.proto;
+    });
+  } else {
+    document.getElementById('m-proto-frame').src='';
+    protoWrap.style.display='none';
+  }
+  // PDF
+  const pdfWrap = document.getElementById('m-pdf-wrap');
+  if(p.pdf){ document.getElementById('m-pdf').src=p.pdf; pdfWrap.style.display='block'; }
+  else { document.getElementById('m-pdf').src=''; pdfWrap.style.display='none'; }
+  // Video embed (iframe)
+  const videoWrap = document.getElementById('m-video-wrap');
+  if(p.video){ document.getElementById('m-video').src=p.video; videoWrap.style.display='block'; }
+  else { document.getElementById('m-video').src=''; videoWrap.style.display='none'; }
+  // Local video file
+  const videoLocalWrap = document.getElementById('m-video-local-wrap');
+  const videoLocalEl = document.getElementById('m-video-local');
+  if(p.videoFile){ videoLocalEl.src=p.videoFile; videoLocalWrap.style.display='block'; }
+  else { videoLocalEl.src=''; videoLocalWrap.style.display='none'; }
+  const mi = document.querySelector('.modal-inner');
+  mi.scrollTop=0;
+  mi.style.willChange='transform';
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow='hidden';
+  requestAnimationFrame(()=>{ mi.scrollTop=0; });
+  mi.addEventListener('transitionend',()=>{ mi.style.willChange='auto'; },{once:true});
+}
+function closeModal(){
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow='';
+  document.getElementById('m-proto-frame').src='';
+}
+function openResume(){
+  document.getElementById('resume-modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeResume(){
+  document.getElementById('resume-modal').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeModal(); closeResume(); } });
+// Prevent browser scroll restoration — always start at top
+if('scrollRestoration' in history) history.scrollRestoration='manual';
+window.addEventListener('load',()=>window.scrollTo(0,0));
+</script>
+</body>
+</html>
